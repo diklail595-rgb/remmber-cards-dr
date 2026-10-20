@@ -125,6 +125,8 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 .wotd .en{font-size:1.6rem}
 
 /* my words */
+@keyframes fillflash{0%{background:var(--good-soft,#DDF3E4)}100%{background:var(--paper)}}
+#wHe.filled{animation:fillflash 1.4s ease-out}
 .wprev{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--mine-soft);display:flex;flex-direction:column;gap:6px}
 .wprev .tr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:1.15rem}
 .wprev .alts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
@@ -1001,7 +1003,7 @@ function tClean(x,toEn){x=String(x||"").trim().replace(/[.。]$/,"");if(toEn&&x=
 function tUniq(a,skip){const seen=new Set(skip.map(x=>x.toLowerCase()));return a.filter(x=>{const k=x.toLowerCase();if(!x||seen.has(k))return false;seen.add(k);return true;});}
 async function gTranslate(q,he){
   try{
-    const j=await (await tfetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl="+(he?"iw":"en")+"&tl="+(he?"en":"iw")+"&dt=t&dt=bd&q="+encodeURIComponent(q))).json();
+    const j=await (await tfetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+(he?"en":"iw")+"&hl=en&dt=t&dt=bd&q="+encodeURIComponent(q))).json();
     const main=tClean((j[0]||[]).map(x=>(x&&x[0])||"").join(""),he);if(!main)return null;
     const alts=[];(j[1]||[]).forEach(p=>(p&&p[1]||[]).forEach(t=>alts.push(tClean(t,he))));
     return {main,alts:tUniq(alts,[main,q]).slice(0,4)};
@@ -1016,7 +1018,7 @@ async function mmTranslate(q,he){
   }catch(e){return null;}
 }
 async function translateWord(q){
-  q=q.trim();const k=q.toLowerCase();if(!q)return null;if(tCache[k])return tCache[k];
+  q=String(q||"").replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069]/g,"").trim();const k=q.toLowerCase();if(!q)return null;if(tCache[k])return tCache[k];
   const he=isHeb(q);let r=null;
   const split=x=>String(x||"").split(/[\/,;]| או /).map(y=>y.trim()).filter(Boolean);
   const v=VOCAB.find(w=>he?split(w.he).includes(q):w.en.toLowerCase()===k);
@@ -1027,13 +1029,17 @@ async function translateWord(q){
       if(j&&j.t)r={main:tClean(j.t,he),alts:tUniq((Array.isArray(j.alts)?j.alts:[]).map(a=>tClean(a,he)),[String(j.t),q]).slice(0,3),ex:j.ex?[String(j.ex),String(j.exHe||"")]:null};
     }catch(e){}
   }
-  if(!r)r=await gTranslate(q,he);
-  if(!r)r=await mmTranslate(q,he);
+  if(!r){
+    const g=gTranslate(q,he),m=mmTranslate(q,he);
+    r=await g;if(!r)r=await m;
+    if(!r&&he){const g2=await gTranslate(q.replace(/^[הו]/,""),he);if(g2)r=g2;}
+  }
   if(r)tCache[k]=r;return r;
 }
 let tSeq=0,tTimer=null,tRes=null,heAuto=true;
+const tidy=v=>String(v||"").replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069]/g,"").trim();
 function wPair(){
-  const q=$("wEn").value.trim(),t=$("wHe").value.trim();
+  const q=tidy($("wEn").value),t=tidy($("wHe").value);
   return isHeb(q)?{en:t,he:q}:{en:q,he:t};
 }
 function renderPrev(state){
@@ -1041,9 +1047,9 @@ function renderPrev(state){
   if(!q){p.hidden=true;return;}
   p.hidden=false;p.textContent="";
   if(state==="loading"){p.append(el("div",{class:"small muted"},el("span",{class:"spin"})," מתרגמת..."));return;}
-  if(!tRes){p.append(el("div",{class:"small",text:"לא מצאתי תרגום כרגע. אפשר לכתוב אותו בעצמך בשדה השני ולהוסיף."}));return;}
-  const {en,he}=wPair();
-  p.append(el("div",{class:"tr"},el("span",{class:"en",style:"font-weight:700",dir:"ltr",text:en}),el("span",{class:"muted",text:"="}),el("b",{text:he}),en?speakBtn(en):null));
+  if(!tRes){p.append(el("div",{class:"small",text:navigator.onLine===false?"אין חיבור לאינטרנט, ולכן אין תרגום אוטומטי. אפשר לכתוב את התרגום בעצמך בשדה השני.":"לא מצאתי תרגום למילה הזאת. בדקי את האיות, או כתבי את התרגום בעצמך בשדה השני."}));return;}
+  const {en}=wPair();
+  if(en)p.append(el("div",{class:"tr"},speakBtn(en),el("span",{class:"small muted",text:"האזנה ל-"}),el("span",{class:"en",dir:"ltr",style:"font-weight:700",text:en})));
   if(tRes.alts&&tRes.alts.length){const a=el("div",{class:"alts"},el("span",{class:"small muted",text:"עוד משמעויות:"}));
     tRes.alts.forEach(x=>a.append(el("button",{type:"button",dir:"auto",text:x,onclick:()=>{$("wHe").value=x;heAuto=false;renderPrev();}})));p.append(a);}
   if(tRes.ex&&tRes.ex[0])p.append(el("div",{class:"en small",dir:"ltr",style:"text-align:left",text:tRes.ex[0]}),tRes.ex[1]?el("div",{class:"small muted",text:tRes.ex[1]}):"");
@@ -1056,7 +1062,7 @@ async function runTranslate(){
   renderPrev("loading");
   const r=await translateWord(q);
   if(my!==tSeq)return null;
-  tRes=r;if(r&&heAuto)$("wHe").value=r.main;
+  tRes=r;if(r&&heAuto){const f=$("wHe");f.value=r.main;f.classList.remove("filled");void f.offsetWidth;f.classList.add("filled");}
   renderPrev();return r;
 }
 $("wEn").addEventListener("input",()=>{heAuto=true;if(!$("wEn").value.trim())$("wHe").value="";clearTimeout(tTimer);tTimer=setTimeout(runTranslate,600);});
