@@ -131,8 +131,9 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 .wprev .tr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:1.15rem}
 .wprev .alts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .wprev .alts button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:2px 10px;font:inherit;font-size:.9rem;cursor:pointer}
-.addbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px}
-@media (max-width:560px){.addbar{grid-template-columns:1fr 1fr}.addbar .btn{grid-column:1/-1;justify-content:center}}
+.addbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.wprev input{font:inherit;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;padding:7px 10px;min-width:0;flex:1}
+
 .wlist{display:flex;flex-direction:column}
 .wrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
 .wrow:first-child{border-top:none}
@@ -330,6 +331,8 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
     <div class="missions" id="missions" style="margin-top:10px"></div>
   </div>
 
+  <div class="card" id="packCard"></div>
+
   <div class="rooms">
     <button class="room" data-swipe="1" style="background:var(--accent-soft)"><h3>החלקת מילים</h3><span class="muted small" id="swRoomTxt">ימינה = יודעת, שמאלה = עוד לא</span><svg class="art" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="12" width="30" height="40" rx="6" fill="var(--accent)" opacity=".4" transform="rotate(-10 25 32)"/><rect x="22" y="10" width="30" height="40" rx="6" fill="var(--accent)" transform="rotate(8 37 30)"/></svg></button>
     <button class="room" data-go="words" style="background:var(--mine-soft)"><h3>המילים שלי</h3><span class="muted small">מוסיפים מילים שנתקלת בהן ומתרגלים בכרטיסיות</span><svg class="art" viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="34" height="40" rx="5" fill="var(--mine)" opacity=".35"/><rect x="18" y="8" width="34" height="40" rx="5" fill="var(--mine)"/><path d="M26 22h18M26 30h12" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></button>
@@ -364,7 +367,7 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
     <b>נתקלת במילה חדשה? כתבי אותה באנגלית או בעברית, והתרגום יופיע מיד</b>
     <form class="addbar" id="wForm">
       <input type="text" id="wEn" dir="auto" placeholder="מילה באנגלית או בעברית" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="מילה באנגלית או בעברית">
-      <input type="text" id="wHe" dir="auto" placeholder="התרגום יופיע כאן" autocomplete="off" autocapitalize="off" aria-label="תרגום">
+      <input type="text" id="wHe" hidden dir="auto" placeholder="התרגום יופיע כאן" autocomplete="off" autocapitalize="off" aria-label="תרגום">
       <button class="btn" type="submit" style="background:var(--mine)">הוספה</button>
     </form>
     <div class="wprev" id="wPrev" hidden></div>
@@ -560,6 +563,31 @@ const EX={"money": [["I need more money for the trip.", "אני צריכה יו�
 function exList(k,en){const out=(EX[en]||[]).slice();const m=S.my&&S.my[k];if(m){if(m.ex)out.push([m.ex,m.exHe||""]);(m.exs||[]).forEach(x=>out.push(x));}const seen=new Set();return out.filter(x=>x[0]&&!seen.has(x[0])&&seen.add(x[0]));}
 function nextEx(k,en){const L=exList(k,en);if(!L.length)return ["",""];S.exi=S.exi||{};const i=(S.exi[k]||0)%L.length;S.exi[k]=i+1;return L[i];}
 function firstEx(en){const L=EX[en];return L?L[0]:["",""];}
+const PACKS=[
+ {id:"home",he:"בבית",t:"gen",w:[["house","בית",1,"Our house is near the park.","הבית שלנו ליד הפארק."],["kitchen","מטבח",1,"We eat breakfast in the kitchen.","אנחנו אוכלים ארוחת בוקר במטבח."],["bedroom","חדר שינה",1,"My bedroom is small but quiet.","חדר השינה שלי קטן אבל שקט."],["door","דלת",1,"Please close the door.","בבקשה סגרי את הדלת."],["window","חלון",1,"I open the window every morning.","אני פותחת את החלון כל בוקר."],["table","שולחן",1,"The keys are on the table.","המפתחות על השולחן."],["chair","כיסא",1,"This chair is very comfortable.","הכיסא הזה מאוד נוח."],["clean","לנקות / נקי",1,"I clean the house on Friday.","אני מנקה את הבית ביום שישי."],["rent","שכר דירה / לשכור",2,"The rent is due on the first of the month.","שכר הדירה צריך להיות משולם בראשון לחודש."],["neighbor","שכן",2,"Our neighbor has a big dog.","לשכן שלנו יש כלב גדול."],["furniture","רהיטים",2,"We bought new furniture for the living room.","קנינו רהיטים חדשים לסלון."],["bill","חשבון (לתשלום)",2,"The electricity bill was high this month.","חשבון החשמל היה גבוה החודש."]]},
+ {id:"food",he:"אוכל ומסעדות",t:"gen",w:[["breakfast","ארוחת בוקר",1,"I eat eggs for breakfast.","אני אוכלת ביצים לארוחת בוקר."],["lunch","ארוחת צהריים",1,"Let's have lunch together.","בואי נאכל צהריים ביחד."],["dinner","ארוחת ערב",1,"We cook dinner at home.","אנחנו מבשלים ארוחת ערב בבית."],["water","מים",1,"Drink more water during the day.","שתי יותר מים במהלך היום."],["bread","לחם",1,"This bread is fresh.","הלחם הזה טרי."],["hungry","רעב",1,"I am hungry after the gym.","אני רעבה אחרי חדר הכושר."],["cook","לבשל",1,"My father likes to cook on Saturday.","אבא שלי אוהב לבשל בשבת."],["menu","תפריט",1,"Can I see the menu, please?","אפשר לראות את התפריט, בבקשה?"],["taste","טעם / לטעום",2,"This soup has a great taste.","למרק הזה יש טעם מעולה."],["recipe","מתכון",2,"I found a simple recipe online.","מצאתי מתכון פשוט באינטרנט."],["delicious","טעים מאוד",2,"The cake was delicious.","העוגה הייתה טעימה מאוד."],["tip","טיפ (בתשלום) / עצה",2,"We left a ten percent tip.","השארנו טיפ של עשרה אחוזים."]]},
+ {id:"travel",he:"טיולים ונסיעות",t:"gen",w:[["trip","טיול / נסיעה",1,"We are planning a trip to Italy.","אנחנו מתכננים טיול לאיטליה."],["ticket","כרטיס",1,"I bought a train ticket.","קניתי כרטיס לרכבת."],["hotel","מלון",1,"The hotel is close to the beach.","המלון קרוב לחוף."],["airport","שדה תעופה",1,"We need to be at the airport at six.","אנחנו צריכים להיות בשדה התעופה בשש."],["passport","דרכון",1,"Don't forget your passport.","אל תשכחי את הדרכון שלך."],["map","מפה",1,"Can you show me on the map?","את יכולה להראות לי על המפה?"],["suitcase","מזוודה",2,"My suitcase is too heavy.","המזוודה שלי כבדה מדי."],["flight","טיסה",2,"Our flight is delayed by one hour.","הטיסה שלנו מתעכבת בשעה."],["booking","הזמנה (מראש)",2,"I have a booking for two nights.","יש לי הזמנה לשני לילות."],["abroad","בחו\"ל",2,"She works abroad for a year.","היא עובדת בחו\"ל במשך שנה."],["luggage","מטען / מזוודות",3,"Please keep your luggage with you.","בבקשה השאירו את המטען שלכם אצלכם."],["destination","יעד",3,"Paris is a popular destination.","פריז היא יעד פופולרי."]]},
+ {id:"health",he:"בריאות וגוף",t:"sport",w:[["doctor","רופא",1,"I have a doctor's appointment today.","יש לי תור לרופא היום."],["sick","חולה",1,"He is sick, so he stayed at home.","הוא חולה, אז הוא נשאר בבית."],["head","ראש",1,"My head hurts.","הראש שלי כואב."],["sleep","לישון / שינה",1,"I sleep seven hours a night.","אני ישנה שבע שעות בלילה."],["tired","עייף",1,"I am tired after a long day.","אני עייפה אחרי יום ארוך."],["pain","כאב",2,"I have pain in my back.","יש לי כאב בגב."],["medicine","תרופה",2,"Take this medicine twice a day.","קחי את התרופה הזאת פעמיים ביום."],["appointment","תור / פגישה",2,"I made an appointment for Monday.","קבעתי תור ליום שני."],["diet","תזונה / דיאטה",2,"A good diet gives you energy.","תזונה טובה נותנת לך אנרגיה."],["stress","לחץ / מתח",2,"Exercise helps me reduce stress.","פעילות גופנית עוזרת לי להפחית לחץ."],["heart","לב",2,"Running is good for your heart.","ריצה טובה ללב."],["symptom","תסמין",3,"A headache is a common symptom.","כאב ראש הוא תסמין נפוץ."]]},
+ {id:"shopping",he:"קניות",t:"fin",w:[["store","חנות",1,"The store opens at nine.","החנות נפתחת בתשע."],["size","מידה / גודל",1,"Do you have this shirt in a smaller size?","יש לכם את החולצה הזאת במידה קטנה יותר?"],["sale","מבצע / מכירה",1,"There is a big sale this weekend.","יש מבצע גדול בסוף השבוע."],["card","כרטיס (אשראי)",1,"Can I pay by card?","אפשר לשלם בכרטיס?"],["change","עודף / שינוי",2,"Here is your change.","הנה העודף שלך."],["receipt","קבלה",2,"Please keep the receipt.","בבקשה שמרי את הקבלה."],["discount","הנחה",2,"Students get a ten percent discount.","סטודנטים מקבלים הנחה של עשרה אחוזים."],["return","להחזיר / החזרה",2,"I want to return these shoes.","אני רוצה להחזיר את הנעליים האלה."],["brand","מותג",2,"This brand is popular with young people.","המותג הזה פופולרי בקרב צעירים."],["afford","להרשות לעצמי (כלכלית)",3,"I can't afford a new car this year.","אני לא יכולה להרשות לעצמי מכונית חדשה השנה."],["bargain","מציאה",3,"This jacket was a real bargain.","המעיל הזה היה מציאה אמיתית."],["refund","החזר כספי",3,"I asked for a full refund.","ביקשתי החזר כספי מלא."]]},
+ {id:"work",he:"יום עבודה",t:"biz",w:[["email","מייל",1,"I send an email every morning.","אני שולחת מייל כל בוקר."],["computer","מחשב",1,"My computer is very slow today.","המחשב שלי מאוד איטי היום."],["colleague","עמית לעבודה",2,"My colleague helped me with the report.","העמיתה שלי עזרה לי עם הדוח."],["task","משימה",2,"This task is easy.","המשימה הזאת קלה."],["report","דוח",2,"The report is ready.","הדוח מוכן."],["schedule","לוח זמנים",2,"My schedule is full this week.","לוח הזמנים שלי מלא השבוע."],["break","הפסקה",1,"Let's take a short break.","בואי ניקח הפסקה קצרה."],["hire","להעסיק / לגייס",2,"The company wants to hire new workers.","החברה רוצה לגייס עובדים חדשים."],["skill","מיומנות",2,"Communication is an important skill.","תקשורת היא מיומנות חשובה."],["promotion","קידום",3,"She got a promotion last month.","היא קיבלה קידום בחודש שעבר."],["feedback","משוב",3,"My manager gave me positive feedback.","המנהל שלי נתן לי משוב חיובי."],["remote","מרחוק",3,"I work remote two days a week.","אני עובדת מרחוק יומיים בשבוע."]]},
+ {id:"feelings",he:"רגשות",t:"grow",w:[["happy","שמח",1,"I am happy with my progress.","אני שמחה מההתקדמות שלי."],["sad","עצוב",1,"He was sad after the game.","הוא היה עצוב אחרי המשחק."],["angry","כועס",1,"Don't be angry with me.","אל תכעסי עליי."],["afraid","מפחד",1,"She is afraid of dogs.","היא מפחדת מכלבים."],["excited","נרגש",2,"I'm excited about the new job.","אני נרגשת לקראת העבודה החדשה."],["worried","מודאג",2,"Mom is worried about the exam.","אמא מודאגת לגבי המבחן."],["proud","גאה",2,"I am proud of you.","אני גאה בך."],["calm","רגוע",2,"Take a deep breath and stay calm.","קחי נשימה עמוקה ותישארי רגועה."],["lonely","בודד",2,"He felt lonely in the new city.","הוא הרגיש בודד בעיר החדשה."],["grateful","אסיר תודה",3,"I'm grateful for your help.","אני אסירת תודה על העזרה שלך."],["upset","נסער / מוטרד",3,"She was upset about the news.","היא הייתה נסערת מהחדשות."],["relieved","הוקל לי",3,"I was relieved when the test was over.","הוקל לי כשהמבחן נגמר."]]},
+ {id:"timecal",he:"זמן ולוח שנה",t:"gen",w:[["morning","בוקר",1,"I run every morning.","אני רצה כל בוקר."],["evening","ערב",1,"We watch TV in the evening.","אנחנו צופים בטלוויזיה בערב."],["month","חודש",1,"I save money every month.","אני חוסכת כסף כל חודש."],["year","שנה",1,"Next year I want to travel.","בשנה הבאה אני רוצה לטייל."],["hour","שעה",1,"The meeting takes one hour.","הפגישה נמשכת שעה."],["weekend","סוף שבוע",1,"What are you doing this weekend?","מה את עושה בסוף השבוע?"],["early","מוקדם",1,"I wake up early.","אני מתעוררת מוקדם."],["late","מאוחר",1,"Sorry, I'm late.","סליחה, איחרתי."],["soon","בקרוב",2,"See you soon!","נתראה בקרוב!"],["already","כבר",2,"I have already paid.","כבר שילמתי."],["usually","בדרך כלל",2,"I usually walk to work.","בדרך כלל אני הולכת ברגל לעבודה."],["recently","לאחרונה",3,"I recently started a new course.","לאחרונה התחלתי קורס חדש."]]},
+ {id:"weather",he:"מזג אוויר וטבע",t:"gen",w:[["sun","שמש",1,"The sun is very strong today.","השמש מאוד חזקה היום."],["rain","גשם",1,"Take an umbrella, it may rain.","קחי מטרייה, אולי ירד גשם."],["hot","חם",1,"It's too hot outside.","חם מדי בחוץ."],["cold","קר",1,"The water is cold.","המים קרים."],["weather","מזג אוויר",1,"The weather is nice today.","מזג האוויר נעים היום."],["sea","ים",1,"We swim in the sea in summer.","אנחנו שוחים בים בקיץ."],["tree","עץ",1,"There is a big tree in our yard.","יש עץ גדול בחצר שלנו."],["wind","רוח",2,"The wind is strong near the beach.","הרוח חזקה ליד החוף."],["cloud","ענן",2,"There isn't a cloud in the sky.","אין אף ענן בשמיים."],["snow","שלג",2,"There is snow on the mountain.","יש שלג על ההר."],["forecast","תחזית",3,"The forecast says it will rain tomorrow.","התחזית אומרת שמחר ירד גשם."],["environment","סביבה",3,"We must protect the environment.","אנחנו חייבים להגן על הסביבה."]]},
+ {id:"city",he:"עיר ותחבורה",t:"gen",w:[["street","רחוב",1,"I live on a quiet street.","אני גרה ברחוב שקט."],["bus","אוטובוס",1,"I take the bus to work.","אני נוסעת באוטובוס לעבודה."],["train","רכבת",1,"The train leaves at eight.","הרכבת יוצאת בשמונה."],["car","מכונית",1,"Her car is new.","המכונית שלה חדשה."],["left","שמאלה / שמאל",1,"Turn left at the bank.","פני שמאלה ליד הבנק."],["right","ימינה / ימין / נכון",1,"The shop is on the right.","החנות בצד ימין."],["near","קרוב ל-",1,"Is there a pharmacy near here?","יש בית מרקחת קרוב לכאן?"],["far","רחוק",1,"The station is not far.","התחנה לא רחוקה."],["traffic","פקקים / תנועה",2,"There was a lot of traffic this morning.","היו הרבה פקקים הבוקר."],["parking","חניה",2,"Parking in the city is expensive.","חניה בעיר יקרה."],["station","תחנה",2,"Meet me at the station.","פגשי אותי בתחנה."],["crowded","צפוף",3,"The bus was very crowded.","האוטובוס היה צפוף מאוד."]]},
+ {id:"people",he:"משפחה ואנשים",t:"gen",w:[["family","משפחה",1,"My family lives in Haifa.","המשפחה שלי גרה בחיפה."],["mother","אמא",1,"My mother is a teacher.","אמא שלי מורה."],["father","אבא",1,"My father works at a bank.","אבא שלי עובד בבנק."],["brother","אח",1,"My brother is older than me.","אחי מבוגר ממני."],["sister","אחות",1,"My sister lives abroad.","אחותי גרה בחו\"ל."],["friend","חבר / חברה",1,"She is my best friend.","היא החברה הכי טובה שלי."],["husband","בעל",1,"My husband cooks very well.","בעלי מבשל טוב מאוד."],["kid","ילד",1,"The kid is playing in the park.","הילד משחק בפארק."],["parents","הורים",1,"I visit my parents every Friday.","אני מבקרת את ההורים שלי כל שישי."],["guest","אורח",2,"We have a guest tonight.","יש לנו אורח הערב."],["relationship","מערכת יחסים",3,"Trust is important in every relationship.","אמון חשוב בכל מערכת יחסים."],["generation","דור",3,"The young generation uses apps for everything.","הדור הצעיר משתמש באפליקציות לכל דבר."]]},
+ {id:"tech",he:"טכנולוגיה",t:"biz",w:[["phone","טלפון",1,"My phone battery is low.","הסוללה של הטלפון שלי חלשה."],["app","אפליקציה",1,"This app helps me learn English.","האפליקציה הזאת עוזרת לי ללמוד אנגלית."],["password","סיסמה",1,"Don't share your password.","אל תשתפי את הסיסמה שלך."],["download","להוריד (קובץ)",2,"You can download the file here.","את יכולה להוריד את הקובץ כאן."],["screen","מסך",2,"The screen is too bright.","המסך בהיר מדי."],["charge","לטעון / חיוב",2,"I need to charge my phone.","אני צריכה לטעון את הטלפון."],["update","עדכון / לעדכן",2,"Please update the app.","בבקשה עדכני את האפליקציה."],["online","באינטרנט / מקוון",1,"I buy most things online.","אני קונה את רוב הדברים באינטרנט."],["message","הודעה",1,"I sent you a message.","שלחתי לך הודעה."],["link","קישור",2,"Click the link to open the page.","לחצי על הקישור כדי לפתוח את הדף."],["data","נתונים / מידע",3,"The app collects data about your progress.","האפליקציה אוספת נתונים על ההתקדמות שלך."],["device","מכשיר",3,"You can use the app on any device.","אפשר להשתמש באפליקציה בכל מכשיר."]]},
+ {id:"school",he:"לימודים",t:"grow",w:[["teacher","מורה",1,"Our teacher is very patient.","המורה שלנו סבלנית מאוד."],["student","תלמיד / סטודנט",1,"I am a student again!","אני שוב סטודנטית!"],["lesson","שיעור",1,"The lesson starts at ten.","השיעור מתחיל בעשר."],["question","שאלה",1,"Can I ask a question?","אפשר לשאול שאלה?"],["answer","תשובה / לענות",1,"I know the answer.","אני יודעת את התשובה."],["word","מילה",1,"This word is new for me.","המילה הזאת חדשה בשבילי."],["practice","לתרגל / תרגול",2,"Practice makes perfect.","תרגול מביא לשלמות."],["exam","מבחן",2,"The exam is next week.","המבחן בשבוע הבא."],["course","קורס",2,"I took an online course.","לקחתי קורס מקוון."],["understand","להבין",1,"I understand you better now.","אני מבינה אותך טוב יותר עכשיו."],["remember","לזכור",2,"I can't remember his name.","אני לא זוכרת את השם שלו."],["knowledge","ידע",3,"Knowledge is power.","ידע הוא כוח."]]},
+ {id:"verbs",he:"פעלים יומיומיים",t:"gen",w:[["go","ללכת / לנסוע",1,"I go to the gym three times a week.","אני הולכת לחדר כושר שלוש פעמים בשבוע."],["come","לבוא",1,"Can you come to the meeting?","את יכולה לבוא לפגישה?"],["make","לעשות / להכין",1,"I make coffee every morning.","אני מכינה קפה כל בוקר."],["take","לקחת",1,"Take your time.","קחי את הזמן."],["give","לתת",1,"Give me a minute.","תני לי דקה."],["find","למצוא",1,"I can't find my keys.","אני לא מוצאת את המפתחות שלי."],["think","לחשוב",1,"I think it's a good idea.","אני חושבת שזה רעיון טוב."],["know","לדעת / להכיר",1,"Do you know the answer?","את יודעת את התשובה?"],["want","לרצות",1,"I want to speak English fluently.","אני רוצה לדבר אנגלית שוטפת."],["need","להצטרך",1,"I need more time.","אני צריכה עוד זמן."],["try","לנסות",1,"Try again tomorrow.","נסי שוב מחר."],["choose","לבחור",2,"Choose the right answer.","בחרי את התשובה הנכונה."]]},
+ {id:"adjectives",he:"תארים שימושיים",t:"gen",w:[["big","גדול",1,"They live in a big house.","הם גרים בבית גדול."],["small","קטן",1,"I have a small car.","יש לי מכונית קטנה."],["new","חדש",1,"I bought a new phone.","קניתי טלפון חדש."],["old","ישן / זקן",1,"This is an old building.","זה בניין ישן."],["fast","מהיר",1,"The train is very fast.","הרכבת מהירה מאוד."],["slow","איטי",1,"The internet is slow today.","האינטרנט איטי היום."],["important","חשוב",1,"This is an important meeting.","זו פגישה חשובה."],["busy","עסוק",1,"I'm busy today.","אני עסוקה היום."],["free","חופשי / חינם",1,"The lesson is free.","השיעור בחינם."],["quiet","שקט",2,"The library is quiet.","הספרייה שקטה."],["useful","שימושי",2,"This app is very useful.","האפליקציה הזאת שימושית מאוד."],["simple","פשוט",2,"The rules are simple.","הכללים פשוטים."]]},
+ {id:"talk",he:"שיחה ותקשורת",t:"grow",w:[["say","לומר",1,"What did you say?","מה אמרת?"],["tell","לספר / להגיד ל-",1,"Tell me about your day.","ספרי לי על היום שלך."],["ask","לשאול / לבקש",1,"Can I ask you something?","אפשר לשאול אותך משהו?"],["call","להתקשר / שיחה",1,"I'll call you later.","אתקשר אלייך אחר כך."],["agree","להסכים",2,"I agree with you.","אני מסכימה איתך."],["explain","להסביר",2,"Can you explain it again?","את יכולה להסביר שוב?"],["advice","עצה",2,"Thanks for the advice.","תודה על העצה."],["opinion","דעה",2,"In my opinion, it's a good plan.","לדעתי, זו תוכנית טובה."],["mean","להתכוון / משמעות",2,"What do you mean?","למה את מתכוונת?"],["suggest","להציע",3,"I suggest we meet on Sunday.","אני מציעה שניפגש ביום ראשון."],["apologize","להתנצל",3,"I apologize for the delay.","אני מתנצלת על העיכוב."],["mention","להזכיר (בדיבור)",3,"She didn't mention the price.","היא לא הזכירה את המחיר."]]},
+ {id:"money2",he:"כסף ביום-יום",t:"fin",w:[["cost","עלות / לעלות",1,"How much does it cost?","כמה זה עולה?"],["spend","להוציא (כסף / זמן)",1,"I spend too much on coffee.","אני מוציאה יותר מדי על קפה."],["earn","להרוויח",2,"I earn more money this year.","אני מרוויחה יותר כסף השנה."],["borrow","ללוות (לקחת)",2,"Can I borrow some money?","אפשר ללוות קצת כסף?"],["lend","להלוות (לתת)",2,"I can lend you fifty shekels.","אני יכולה להלוות לך חמישים שקל."],["owe","להיות חייב",2,"I owe you ten dollars.","אני חייבת לך עשרה דולר."],["tax","מס",2,"We pay tax on our income.","אנחנו משלמים מס על ההכנסה שלנו."],["wallet","ארנק",1,"I left my wallet at home.","השארתי את הארנק בבית."],["fee","עמלה / תשלום",3,"The bank charges a monthly fee.","הבנק גובה עמלה חודשית."],["coin","מטבע",1,"I found a coin on the street.","מצאתי מטבע ברחוב."],["insurance","ביטוח",3,"Car insurance is expensive here.","ביטוח רכב יקר כאן."],["pension","פנסיה",3,"It's important to save for your pension.","חשוב לחסוך לפנסיה."]]},
+ {id:"sport2",he:"ספורט ופנאי",t:"sport",w:[["ball","כדור",1,"Pass me the ball!","תמסרי לי את הכדור!"],["gym","חדר כושר",1,"I go to the gym after work.","אני הולכת לחדר כושר אחרי העבודה."],["swim","לשחות",1,"I swim twice a week.","אני שוחה פעמיים בשבוע."],["walk","ללכת ברגל / הליכה",1,"Let's go for a walk.","בואי נצא להליכה."],["fan","אוהד",2,"He is a big football fan.","הוא אוהד כדורגל גדול."],["stadium","אצטדיון",2,"The stadium was full.","האצטדיון היה מלא."],["exercise","פעילות גופנית / תרגיל",2,"Exercise is good for your mind.","פעילות גופנית טובה לנפש."],["muscle","שריר",2,"My leg muscle hurts after running.","שריר הרגל שלי כואב אחרי ריצה."],["warm up","להתחמם (לפני אימון)",2,"Always warm up before you run.","תמיד תתחממי לפני שאת רצה."],["referee","שופט (במשחק)",3,"The referee stopped the game.","השופט עצר את המשחק."],["draw","תיקו / לצייר",3,"The match ended in a draw.","המשחק נגמר בתיקו."],["hobby","תחביב",2,"Reading is my favorite hobby.","קריאה היא התחביב האהוב עליי."]]},
+ {id:"growth2",he:"מטרות והרגלים",t:"grow",w:[["dream","חלום",1,"My dream is to live abroad.","החלום שלי הוא לגור בחו\"ל."],["start","להתחיל",1,"Start with small steps.","תתחילי בצעדים קטנים."],["finish","לסיים",1,"I want to finish the book this week.","אני רוצה לסיים את הספר השבוע."],["step","צעד",1,"Take one small step every day.","עשי צעד קטן אחד כל יום."],["progress","התקדמות",2,"I see progress every week.","אני רואה התקדמות כל שבוע."],["patience","סבלנות",2,"Learning a language takes patience.","לימוד שפה דורש סבלנות."],["challenge","אתגר",2,"Speaking English is a fun challenge.","לדבר אנגלית זה אתגר כיפי."],["believe","להאמין",2,"Believe in yourself.","תאמיני בעצמך."],["fail","להיכשל",2,"It's okay to fail sometimes.","זה בסדר להיכשל לפעמים."],["priority","עדיפות",3,"Health is my first priority.","הבריאות היא העדיפות הראשונה שלי."],["balance","איזון",3,"I try to find balance between work and life.","אני מנסה למצוא איזון בין עבודה לחיים."],["commitment","מחויבות",3,"Learning every day needs commitment.","ללמוד כל יום דורש מחויבות."]]},
+ {id:"meetings",he:"פגישות ועסקים",t:"biz",w:[["agenda","סדר יום (בפגישה)",3,"Let's look at today's agenda.","בואו נסתכל על סדר היום של היום."],["client","לקוח",2,"I have a call with a client.","יש לי שיחה עם לקוח."],["offer","הצעה / להציע",2,"We made them a good offer.","הצענו להם הצעה טובה."],["contract","חוזה",2,"Please sign the contract.","בבקשה חתמי על החוזה."],["sign","לחתום / שלט",2,"Sign here, please.","חתמי כאן, בבקשה."],["decision","החלטה",2,"We need a decision today.","אנחנו צריכים החלטה היום."],["quarter","רבעון / רבע",3,"Sales grew in the second quarter.","המכירות גדלו ברבעון השני."],["sales","מכירות",2,"Sales went up this quarter.","המכירות עלו ברבעון הזה."],["partner","שותף",2,"He is my business partner.","הוא השותף העסקי שלי."],["presentation","מצגת",3,"I'm preparing a presentation.","אני מכינה מצגת."],["proposal","הצעה (מסודרת)",3,"We sent the proposal yesterday.","שלחנו את ההצעה אתמול."],["follow up","לעקוב / להמשיך בקשר",3,"I'll follow up with an email.","אמשיך בקשר עם מייל."]]}
+];
+PACKS.forEach(p=>p.w.forEach(([en,he,l,e1,e2])=>{VOCAB.push({en,he,t:p.t,l,p:p.id});EX[en]=[[e1,e2]];}));
+const dayNo=()=>Math.floor(new Date().setHours(12,0,0,0)/86400000);
+const todayPack=()=>PACKS[dayNo()%PACKS.length];
 const GQ=[
  {id:"g1",l:1,s:"Yesterday I ___ to the bank.",o:["go","went","will go"],a:1,he:"אתמול הלכתי לבנק.",why:"yesterday = עבר, ולכן went (צורת העבר של go)."},
  {id:"g2",l:1,s:"She ___ in an office every day.",o:["work","works","working"],a:1,he:"היא עובדת במשרד כל יום.",why:"every day = הרגל, הווה פשוט. אחרי she מוסיפים s: works."},
@@ -885,7 +913,7 @@ function aiErr(e){
 function updateAI(){
   const ok=aiReady();
   ["sGen","lGen","spStart"].forEach(id=>{$(id).disabled=!ok;$(id).title=ok?"":"זמין כשהדף פתוח ב-Claude";});
-  $("wAiNote").textContent=ok?"התרגום מתמלא לבד, ואפשר לבחור משמעות אחרת או לתקן. Claude יוסיף גם משפט דוגמה.":"התרגום מתמלא לבד (צריך חיבור לאינטרנט), ואפשר לבחור משמעות אחרת או לתקן.";
+  $("wAiNote").textContent=ok?"התרגום מופיע מתחת לשדה, ואפשר לבחור משמעות אחרת או לתקן. Claude יוסיף גם משפט דוגמה.":"התרגום מופיע מתחת לשדה (צריך חיבור לאינטרנט), ואפשר לבחור משמעות אחרת או לתקן.";
 }
 const LEVEL_DESC=n=>"CEFR "+LEVELS[n-1].cefr+" (level "+n+" of 5"+(n<=2?", a beginner: very short sentences, the most common 1000 words":"")+")";
 function focusWords(){return Object.values(S.my).filter(w=>w.status!=="known").sort((a,b)=>(b.status==="focus")-(a.status==="focus")).slice(0,12).map(w=>w.en);}
@@ -983,7 +1011,17 @@ function renderHome(){
   BADGES.forEach(b=>{const ok=b.ok();if(ok)on++;bx.append(el("div",{class:"badge"+(ok?" on":""),title:b.d},el("div",{class:"medal",text:ok?"★":"?"}),el("b",{text:b.t}),el("span",{class:"small",text:b.d})));});
   $("badgeCount").textContent=on+" מתוך "+BADGES.length;
   const dc=dueCount();$("swRoomTxt").textContent=dc?(dc+" מילים מחכות לחזרה"):"ימינה = יודעת, שמאלה = עוד לא";
+  renderPack();
   renderWotd();
+}
+function renderPack(){
+  const P=todayPack();const c=$("packCard");c.textContent="";
+  const ws=VOCAB.filter(w=>w.p===P.id);const seen=ws.filter(w=>S.srs[wkey(w.en)]).length;
+  c.append(el("div",{class:"row",style:"justify-content:space-between"},el("h3",{text:"חבילת המילים של היום: "+P.he}),el("span",{class:"small muted",text:"נלמדו "+seen+" מתוך "+ws.length})));
+  const chips=el("div",{class:"chips",style:"margin-top:10px"});
+  ws.forEach(w=>{const st=S.srs[wkey(w.en)];chips.append(el("button",{class:"chip en",dir:"ltr","aria-pressed":st&&st.box>=2?"true":"false",title:w.he,text:w.en,onclick:()=>{speak(w.en,{rate:0.85});toast(w.en+" = "+w.he,2200);}}));});
+  c.append(chips);
+  c.append(el("div",{class:"row",style:"margin-top:10px;justify-content:space-between"},el("span",{class:"small muted",text:"מחר תגיע חבילה חדשה. מילים שכבר למדת ימשיכו לחזור בהחלקה ובמשחקים."}),el("button",{class:"btn",style:"background:var(--mine)",text:"ללמוד בהחלקה",onclick:openSwipe})));
 }
 function renderWotd(){
   const pool=VOCAB.filter(w=>w.l===lvl());const d=new Date();const i=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%pool.length;
@@ -1020,7 +1058,7 @@ async function mmTranslate(q,he){
 async function translateWord(q){
   q=String(q||"").replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069]/g,"").trim();const k=q.toLowerCase();if(!q)return null;if(tCache[k])return tCache[k];
   const he=isHeb(q);let r=null;
-  const split=x=>String(x||"").split(/[\/,;]| או /).map(y=>y.trim()).filter(Boolean);
+  const split=x=>String(x||"").replace(/\(.*?\)/g,"").split(/[\/,;]| או /).map(y=>y.trim()).filter(Boolean);
   const v=VOCAB.find(w=>he?split(w.he).includes(q):w.en.toLowerCase()===k);
   if(v){const e=firstEx(v.en);r={main:he?v.en:v.he,alts:[],ex:e[0]?e:null};}
   if(!r){const m=Object.values(S.my).find(w=>w.he&&(he?split(w.he).includes(q):w.en.toLowerCase()===k));if(m)r={main:he?m.en:m.he,alts:[],ex:m.ex?[m.ex,m.exHe||""]:null};}
@@ -1042,14 +1080,22 @@ function wPair(){
   const q=tidy($("wEn").value),t=tidy($("wHe").value);
   return isHeb(q)?{en:t,he:q}:{en:q,he:t};
 }
+function editTr(p,keep){
+  if(!keep)p.querySelector(".tr")?.remove();
+  const inp=el("input",{type:"text",dir:"auto",autocomplete:"off",autocapitalize:"off","aria-label":"תרגום",placeholder:isHeb(tidy($("wEn").value))?"המילה באנגלית":"התרגום בעברית"});
+  inp.value=$("wHe").value;
+  inp.addEventListener("input",()=>{$("wHe").value=inp.value;heAuto=!inp.value.trim();});
+  inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("wForm").requestSubmit();}});
+  p.prepend(el("div",{class:"tr"},inp));inp.focus();
+}
 function renderPrev(state){
   const p=$("wPrev");const q=$("wEn").value.trim();
   if(!q){p.hidden=true;return;}
   p.hidden=false;p.textContent="";
   if(state==="loading"){p.append(el("div",{class:"small muted"},el("span",{class:"spin"})," מתרגמת..."));return;}
-  if(!tRes){p.append(el("div",{class:"small",text:navigator.onLine===false?"אין חיבור לאינטרנט, ולכן אין תרגום אוטומטי. אפשר לכתוב את התרגום בעצמך בשדה השני.":"לא מצאתי תרגום למילה הזאת. בדקי את האיות, או כתבי את התרגום בעצמך בשדה השני."}));return;}
-  const {en}=wPair();
-  if(en)p.append(el("div",{class:"tr"},speakBtn(en),el("span",{class:"small muted",text:"האזנה ל-"}),el("span",{class:"en",dir:"ltr",style:"font-weight:700",text:en})));
+  if(!tRes&&!tidy($("wHe").value)){p.append(el("div",{class:"small",text:navigator.onLine===false?"אין חיבור לאינטרנט, ולכן אין תרגום אוטומטי. אפשר לכתוב את התרגום כאן:":"לא מצאתי תרגום. בדקי את האיות, או כתבי את התרגום כאן:"}));editTr(p,true);return;}
+  const {en}=wPair();const heIn=isHeb(tidy($("wEn").value));const tr=tidy($("wHe").value);
+  p.append(el("div",{class:"tr"},el("span",{class:"small muted",text:heIn?"באנגלית:":"בעברית:"}),el("b",{class:heIn?"en":"",dir:"auto",style:"font-size:1.25rem",text:tr}),en?speakBtn(en):null,el("button",{type:"button",class:"btn ghost small",style:"padding:2px 10px",text:"✎ תיקון",onclick:()=>editTr(p)})));
   if(tRes.alts&&tRes.alts.length){const a=el("div",{class:"alts"},el("span",{class:"small muted",text:"עוד משמעויות:"}));
     tRes.alts.forEach(x=>a.append(el("button",{type:"button",dir:"auto",text:x,onclick:()=>{$("wHe").value=x;heAuto=false;renderPrev();}})));p.append(a);}
   if(tRes.ex&&tRes.ex[0])p.append(el("div",{class:"en small",dir:"ltr",style:"text-align:left",text:tRes.ex[0]}),tRes.ex[1]?el("div",{class:"small muted",text:tRes.ex[1]}):"");
@@ -1066,7 +1112,7 @@ async function runTranslate(){
   renderPrev();return r;
 }
 $("wEn").addEventListener("input",()=>{heAuto=true;if(!$("wEn").value.trim())$("wHe").value="";clearTimeout(tTimer);tTimer=setTimeout(runTranslate,600);});
-$("wHe").addEventListener("input",()=>{heAuto=!$("wHe").value.trim();renderPrev();});
+
 function addWord(en,he,ex,src){
   const k=wkey(en);if(!k)return;
   if(S.my[k]){toast("המילה כבר ברשימה");return;}
@@ -1178,17 +1224,18 @@ $("fFocus").onclick=()=>flashAnswer("focus");
 $("fClose").onclick=()=>{$("flash").hidden=true;renderWords();};
 
 /* ---------------- memory ---------------- */
-const mem={topic:"all",cards:[],open:[],lock:false,moves:0,matched:0,pairs:0,words:[]};
+const mem={topic:"pack",cards:[],open:[],lock:false,moves:0,matched:0,pairs:0,words:[]};
 function myPool(){return Object.values(S.my).filter(w=>w.he&&w.status!=="known").map(w=>({en:w.en,he:w.he,t:"mine",l:1,focus:w.status==="focus"}));}
 function renderMemTopics(){
   const box=$("memTopics");box.textContent="";
-  const keys=Object.keys(TOPICS);if(myPool().length>=2)keys.splice(1,0,"mine");
-  keys.forEach(k=>box.append(el("button",{class:"chip","aria-pressed":mem.topic===k?"true":"false",text:k==="mine"?"המילים שלי":TOPICS[k],onclick:()=>{mem.topic=k;renderMemTopics();newMemory();}})));
+  const keys=Object.keys(TOPICS);if(myPool().length>=2)keys.splice(1,0,"mine");keys.unshift("pack");
+  keys.forEach(k=>box.append(el("button",{class:"chip","aria-pressed":mem.topic===k?"true":"false",text:k==="pack"?"חבילת היום":k==="mine"?"המילים שלי":TOPICS[k],onclick:()=>{mem.topic=k;renderMemTopics();newMemory();}})));
 }
 function newMemory(){
   const L=lvl();const n=[4,6,6,8,8][L-1];
   let pool;
   if(mem.topic==="mine"){pool=myPool().map(w=>({w,k:(w.focus?0:1)+Math.random()*1.5})).sort((a,b)=>a.k-b.k).map(x=>x.w).slice(0,n);}
+  else if(mem.topic==="pack"){pool=shuffle(VOCAB.filter(w=>w.p===todayPack().id)).sort((a,b)=>(S.words[a.en]||0)-(S.words[b.en]||0)).slice(0,n);}
   else{
     pool=VOCAB.filter(w=>w.l<=L&&(mem.topic==="all"||w.t===mem.topic)&&!(S.my[wkey(w.en)]&&S.my[wkey(w.en)].status==="known"));
     pool=pool.map(w=>({w,k:(w.l===L?0:1.2)+(S.words[w.en]||0)*0.6+Math.random()*1.5-((S.my[wkey(w.en)]||{}).status==="focus"?2:0)})).sort((a,b)=>a.k-b.k).map(x=>x.w).slice(0,n);
@@ -1570,7 +1617,7 @@ let deck=[],dIdx=0,dStats={yes:0,no:0},dLeft={};
 function swipePool(){
   const L=lvl();const map=new Map();
   Object.values(S.my).forEach(w=>{if(w.he)map.set(wkey(w.en),{en:w.en,he:w.he,t:"mine"});});
-  VOCAB.forEach(w=>{const k=wkey(w.en);if(!map.has(k))map.set(k,{en:w.en,he:w.he,t:w.t,l:w.l});});
+  VOCAB.forEach(w=>{const k=wkey(w.en);if(!map.has(k))map.set(k,{en:w.en,he:w.he,t:w.t,l:w.l,p:w.p});});
   return [...map.entries()].map(([k,w])=>Object.assign({k},w));
 }
 let exBusy=false;
@@ -1606,7 +1653,9 @@ function buildDeck(){
   const due=pool.filter(w=>S.srs[w.k]&&S.srs[w.k].due<=now);
   const hard=due.filter(w=>S.srs[w.k].box===0).sort((a,b)=>S.srs[a.k].due-S.srs[b.k].due).slice(0,4);
   const rev=due.filter(w=>S.srs[w.k].box>0).sort((a,b)=>S.srs[a.k].due-S.srs[b.k].due).slice(0,4);
-  let fresh=freshMix(pool.filter(w=>!S.srs[w.k]),Math.max(6,14-hard.length-rev.length));
+  const nFresh=Math.max(6,14-hard.length-rev.length);const tp=todayPack().id;
+  const packNew=shuffle(pool.filter(w=>!S.srs[w.k]&&w.p===tp)).slice(0,6);
+  let fresh=packNew.concat(freshMix(pool.filter(w=>!S.srs[w.k]&&!packNew.includes(w)),nFresh-packNew.length));
   let base=shuffle(rev.concat(fresh));
   if(base.length+hard.length<8){
     // everything seen and nothing due: extra practice with the words seen longest ago
@@ -1716,7 +1765,7 @@ function cardEl(w,under){
   if(under&&!w._ex){const L=exList(w.k,w.en);const e=L.length?L[((S.exi||{})[w.k]||0)%L.length]:['',''];w.ex=e[0];w.exHe=e[1];}
   const c=el("div",{class:"scard"+(under?" under":"")});
   c.append(el("div",{class:"band",style:"background:var(--"+(TCOL[w.t]||"gen")+")"}));
-  c.append(el("span",{class:"tag",style:"background:var(--"+(TCOL[w.t]||"gen")+"-soft)",text:w.t==="mine"?"מהמילים שלי":TOPICS[w.t]||""}));
+  c.append(el("span",{class:"tag",style:"background:var(--"+(TCOL[w.t]||"gen")+"-soft)",text:w.t==="mine"?"מהמילים שלי":(w.p&&w.p===todayPack().id?"חבילת היום · "+todayPack().he:TOPICS[w.t]||"")}));
   c.append(el("div",{class:"w",text:w.en}));
   if(w.ex){const exl=el("div",{class:"ex",style:"font-size:1.05rem;line-height:1.5;max-width:28ch"});exl.append(...hiWord(w.ex,w.en));c.append(exl);}
   const back=el("div",{class:"back",hidden:"hidden"},el("div",{class:"he",text:w.he}));
