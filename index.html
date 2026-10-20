@@ -1,0 +1,1721 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="English Path">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F3F6F4">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="apple-touch-icon.png">
+<title>English Path</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Suez+One&family=Assistant:wght@400;600;700&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+<style>
+/* Layout: a garden-journal app. Home is "your tree" + today's missions; each practice room has its own topic color; cards only where you act */
+:root{
+  --paper:#F3F6F4; --card:#FFFFFF; --ink:#18241F; --muted:#5D6B66; --line:#DCE3DF;
+  --blue:#2E5BBA; --blue-soft:#E4EBF9; --accent:#E8960C; --accent-soft:#FDF0D6;
+  --good:#23845A; --good-soft:#DDF2E7; --bad:#C2413A; --bad-soft:#F9E1DF;
+  --fin:#1F9D6B; --fin-soft:#DDF3E9; --biz:#3467D6; --biz-soft:#E2EAFB; --sport:#E26A2C; --sport-soft:#FCE6DA; --grow:#8754E8; --grow-soft:#EEE6FC; --gen:#C2862A; --gen-soft:#F7ECD9; --mine:#D2477A; --mine-soft:#FBE3EC;
+  --leaf1:#3FA45B; --leaf2:#6CC070; --leaf3:#2E8A4E; --trunk:#7A5236; --pot:#D9774A; --pot-rim:#C0623A; --fruit:#F2A516; --bloom:#F59CB8; --sky:#E5F1F8; --soil:#B48A64;
+  --f-display:"Suez One", "Assistant", Georgia, serif;
+  --f-body:"Assistant", "Segoe UI", Arial, sans-serif;
+  --f-en:"Literata", Georgia, "Times New Roman", serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F1714; --card:#17221E; --ink:#E6EEEA; --muted:#9AAAA3; --line:#2A3833;
+  --blue:#8AA8F0; --blue-soft:#1D2A45; --accent:#F4B53A; --accent-soft:#3A2E14;
+  --good:#4CC38A; --good-soft:#163A2B; --bad:#F07368; --bad-soft:#40201F;
+  --fin:#4ACB95; --fin-soft:#15342A; --biz:#7FA3F2; --biz-soft:#1B2945; --sport:#F59362; --sport-soft:#3D2418; --grow:#B28DF5; --grow-soft:#2C2145; --gen:#E0AC5A; --gen-soft:#3A2C17; --mine:#F07AA6; --mine-soft:#3F1D2B;
+  --leaf1:#4DB86A; --leaf2:#79CF7D; --leaf3:#2F9A55; --trunk:#A47552; --pot:#C9693E; --pot-rim:#A9542F; --fruit:#F7B638; --bloom:#F2A0BC; --sky:#16262C; --soil:#6E5640; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F1714; --card:#17221E; --ink:#E6EEEA; --muted:#9AAAA3; --line:#2A3833;
+  --blue:#8AA8F0; --blue-soft:#1D2A45; --accent:#F4B53A; --accent-soft:#3A2E14;
+  --good:#4CC38A; --good-soft:#163A2B; --bad:#F07368; --bad-soft:#40201F;
+  --fin:#4ACB95; --fin-soft:#15342A; --biz:#7FA3F2; --biz-soft:#1B2945; --sport:#F59362; --sport-soft:#3D2418; --grow:#B28DF5; --grow-soft:#2C2145; --gen:#E0AC5A; --gen-soft:#3A2C17; --mine:#F07AA6; --mine-soft:#3F1D2B;
+  --leaf1:#4DB86A; --leaf2:#79CF7D; --leaf3:#2F9A55; --trunk:#A47552; --pot:#C9693E; --pot-rim:#A9542F; --fruit:#F7B638; --bloom:#F2A0BC; --sky:#16262C; --soil:#6E5640; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+.en{font-family:var(--f-en);direction:ltr;unicode-bidi:isolate}
+.wrap{max-width:900px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;line-height:1.2;text-wrap:balance;margin:0}
+h2{font-size:1.6rem} h3{font-size:1.2rem}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.muted{color:var(--muted)} .small{font-size:.875rem}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line)}
+.top-in{max-width:900px;margin:0 auto;padding:10px 16px 6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:1.3rem;color:var(--fin);display:flex;align-items:center;gap:8px}
+.brand svg{width:26px;height:26px}
+.hud{margin-inline-start:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 11px;font-weight:700;font-size:.9rem;font-variant-numeric:tabular-nums;background:var(--card);border:1px solid var(--line);position:relative}
+.pill svg{width:16px;height:16px}
+.pill.flame{color:var(--sport)} .pill.drop{color:var(--biz)} .pill.lv{background:var(--fin);color:var(--paper);border-color:var(--fin)}
+.lvbar{height:6px;background:var(--line);border-radius:999px;overflow:hidden;max-width:900px;margin:0 auto 6px;width:calc(100% - 32px)}
+.lvbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--fin),var(--accent));border-radius:999px;transition:width .6s}
+nav.tabs{max-width:900px;margin:0 auto;padding:0 16px 8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.tabs button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;white-space:nowrap;font-weight:600;display:inline-flex;gap:6px;align-items:center}
+nav.tabs button i{width:9px;height:9px;border-radius:50%;display:inline-block}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.float{position:absolute;inset-inline-start:50%;top:-4px;font-weight:700;color:var(--accent);pointer-events:none;animation:fl 1.2s ease-out forwards;white-space:nowrap}
+@keyframes fl{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-28px)}}
+
+section.view{padding-top:22px;display:flex;flex-direction:column;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border:none;background:var(--fin);color:#fff;border-radius:10px;padding:9px 18px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn.alt{background:var(--blue-soft);color:var(--blue)}
+.btn.gold{background:var(--accent);color:#1B1405}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 12px;font-size:.9rem}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:700}
+.tag{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.03em;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--ink)}
+.icon-btn{border:1px solid var(--line);background:var(--card);border-radius:999px;width:34px;height:34px;display:inline-grid;place-items:center;flex:none;padding:0}
+.icon-btn svg{width:17px;height:17px;fill:currentColor}
+input[type=text]{font:inherit;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;padding:9px 12px;min-width:0}
+select{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 8px}
+
+/* home: garden */
+.garden{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:0;padding:0;overflow:hidden}
+@media (max-width:640px){.garden{grid-template-columns:1fr}}
+.tree-box{background:linear-gradient(180deg,var(--sky),var(--card));display:grid;place-items:center;padding:12px;position:relative;min-height:240px}
+.tree-box svg{width:100%;max-width:280px;height:auto}
+.tree-box .drop-anim{position:absolute;top:10px;inset-inline-start:50%;width:22px;height:22px;animation:drop 1.4s ease-in 2}
+@keyframes drop{0%{transform:translateY(0);opacity:1}100%{transform:translateY(140px);opacity:0}}
+.leaf{transform-box:fill-box;transform-origin:center;animation:sway 5s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){.leaf,.float,.tree-box .drop-anim{animation:none}.lvbar>i{transition:none}}
+.garden-info{padding:18px;display:flex;flex-direction:column;gap:12px}
+.ring-row{display:flex;gap:14px;align-items:center}
+.ring{width:84px;height:84px;flex:none}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.fact{background:var(--paper);border-radius:10px;padding:8px 10px}
+.fact b{display:block;font-family:var(--f-display);font-weight:400;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.missions{display:flex;flex-direction:column;gap:8px}
+.mission{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--paper)}
+.mission .chk{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
+.mission.done .chk{background:var(--good);border-color:var(--good)}
+.mission.done .chk svg{display:block}
+.mission .chk svg{display:none;width:14px;height:14px;fill:#fff}
+.mission .mbar{flex:1;min-width:0}
+.mission .mbar div{height:5px;background:var(--line);border-radius:9px;margin-top:4px;overflow:hidden}
+.mission .mbar div i{display:block;height:100%;background:var(--good)}
+.rooms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:700px){.rooms{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.room{text-align:start;border:none;border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:4px;min-height:132px;position:relative;overflow:hidden}
+.room svg.art{position:absolute;inset-inline-end:-8px;bottom:-8px;width:72px;height:72px;opacity:.9}
+.room h3{font-size:1.1rem;position:relative}
+.room span{position:relative;max-width:78%}
+.room:hover{filter:brightness(.98);transform:translateY(-1px)}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.badge{text-align:center;font-size:.8rem;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted)}
+.badge .medal{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:var(--line);color:var(--card);font-family:var(--f-display);font-size:1.1rem}
+.badge.on{color:var(--ink)} .badge.on .medal{background:radial-gradient(circle at 35% 30%,#FFE08A,var(--accent));color:#5A3A00;box-shadow:0 2px 0 var(--pot-rim)}
+.wotd{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wotd .en{font-size:1.6rem}
+
+/* my words */
+.addbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px}
+@media (max-width:560px){.addbar{grid-template-columns:1fr 1fr}.addbar .btn{grid-column:1/-1;justify-content:center}}
+.wlist{display:flex;flex-direction:column}
+.wrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.wrow:first-child{border-top:none}
+.wrow .w-en{font-weight:600;font-size:1.05rem}
+.wrow .w-ex{font-size:.85rem;color:var(--muted)}
+.seg{display:flex;gap:4px}
+.seg button{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:4px 9px;font-size:.82rem;white-space:nowrap}
+.seg button.on-known{background:var(--good);border-color:var(--good);color:#fff}
+.seg button.on-focus{background:var(--accent);border-color:var(--accent);color:#1B1405}
+.seg button.del{color:var(--bad)}
+.flash{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:26px 18px;background:linear-gradient(160deg,var(--mine-soft),var(--card))}
+.flash .big{font-size:2rem}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-inline-end:4px}
+
+/* memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.mcard{aspect-ratio:4/3;max-width:100%;border:none;border-radius:12px;padding:0;perspective:800px;background:none}
+.mcard .in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.mcard.open .in,.mcard.matched .in{transform:rotateY(180deg)}
+.mcard .face{position:absolute;inset:0;border-radius:12px;display:grid;place-items:center;padding:6px;backface-visibility:hidden;-webkit-backface-visibility:hidden;text-align:center;overflow-wrap:anywhere;line-height:1.2}
+.mcard .back{background:var(--fin);background-image:radial-gradient(circle at 30% 30%,rgba(255,255,255,.18) 0 18%,transparent 19%),radial-gradient(circle at 70% 70%,rgba(255,255,255,.12) 0 14%,transparent 15%);color:#fff;font-family:var(--f-display);font-size:1.4rem}
+.mcard .front{transform:rotateY(180deg);background:var(--card);border:2px solid var(--line);font-size:clamp(.8rem,2.6vw,1.1rem)}
+.mcard .front.en{font-weight:600}
+.mcard.matched .front{border-color:var(--good);background:var(--good-soft)}
+@media (prefers-reduced-motion:reduce){.mcard .in{transition:none}}
+
+/* sentences */
+.prompt-he{font-size:1.35rem;font-weight:700}
+.slots{min-height:64px;border:2px dashed var(--line);border-radius:10px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.slots.ok{border-color:var(--good);border-style:solid;background:var(--good-soft)}
+.slots.no{border-color:var(--bad);border-style:solid;background:var(--bad-soft)}
+.bank{display:flex;flex-wrap:wrap;gap:8px}
+.tile{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:6px 12px;font-family:var(--f-en);font-size:1.05rem;box-shadow:0 2px 0 var(--line)}
+.tile.used{visibility:hidden}
+.result{border-radius:10px;padding:12px 14px}
+.result.ok{background:var(--good-soft)} .result.no{background:var(--bad-soft)}
+.grammar{background:var(--biz-soft);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.grammar code,.tense-item code{font-family:var(--f-en);direction:ltr;unicode-bidi:isolate;background:var(--card);padding:1px 6px;border-radius:5px}
+.tense-table{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.tense-item{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--card)}
+.tense-item.locked{opacity:.5}
+
+/* listening */
+.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.pcard{text-align:start;border:1px solid var(--line);background:var(--card);border-radius:var(--r);padding:0;display:flex;flex-direction:column;overflow:hidden}
+.pcard .band{height:8px}
+.pcard .body{padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.pcard:hover{border-color:var(--ink)}
+.pcard .en{font-weight:600;font-size:1.05rem}
+.player{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ptext{font-family:var(--f-en);direction:ltr;text-align:left;font-size:1.1rem;line-height:1.8;background:var(--paper);border-radius:10px;padding:14px}
+.ptext span{cursor:pointer;border-radius:4px}
+.ptext span.now{background:var(--accent-soft);box-shadow:0 0 0 2px var(--accent-soft)}
+.q{display:flex;flex-direction:column;gap:8px;padding-block:12px;border-top:1px solid var(--line)}
+.q:first-child{border-top:none}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{text-align:left;direction:ltr;font-family:var(--f-en);border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:8px 12px}
+.opt.right{background:var(--good-soft);border-color:var(--good)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+
+/* speaking */
+.chat{display:flex;flex-direction:column;gap:12px;max-height:60vh;overflow-y:auto;padding:4px}
+.msg{max-width:88%;display:flex;flex-direction:column;gap:6px}
+.msg.ai{align-self:flex-end} .msg.me{align-self:flex-start}
+.bubble{border-radius:14px;padding:10px 14px;direction:ltr;text-align:left;font-family:var(--f-en)}
+.msg.ai .bubble{background:var(--grow-soft)}
+.msg.me .bubble{background:var(--card);border:1px solid var(--line)}
+.trans{font-size:.9rem;color:var(--muted)}
+.fb{border-radius:10px;padding:10px 12px;background:var(--accent-soft);font-size:.92rem;display:flex;flex-direction:column;gap:4px}
+.fb .en{background:var(--card);border-radius:6px;padding:2px 8px;display:inline-block}
+.stars{color:var(--accent);letter-spacing:2px}
+.composer{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;min-width:0;resize:vertical;min-height:52px;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:var(--f-en);font-size:1rem;direction:ltr;background:var(--paper);color:var(--ink)}
+.mic.rec{background:var(--bad);color:#fff;border-color:var(--bad)}
+.note{font-size:.88rem;color:var(--muted);background:var(--paper);border-radius:8px;padding:8px 10px}
+
+/* videos */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.vcard{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--card);display:flex;flex-direction:column}
+.vthumb{aspect-ratio:16/7;max-width:100%;display:grid;place-items:center;position:relative}
+.vthumb svg{width:46px;height:46px}
+.vthumb .lv{position:absolute;top:8px;inset-inline-start:8px}
+.vbody{padding:12px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.vbody .en{font-weight:600}
+.vbody .row{margin-top:auto}
+.vcard.seen{opacity:.75}
+
+
+/* swipe deck */
+.swipe-ov{position:fixed;inset:0;z-index:30;background:var(--paper);background:color-mix(in srgb,var(--paper) 94%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.swipe-top{width:100%;max-width:380px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.swipe-dots{flex:1;height:6px;background:var(--line);border-radius:9px;overflow:hidden}
+.swipe-dots i{display:block;height:100%;background:var(--mine);transition:width .3s}
+.stack{position:relative;width:100%;max-width:340px;aspect-ratio:3/4;max-height:58vh}
+.scard{position:absolute;inset:0;border-radius:22px;background:var(--card);border:1px solid var(--line);box-shadow:0 14px 34px rgba(20,40,30,.16);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;overflow:hidden}
+.scard.under{transform:scale(.94) translateY(14px);opacity:.7;pointer-events:none}
+.scard .band{position:absolute;inset:0 0 auto 0;height:10px}
+.scard .w{font-family:var(--f-en);font-size:clamp(1.9rem,8vw,2.6rem);font-weight:600;direction:ltr;overflow-wrap:anywhere}
+.scard .he{font-size:1.5rem;font-weight:700}
+.scard .ex{font-family:var(--f-en);direction:ltr;color:var(--muted);font-size:.95rem}
+.scard .hint{position:absolute;bottom:14px;inset-inline:0;font-size:.85rem;color:var(--muted)}
+.scard .stamp{position:absolute;top:24px;padding:4px 14px;border:3px solid;border-radius:10px;font-weight:700;font-size:1.2rem;opacity:0;transform:rotate(-12deg)}
+.scard .stamp.yes{left:20px;color:var(--good);border-color:var(--good)}
+.scard .stamp.no{right:20px;color:var(--bad);border-color:var(--bad);transform:rotate(12deg)}
+.swipe-btns{direction:ltr;display:flex;gap:28px;align-items:center}
+.sbtn{width:64px;height:64px;border-radius:50%;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.sbtn svg{width:28px;height:28px}
+.sbtn.no{color:var(--bad)} .sbtn.yes{color:var(--good)}
+.swipe-legend{direction:ltr;display:flex;gap:28px;font-size:.85rem;color:var(--muted)}
+
+.scard.rule{justify-content:flex-start;padding:32px 18px 14px;gap:10px}
+.scard.rule .hint{position:static;margin-top:auto;flex:none}
+.scard.rule.flipped .rforms{display:none}
+.scard.rule.tight{gap:6px;padding-top:26px}
+.scard.rule.tight .rtitle{font-size:1.25rem}
+.scard.rule.tight .rrule,.scard.rule.tight .rex .en{font-size:.86rem;line-height:1.4}
+.scard.rule.tight .rforms{font-size:.95rem}
+.scard.rule.tight .qwhy{font-size:.82rem;padding:6px 8px}
+.scard.rule.tighter .qwhy{display:none}
+.rtitle{font-family:var(--f-en);direction:ltr;font-size:1.5rem;font-weight:700}
+.rhe{font-weight:700;margin-top:2px}
+.rforms{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;font-family:var(--f-en);direction:ltr;font-size:1.08rem}
+.rf .arr{color:var(--muted);margin:0 8px}
+.rf .to{font-weight:700;color:var(--accent)}
+.rrule{font-size:.95rem;line-height:1.5}
+.scard.rule .back{display:flex;flex-direction:column;gap:8px;width:100%}
+.scard.rule .back[hidden]{display:none}
+.rex .en{font-family:var(--f-en);direction:ltr;font-size:1rem}
+.scard.quiz{cursor:default;justify-content:flex-start;padding:34px 18px 18px;gap:10px;overflow-y:auto}
+.qsent{font-family:var(--f-en);direction:ltr;font-size:1.25rem;line-height:1.6}
+.qsent .gap{display:inline-block;min-width:70px;border-bottom:3px solid var(--accent);color:var(--accent);font-weight:700;padding:0 4px}
+.qopts{direction:ltr;display:flex;flex-direction:column;gap:8px;width:100%}
+.qopts button{font-family:var(--f-en);font-size:1.05rem;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:10px 12px}
+.qopts button.right{background:var(--good-soft);border-color:var(--good)}
+.qopts button.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.qwhy{font-size:.92rem;background:var(--biz-soft);border-radius:10px;padding:8px 10px;text-align:start}
+.swipe-done{max-width:360px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));inset-inline:16px;margin-inline:auto;max-width:420px;background:var(--ink);color:var(--paper);padding:12px 16px;border-radius:12px;font-weight:600;text-align:center;z-index:40}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+
+<div dir="rtl" lang="he">
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 29V15" stroke="var(--trunk)" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="11" r="8" fill="var(--leaf1)"/><circle cx="10" cy="14" r="5" fill="var(--leaf2)"/><circle cx="22" cy="14" r="5" fill="var(--leaf3)"/></svg>המסלול שלי</div>
+    <div class="hud">
+      <span class="pill flame" title="ימים ברצף"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 1s1 3.5-1.5 6.5S7 12 7 15a5 5 0 0 0 10 0c0-2-1-3.5-1-3.5s2 1 2 4A6 6 0 0 1 6 15.5C6 9 13.5 7 13.5 1z"/></svg><span id="hStreak">0</span></span>
+      <span class="pill drop" id="hXpPill" title="נקודות"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l2.9 6.9L22 9.6l-5.4 4.8L18.2 22 12 18.3 5.8 22l1.6-7.6L2 9.6l7.1-.7z"/></svg><span id="hXp">0</span></span>
+      <span class="pill lv" id="hLevel">רמה 1</span>
+    </div>
+  </div>
+  <div class="lvbar" title="ההתקדמות לרמה הבאה"><i id="lvlBar" style="width:2%"></i></div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="home" aria-selected="true">בית</button>
+    <button role="tab" data-swipe="1" aria-selected="false"><i style="background:var(--accent)"></i>החלקת מילים</button>
+    <button role="tab" data-tab="words" aria-selected="false"><i style="background:var(--mine)"></i>המילים שלי</button>
+    <button role="tab" data-tab="memory" aria-selected="false"><i style="background:var(--fin)"></i>משחק זיכרון</button>
+    <button role="tab" data-tab="sentences" aria-selected="false"><i style="background:var(--biz)"></i>בניית משפטים</button>
+    <button role="tab" data-tab="listening" aria-selected="false"><i style="background:var(--sport)"></i>האזנה</button>
+    <button role="tab" data-tab="speaking" aria-selected="false"><i style="background:var(--grow)"></i>שיחה עם מורה</button>
+    <button role="tab" data-tab="videos" aria-selected="false"><i style="background:var(--gen)"></i>סרטונים</button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<!-- HOME -->
+<section class="view" id="v-home">
+  <div class="card garden">
+    <div class="tree-box" id="treeBox"></div>
+    <div class="garden-info">
+      <div>
+        <span class="tag" id="treeStageTag">נבט</span>
+        <h2 style="margin-top:6px" id="treeTitle">העץ שלך</h2>
+        <p class="muted small" id="treeSub"></p>
+      </div>
+      <div class="ring-row">
+        <svg class="ring" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="34" fill="none" stroke="var(--line)" stroke-width="9"/><circle id="ringArc" cx="42" cy="42" r="34" fill="none" stroke="var(--fin)" stroke-width="9" stroke-linecap="round" stroke-dasharray="0 214" transform="rotate(-90 42 42)"/><text x="42" y="47" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)" id="ringTxt">0%</text></svg>
+        <div><b>היעד היומי</b><p class="small muted" id="goalTxt">0 מתוך 40 XP היום. כשמגיעים ליעד, צומח פרי על העץ.</p></div>
+      </div>
+      <div class="facts">
+        <div class="fact"><b id="fDays">1</b><span class="small muted">ימים עם העץ</span></div>
+        <div class="fact"><b id="fLeaves">0</b><span class="small muted">עלים = מילים שאת יודעת</span></div>
+        <div class="fact"><b id="fFruits">0</b><span class="small muted">פירות = ימי יעד</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between"><h3>המשימות של היום</h3><span class="small muted">כל משימה שווה 10 XP</span></div>
+    <div class="missions" id="missions" style="margin-top:10px"></div>
+  </div>
+
+  <div class="rooms">
+    <button class="room" data-swipe="1" style="background:var(--accent-soft)"><h3>החלקת מילים</h3><span class="muted small" id="swRoomTxt">ימינה = יודעת, שמאלה = עוד לא</span><svg class="art" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="12" width="30" height="40" rx="6" fill="var(--accent)" opacity=".4" transform="rotate(-10 25 32)"/><rect x="22" y="10" width="30" height="40" rx="6" fill="var(--accent)" transform="rotate(8 37 30)"/></svg></button>
+    <button class="room" data-go="words" style="background:var(--mine-soft)"><h3>המילים שלי</h3><span class="muted small">מוסיפים מילים שנתקלת בהן ומתרגלים בכרטיסיות</span><svg class="art" viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="34" height="40" rx="5" fill="var(--mine)" opacity=".35"/><rect x="18" y="8" width="34" height="40" rx="5" fill="var(--mine)"/><path d="M26 22h18M26 30h12" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></button>
+    <button class="room" data-go="memory" style="background:var(--fin-soft)"><h3>משחק זיכרון</h3><span class="muted small">זוגות של מילה ותרגום</span><svg class="art" viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="12" width="24" height="32" rx="5" fill="var(--fin)"/><rect x="34" y="20" width="24" height="32" rx="5" fill="var(--fin)" opacity=".45"/><circle cx="18" cy="28" r="5" fill="#fff"/></svg></button>
+    <button class="room" data-go="sentences" style="background:var(--biz-soft)"><h3>בניית משפטים</h3><span class="muted small">עבר, הווה, עתיד ועוד</span><svg class="art" viewBox="0 0 64 64" aria-hidden="true"><rect x="4" y="18" width="18" height="12" rx="3" fill="var(--biz)"/><rect x="25" y="18" width="14" height="12" rx="3" fill="var(--biz)" opacity=".6"/><rect x="42" y="18" width="18" height="12" rx="3" fill="var(--biz)"/><rect x="12" y="36" width="22" height="12" rx="3" fill="var(--biz)" opacity=".4"/></svg></button>
+    <button class="room" data-go="listening" style="background:var(--sport-soft)"><h3>האזנה והבנה</h3><span class="muted small">קטעים בתחומים שלך ושאלות</span><svg class="art" viewBox="0 0 64 64" aria-hidden="true"><path d="M14 38v-6a18 18 0 0 1 36 0v6" stroke="var(--sport)" stroke-width="5" fill="none"/><rect x="8" y="36" width="12" height="18" rx="4" fill="var(--sport)"/><rect x="44" y="36" width="12" height="18" rx="4" fill="var(--sport)"/></svg></button>
+    <button class="room" data-go="speaking" style="background:var(--grow-soft)"><h3>שיחה עם מורה</h3><span class="muted small">משוב על דקדוק ותגובה</span><svg class="art" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 12h36a6 6 0 0 1 6 6v14a6 6 0 0 1-6 6H22l-10 8v-8H8a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6z" fill="var(--grow)"/><path d="M30 42h20a6 6 0 0 0 6-6v-4" stroke="var(--grow)" stroke-width="4" fill="none" opacity=".5"/></svg></button>
+    <button class="room" data-go="videos" style="background:var(--gen-soft)"><h3>סרטונים</h3><span class="muted small">ערוצים מומלצים בתחומים שלך</span><svg class="art" viewBox="0 0 64 64" aria-hidden="true"><rect x="4" y="14" width="50" height="34" rx="8" fill="var(--gen)"/><path d="M24 22l14 9-14 9z" fill="#fff"/></svg></button>
+  </div>
+
+  <div class="card wotd">
+    <div style="flex:1;min-width:180px">
+      <span class="small muted">מילת היום</span>
+      <div class="en" id="wotdEn"></div>
+      <div id="wotdHe" class="muted"></div>
+    </div>
+    <button class="icon-btn" id="wotdSpeak" aria-label="השמעה"></button>
+    <button class="btn alt" id="wotdAdd">הוספה למילים שלי</button>
+  </div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between"><h3>ההישגים שלך</h3><span class="small muted" id="badgeCount"></span></div>
+    <div class="badges" id="badges" style="margin-top:12px"></div>
+    <p class="small muted" id="syncNote" style="margin-top:12px">ההתקדמות נשמרת בדפדפן הזה.</p>
+  </div>
+</section>
+
+<!-- MY WORDS -->
+<section class="view" id="v-words" hidden>
+  <div class="row" style="justify-content:space-between"><h2>המילים שלי</h2><button class="btn" id="wPractice" style="background:var(--mine)">תרגול בכרטיסיות</button></div>
+  <div class="card" style="display:flex;flex-direction:column;gap:10px">
+    <b>נתקלת במילה חדשה? הוסיפי אותה כאן</b>
+    <form class="addbar" id="wForm">
+      <input type="text" id="wEn" class="en" placeholder="English word" autocomplete="off" aria-label="המילה באנגלית">
+      <input type="text" id="wHe" placeholder="תרגום (לא חובה)" autocomplete="off" aria-label="תרגום">
+      <button class="btn" type="submit" style="background:var(--mine)">הוספה</button>
+    </form>
+    <p class="small muted" id="wAiNote">אם לא כתבת תרגום, Claude ישלים תרגום ומשפט דוגמה.</p>
+  </div>
+
+  <div class="card flash" id="flash" hidden>
+    <span class="small muted" id="fProg"></span>
+    <div class="row" style="justify-content:center"><span class="en big" id="fEn"></span><button class="icon-btn" id="fSpeak" aria-label="השמעה"></button></div>
+    <div id="fBack" hidden><div style="font-size:1.25rem;font-weight:700" id="fHe"></div><div class="en muted" id="fEx" style="margin-top:4px"></div><div class="muted small" id="fExHe"></div></div>
+    <button class="btn alt" id="fReveal">הצגת התרגום</button>
+    <div class="row" id="fBtns" hidden style="justify-content:center">
+      <button class="btn" id="fKnown" style="background:var(--good)">יודעת בוודאות</button>
+      <button class="btn ghost" id="fAgain">עוד לא, שוב</button>
+      <button class="btn gold" id="fFocus">להתעכב עליה</button>
+    </div>
+    <button class="btn ghost small" id="fClose">סיום התרגול</button>
+  </div>
+
+  <div class="card">
+    <div class="chips" id="wFilters"></div>
+    <div class="wlist" id="wList" style="margin-top:10px"></div>
+  </div>
+</section>
+
+<!-- MEMORY -->
+<section class="view" id="v-memory" hidden>
+  <div class="row" style="justify-content:space-between">
+    <h2>משחק זיכרון</h2>
+    <div class="row small muted"><span>מהלכים: <b id="memMoves">0</b></span><span>זוגות: <b id="memPairs">0/0</b></span></div>
+  </div>
+  <div class="chips" id="memTopics"></div>
+  <div class="mem-grid" id="memGrid"></div>
+  <div class="card" id="memDone" hidden>
+    <h3>כל הכבוד! מצאת את כל הזוגות</h3>
+    <p class="muted" id="memDoneTxt"></p>
+    <p class="small muted" style="margin-top:6px">סמני מילים שאת כבר יודעת, או כאלה שרוצה להתעכב עליהן:</p>
+    <div id="memReview" style="margin-top:6px"></div>
+  </div>
+  <div class="row"><button class="btn" id="memNew">משחק חדש</button><span class="small muted">לחיצה על קלף באנגלית משמיעה את המילה.</span></div>
+</section>
+
+<!-- SENTENCES -->
+<section class="view" id="v-sentences" hidden>
+  <div class="row" style="justify-content:space-between">
+    <h2>בניית משפטים</h2>
+    <button class="btn ghost" id="toggleTenses">כל החוקים</button>
+  </div>
+  <div class="card" id="tenseRef" hidden><div class="tense-table" id="tenseTable"></div></div>
+  <div class="card" style="display:flex;flex-direction:column;gap:14px">
+    <div class="row"><span class="tag" id="sTense" style="background:var(--biz-soft)"></span><button class="btn ghost small" id="sExplainBtn" style="padding:3px 10px">מה החוק?</button><span class="small muted" id="sSource"></span></div>
+    <div class="grammar" id="sGrammar" hidden></div>
+    <p class="prompt-he" id="sHe"></p>
+    <div class="slots en" id="sSlots" aria-label="המשפט שלך"></div>
+    <div class="bank" id="sBank" dir="ltr"></div>
+    <div class="result" id="sResult" hidden></div>
+    <div class="row">
+      <button class="btn" id="sCheck" style="background:var(--biz)">בדיקה</button>
+      <button class="btn ghost" id="sReset">איפוס</button>
+      <button class="btn alt" id="sListen" hidden>השמעה</button>
+      <button class="btn gold" id="sNext" hidden>המשפט הבא</button>
+    </div>
+  </div>
+  <div class="card row" style="justify-content:space-between">
+    <div style="flex:1;min-width:200px"><h3>עוד משפטים בהתאמה אישית</h3><p class="small muted">Claude יכין 6 משפטים חדשים ברמה שלך, וישלב מילים מהרשימה שלך.</p></div>
+    <button class="btn alt" id="sGen">צרי משפטים חדשים</button>
+  </div>
+</section>
+
+<!-- LISTENING -->
+<section class="view" id="v-listening" hidden>
+  <div id="lList" style="display:flex;flex-direction:column;gap:16px">
+    <h2>האזנה והבנה</h2>
+    <div class="chips" id="lTopics"></div>
+    <div class="plist" id="lCards"></div>
+    <div class="card row" style="justify-content:space-between">
+      <div style="flex:1;min-width:200px"><h3>קטע האזנה חדש</h3><p class="small muted">Claude יכתוב קטע חדש ברמה שלך בנושא שבחרת למעלה, עם שאלות הבנה.</p></div>
+      <button class="btn alt" id="lGen">צרי קטע חדש</button>
+    </div>
+  </div>
+  <div id="lDetail" hidden style="display:flex;flex-direction:column;gap:16px">
+    <button class="btn ghost" id="lBack" style="align-self:flex-start">חזרה לרשימה</button>
+    <div class="card" style="display:flex;flex-direction:column;gap:12px">
+      <div class="row"><span class="tag" id="lTag"></span></div>
+      <h2 class="en" id="lTitle" style="text-align:left"></h2>
+      <div class="player">
+        <button class="btn" id="lPlay" style="background:var(--sport)">השמעה</button>
+        <button class="btn ghost" id="lStop">עצירה</button>
+        <label class="small">מהירות
+          <select id="lRate"><option value="0.7">איטי</option><option value="0.85" selected>רגיל-איטי</option><option value="1">רגיל</option></select>
+        </label>
+        <button class="btn alt" id="lShow">הצגת הטקסט</button>
+      </div>
+      <p class="small muted">כדאי להקשיב קודם בלי לקרוא, לענות על השאלות, ורק אז לפתוח את הטקסט. לחיצה על משפט בטקסט משמיעה אותו שוב.</p>
+      <div class="ptext" id="lText" hidden></div>
+    </div>
+    <div class="card"><h3>שאלות הבנה</h3><div id="lQs"></div><p id="lScore" class="muted" style="margin-top:8px"></p></div>
+  </div>
+</section>
+
+<!-- SPEAKING -->
+<section class="view" id="v-speaking" hidden>
+  <h2>שיחה עם מורה AI</h2>
+  <div class="card row">
+    <label>נושא השיחה
+      <select id="spTopic">
+        <option value="daily life and hobbies">חיי יום-יום</option>
+        <option value="personal finance and saving money">פיננסים וחיסכון</option>
+        <option value="business and work">עסקים ועבודה</option>
+        <option value="sport and fitness">ספורט וכושר</option>
+        <option value="personal development and habits">התפתחות אישית</option>
+        <option value="a job interview (you are the interviewer)">ראיון עבודה</option>
+        <option value="the learner's own word list">המילים שלי</option>
+      </select>
+    </label>
+    <button class="btn" id="spStart" style="background:var(--grow)">התחלת שיחה חדשה</button>
+    <label class="small row" style="gap:6px"><input type="checkbox" id="spAuto" checked> הקראה אוטומטית</label>
+  </div>
+  <div class="card" style="display:flex;flex-direction:column;gap:12px">
+    <div class="chat" id="chat"><p class="muted">בחרי נושא ולחצי על "התחלת שיחה חדשה". המורה תפתח בשאלה, ואחרי כל תשובה שלך תקבלי תיקון ומשוב.</p></div>
+    <div class="composer">
+      <button class="icon-btn mic" id="spMic" aria-label="הקלטה" hidden><svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg></button>
+      <textarea id="spInput" placeholder="Type or dictate your answer in English..." disabled></textarea>
+      <button class="btn" id="spSend" disabled style="background:var(--grow)">שליחה</button>
+    </div>
+    <p class="note" id="spNote">רוצה לענות בדיבור? בטלפון לחצי על סמל המיקרופון במקלדת (הכתבה), דברי באנגלית, והטקסט ייכתב לבד. המורה תבדוק את הדקדוק, ניסוח המשפט ואיך הגבת.</p>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section class="view" id="v-videos" hidden>
+  <div class="row" style="justify-content:space-between"><h2>סרטונים שיקדמו אותך</h2><span class="small muted" id="vCount"></span></div>
+  <div class="chips" id="vTopics"></div>
+  <div class="vgrid" id="vGrid"></div>
+  <p class="note">הסרטונים נפתחים ביוטיוב בלשונית חדשה. טיפ: הפעילי כתוביות באנגלית (CC), ואם קשה, האטי את המהירות ל-0.75 בהגדרות הנגן. כשתחזרי, לחצי "צפיתי" כדי לקבל XP. מילה חדשה ששמעת? הוסיפי אותה ל"המילים שלי".</p>
+</section>
+
+</main>
+</div>
+<div class="swipe-ov" id="swipeOv" dir="rtl" lang="he" hidden role="dialog" aria-label="החלקת מילים">
+  <div class="swipe-top">
+    <b>החלקת מילים</b>
+    <div class="swipe-dots"><i id="swProg" style="width:0%"></i></div>
+    <button class="btn ghost small" id="swClose" style="padding:4px 12px">סגירה</button>
+  </div>
+  <div class="stack" id="swStack"></div>
+  <div class="swipe-btns" id="swBtns">
+    <button class="sbtn no" id="swNo" aria-label="לא מזהה"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7l-1.4-1.4L9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z" transform="translate(1.5 0)"/></svg></button>
+    <button class="sbtn" id="swSpeak" aria-label="השמעה" style="width:48px;height:48px"></button>
+    <button class="sbtn yes" id="swYes" aria-label="יודעת"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></button>
+  </div>
+  <div class="swipe-legend" id="swLegend"><span dir="rtl">← שמאלה: עוד לא</span><span dir="rtl">ימינה: יודעת →</span></div>
+  <div class="swipe-done" id="swDone" hidden></div>
+</div>
+<div class="toast" id="toast" dir="rtl" lang="he" hidden></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------------- data ---------------- */
+const TOPICS={all:"הכול",fin:"פיננסים",biz:"עסקים",sport:"ספורט",grow:"התפתחות אישית",gen:"כללי"};
+const TCOL={fin:"fin",biz:"biz",sport:"sport",grow:"grow",gen:"gen",mine:"mine"};
+const LEVELS=[
+ {n:1,name:"מתחילה",cefr:"A1",min:0},
+ {n:2,name:"בסיסית",cefr:"A2",min:200},
+ {n:3,name:"בינונית",cefr:"B1",min:550},
+ {n:4,name:"מתקדמת",cefr:"B2",min:1100},
+ {n:5,name:"שוטפת",cefr:"C1",min:1900}];
+const DAILY_GOAL=40;
+const W=(en,he,t,l)=>({en,he,t,l});
+const VOCAB=[
+ W("money","כסף","fin",1),W("price","מחיר","fin",1),W("buy","לקנות","fin",1),W("sell","למכור","fin",1),W("pay","לשלם","fin",1),W("save","לחסוך","fin",1),W("bank","בנק","fin",1),W("cheap","זול","fin",1),W("expensive","יקר","fin",1),
+ W("work","עבודה","biz",1),W("office","משרד","biz",1),W("boss","מנהל / בוס","biz",1),W("customer","לקוח","biz",1),W("shop","חנות","biz",1),W("job","משרה","biz",1),
+ W("team","קבוצה","sport",1),W("game","משחק","sport",1),W("player","שחקן","sport",1),W("coach","מאמן","sport",1),W("win","לנצח","sport",1),W("lose","להפסיד","sport",1),W("run","לרוץ","sport",1),
+ W("goal","מטרה","grow",1),W("habit","הרגל","grow",1),W("learn","ללמוד","grow",1),W("plan","תוכנית","grow",1),W("healthy","בריא","grow",1),W("strong","חזק","grow",1),
+ W("time","זמן","gen",1),W("today","היום","gen",1),W("tomorrow","מחר","gen",1),W("yesterday","אתמול","gen",1),W("week","שבוע","gen",1),W("easy","קל","gen",1),W("difficult","קשה","gen",1),
+ W("budget","תקציב","fin",2),W("income","הכנסה","fin",2),W("expense","הוצאה","fin",2),W("salary","משכורת","fin",2),W("loan","הלוואה","fin",2),W("invest","להשקיע","fin",2),W("account","חשבון","fin",2),
+ W("profit","רווח","biz",2),W("meeting","פגישה","biz",2),W("company","חברה","biz",2),W("product","מוצר","biz",2),W("market","שוק","biz",2),W("manager","מנהל","biz",2),W("order","הזמנה","biz",2),
+ W("training","אימון","sport",2),W("match","משחק / תחרות","sport",2),W("score","תוצאה / ניקוד","sport",2),W("fitness","כושר","sport",2),W("season","עונה","sport",2),
+ W("confidence","ביטחון עצמי","grow",2),W("focus","מיקוד","grow",2),W("motivation","מוטיבציה","grow",2),W("success","הצלחה","grow",2),W("mistake","טעות","grow",2),W("improve","להשתפר","grow",2),W("routine","שגרה","grow",2),
+ W("investment","השקעה","fin",3),W("interest","ריבית","fin",3),W("debt","חוב","fin",3),W("shares","מניות","fin",3),W("savings","חסכונות","fin",3),W("risk","סיכון","fin",3),W("advisor","יועץ","fin",3),
+ W("revenue","הכנסות / מחזור","biz",3),W("negotiate","לנהל משא ומתן","biz",3),W("strategy","אסטרטגיה","biz",3),W("competitor","מתחרה","biz",3),W("deadline","מועד אחרון","biz",3),W("entrepreneur","יזם","biz",3),W("supplier","ספק","biz",3),
+ W("endurance","סיבולת","sport",3),W("tournament","טורניר","sport",3),W("injury","פציעה","sport",3),W("athlete","ספורטאי","sport",3),W("pressure","לחץ","sport",3),
+ W("discipline","משמעת","grow",3),W("mindset","דפוס חשיבה","grow",3),W("resilience","חוסן","grow",3),W("achieve","להשיג","grow",3),W("growth","צמיחה","grow",3),W("effort","מאמץ","grow",3),
+ W("inflation","אינפלציה","fin",4),W("portfolio","תיק השקעות","fin",4),W("dividend","דיבידנד","fin",4),W("asset","נכס","fin",4),W("cash flow","תזרים מזומנים","fin",4),W("purchasing power","כוח קנייה","fin",4),
+ W("stakeholder","בעל עניין","biz",4),W("acquisition","רכישה (של חברה)","biz",4),W("merger","מיזוג","biz",4),W("leverage","מינוף","biz",4),W("reputation","מוניטין","biz",4),
+ W("opponent","יריב","sport",4),W("championship","אליפות","sport",4),W("performance","ביצועים","sport",4),W("recovery","התאוששות","sport",4),
+ W("procrastinate","לדחות משימות","grow",4),W("accountability","לקיחת אחריות","grow",4),W("self-awareness","מודעות עצמית","grow",4),W("consistency","עקביות","grow",4),
+ W("diversify","לפזר (השקעות)","fin",5),W("volatility","תנודתיות","fin",5),W("recession","מיתון","fin",5),W("due diligence","בדיקת נאותות","biz",5),W("bottleneck","צוואר בקבוק","biz",5),W("scalable","בר-הרחבה","biz",5),
+ W("perseverance","התמדה","grow",5),W("delayed gratification","דחיית סיפוקים","grow",5),W("benchmark","מדד ייחוס","fin",5),W("comeback","קאמבק / חזרה","sport",5)
+];
+const EX={"money": [["I need more money for the trip.", "אני צריכה יותר כסף לטיול."], ["Time is more important than money.", "זמן חשוב יותר מכסף."], ["She keeps her money in a small box.", "היא שומרת את הכסף שלה בקופסה קטנה."]], "price": [["The price of coffee went up.", "המחיר של הקפה עלה."], ["What is the price of this bag?", "מה המחיר של התיק הזה?"], ["The prices here are very good.", "המחירים כאן טובים מאוד."]], "buy": [["I want to buy a new phone.", "אני רוצה לקנות טלפון חדש."], ["We buy vegetables at the market.", "אנחנו קונים ירקות בשוק."], ["He bought flowers for his wife.", "הוא קנה פרחים לאשתו."]], "sell": [["They sell fresh bread every morning.", "הם מוכרים לחם טרי כל בוקר."], ["I want to sell my old car.", "אני רוצה למכור את המכונית הישנה שלי."], ["This book sells very well.", "הספר הזה נמכר טוב מאוד."]], "pay": [["Can I pay by card?", "אפשר לשלם בכרטיס?"], ["I pay my bills on time.", "אני משלמת את החשבונות שלי בזמן."], ["Who will pay for dinner?", "מי ישלם על ארוחת הערב?"]], "save": [["I save a little money every month.", "אני חוסכת קצת כסף כל חודש."], ["Turn off the light to save energy.", "כבי את האור כדי לחסוך באנרגיה."], ["We are saving for a new home.", "אנחנו חוסכים לבית חדש."]], "bank": [["I went to the bank yesterday.", "הלכתי לבנק אתמול."], ["The bank is closed on Saturday.", "הבנק סגור בשבת."], ["My bank has a good app.", "לבנק שלי יש אפליקציה טובה."]], "cheap": [["This shirt is very cheap.", "החולצה הזאת מאוד זולה."], ["Food at the market is cheap.", "האוכל בשוק זול."], ["Cheap shoes don't last long.", "נעליים זולות לא מחזיקות הרבה זמן."]], "expensive": [["The hotel was too expensive.", "המלון היה יקר מדי."], ["Life in the city is expensive.", "החיים בעיר יקרים."], ["Is this watch expensive?", "השעון הזה יקר?"]], "work": [["I start work at nine.", "אני מתחילה לעבוד בתשע."], ["I work from home on Fridays.", "אני עובדת מהבית בימי שישי."], ["She goes to work by bus.", "היא נוסעת לעבודה באוטובוס."]], "office": [["Her office is on the third floor.", "המשרד שלה בקומה השלישית."], ["I left my keys at the office.", "שכחתי את המפתחות שלי במשרד."], ["The office is quiet in the morning.", "המשרד שקט בבוקר."]], "boss": [["My boss is very nice.", "המנהל שלי מאוד נחמד."], ["The boss wants the report today.", "הבוס רוצה את הדוח היום."], ["She is her own boss now.", "עכשיו היא הבוסית של עצמה."]], "customer": [["The customer asked about the price.", "הלקוח שאל על המחיר."], ["Our customers are very happy.", "הלקוחות שלנו מאוד מרוצים."], ["Every customer gets a free coffee.", "כל לקוח מקבל קפה חינם."]], "shop": [["The shop opens at ten.", "החנות נפתחת בעשר."], ["I bought this dress in a small shop.", "קניתי את השמלה הזאת בחנות קטנה."], ["Is there a shop near here?", "יש חנות כאן בסביבה?"]], "job": [["She has a new job in Tel Aviv.", "יש לה עבודה חדשה בתל אביב."], ["I love my job.", "אני אוהבת את העבודה שלי."], ["He is looking for a job.", "הוא מחפש עבודה."]], "team": [["Our team won the game.", "הקבוצה שלנו ניצחה במשחק."], ["She is the leader of the team.", "היא המנהלת של הצוות."], ["We work well as a team.", "אנחנו עובדים טוב כצוות."]], "game": [["We watched the game on TV.", "צפינו במשחק בטלוויזיה."], ["It was a great game.", "זה היה משחק נהדר."], ["Do you want to play a game?", "את רוצה לשחק משחק?"]], "player": [["He is the best player on the team.", "הוא השחקן הכי טוב בקבוצה."], ["Every player has a number.", "לכל שחקן יש מספר."], ["She is a famous tennis player.", "היא שחקנית טניס מפורסמת."]], "coach": [["The coach talks to the players.", "המאמן מדבר עם השחקנים."], ["My coach helps me run faster.", "המאמן שלי עוזר לי לרוץ מהר יותר."], ["The new coach is very young.", "המאמנת החדשה צעירה מאוד."]], "win": [["I hope we win tonight.", "אני מקווה שננצח הערב."], ["Who will win the game?", "מי ינצח במשחק?"], ["She wants to win a gold medal.", "היא רוצה לזכות במדליית זהב."]], "lose": [["Nobody likes to lose.", "אף אחד לא אוהב להפסיד."], ["Don't lose your ticket.", "אל תאבדי את הכרטיס שלך."], ["We lost the game, but we played well.", "הפסדנו במשחק, אבל שיחקנו טוב."]], "run": [["I run in the park every morning.", "אני רצה בפארק כל בוקר."], ["He runs five kilometers every day.", "הוא רץ חמישה קילומטרים כל יום."], ["I have to run, I'm late!", "אני חייבת לרוץ, אני מאחרת!"]], "goal": [["My goal is to speak English well.", "המטרה שלי היא לדבר אנגלית טוב."], ["What is your goal for this year?", "מה המטרה שלך לשנה הזאת?"], ["He scored a beautiful goal.", "הוא הבקיע שער יפה."]], "habit": [["Reading every day is a good habit.", "לקרוא כל יום זה הרגל טוב."], ["Drinking water is a healthy habit.", "לשתות מים זה הרגל בריא."], ["It takes time to change a habit.", "לוקח זמן לשנות הרגל."]], "learn": [["I learn five new words every day.", "אני לומדת חמש מילים חדשות כל יום."], ["Children learn very fast.", "ילדים לומדים מהר מאוד."], ["I want to learn how to cook.", "אני רוצה ללמוד לבשל."]], "plan": [["What is your plan for the weekend?", "מה התוכנית שלך לסוף השבוע?"], ["Let's make a plan.", "בואי נעשה תוכנית."], ["I plan to visit London next year.", "אני מתכננת לבקר בלונדון בשנה הבאה."]], "healthy": [["I try to eat healthy food.", "אני משתדלת לאכול אוכל בריא."], ["Walking keeps you healthy.", "הליכה שומרת עלייך בריאה."], ["A healthy breakfast gives you energy.", "ארוחת בוקר בריאה נותנת אנרגיה."]], "strong": [["She is strong and fast.", "היא חזקה ומהירה."], ["I drink strong coffee in the morning.", "אני שותה קפה חזק בבוקר."], ["Exercise makes your body strong.", "פעילות גופנית מחזקת את הגוף."]], "time": [["I don't have time today.", "אין לי זמן היום."], ["What time is it?", "מה השעה?"], ["We had a great time at the party.", "נהנינו מאוד במסיבה."]], "today": [["Today is a good day.", "היום הוא יום טוב."], ["I am very busy today.", "אני מאוד עסוקה היום."], ["What are you doing today?", "מה את עושה היום?"]], "tomorrow": [["See you tomorrow!", "נתראה מחר!"], ["The meeting is tomorrow morning.", "הפגישה מחר בבוקר."], ["Tomorrow I will start a new book.", "מחר אתחיל ספר חדש."]], "yesterday": [["I called my mother yesterday.", "התקשרתי לאמא שלי אתמול."], ["It rained yesterday.", "ירד גשם אתמול."], ["Yesterday was a long day.", "אתמול היה יום ארוך."]], "week": [["I go to the gym three times a week.", "אני הולכת לחדר כושר שלוש פעמים בשבוע."], ["Next week I'm on holiday.", "בשבוע הבא אני בחופשה."], ["The course is six weeks long.", "הקורס נמשך שישה שבועות."]], "easy": [["This lesson is easy.", "השיעור הזה קל."], ["It's easy to use this app.", "קל להשתמש באפליקציה הזאת."], ["Take it easy!", "תירגעי, קחי את זה בקלות!"]], "difficult": [["English grammar is sometimes difficult.", "דקדוק באנגלית לפעמים קשה."], ["It was a difficult decision.", "זו הייתה החלטה קשה."], ["The test wasn't difficult.", "המבחן לא היה קשה."]], "budget": [["We made a budget for the month.", "הכנו תקציב לחודש."], ["We are over budget this month.", "חרגנו מהתקציב החודש."], ["A budget helps you see where your money goes.", "תקציב עוזר לך לראות לאן הכסף הולך."]], "income": [["Her income is higher this year.", "ההכנסה שלה גבוהה יותר השנה."], ["I want a second source of income.", "אני רוצה מקור הכנסה נוסף."], ["Write down your monthly income.", "רשמי את ההכנסה החודשית שלך."]], "expense": [["Rent is my biggest expense.", "שכר הדירה הוא ההוצאה הכי גדולה שלי."], ["Food is a big expense for families.", "אוכל הוא הוצאה גדולה למשפחות."], ["Try to cut one expense this month.", "נסי לצמצם הוצאה אחת החודש."]], "salary": [["I get my salary at the end of the month.", "אני מקבלת משכורת בסוף החודש."], ["She asked for a higher salary.", "היא ביקשה משכורת גבוהה יותר."], ["His salary is paid every two weeks.", "המשכורת שלו משולמת כל שבועיים."]], "loan": [["They took a loan to buy a car.", "הם לקחו הלוואה כדי לקנות מכונית."], ["The bank gave me a small loan.", "הבנק נתן לי הלוואה קטנה."], ["We paid back the loan in two years.", "החזרנו את ההלוואה בשנתיים."]], "invest": [["I want to invest in my future.", "אני רוצה להשקיע בעתיד שלי."], ["Many young people invest in stocks.", "הרבה צעירים משקיעים במניות."], ["Invest time in your health.", "השקיעי זמן בבריאות שלך."]], "account": [["I opened a new bank account.", "פתחתי חשבון בנק חדש."], ["Please check your account balance.", "בבקשה בדקי את היתרה בחשבון."], ["I have an account on this website.", "יש לי חשבון באתר הזה."]], "profit": [["The shop made a small profit.", "החנות עשתה רווח קטן."], ["We sold the house at a profit.", "מכרנו את הבית ברווח."], ["Profit is up ten percent this year.", "הרווח עלה בעשרה אחוז השנה."]], "meeting": [["The meeting starts at ten.", "הפגישה מתחילה בעשר."], ["I have a meeting with a client.", "יש לי פגישה עם לקוח."], ["The meeting was short and useful.", "הפגישה הייתה קצרה ומועילה."]], "company": [["She works for a big company.", "היא עובדת בחברה גדולה."], ["The company has two hundred workers.", "בחברה יש מאתיים עובדים."], ["He started his own company.", "הוא הקים חברה משלו."]], "product": [["This is our new product.", "זה המוצר החדש שלנו."], ["Customers love this product.", "הלקוחות אוהבים את המוצר הזה."], ["We sell beauty products online.", "אנחנו מוכרים מוצרי טיפוח באינטרנט."]], "market": [["The market for electric cars is growing.", "השוק של מכוניות חשמליות גדל."], ["The stock market went down today.", "הבורסה ירדה היום."], ["We want to enter a new market.", "אנחנו רוצים להיכנס לשוק חדש."]], "manager": [["I spoke with the manager.", "דיברתי עם המנהל."], ["The manager is in a meeting.", "המנהלת בפגישה."], ["She became a manager at thirty.", "היא נהייתה מנהלת בגיל שלושים."]], "order": [["We got a big order today.", "קיבלנו היום הזמנה גדולה."], ["I'd like to order a pizza.", "אני רוצה להזמין פיצה."], ["Your order will arrive tomorrow.", "ההזמנה שלך תגיע מחר."]], "training": [["Training starts at six.", "האימון מתחיל בשש."], ["The training was hard today.", "האימון היה קשה היום."], ["New workers get two weeks of training.", "עובדים חדשים מקבלים שבועיים של הכשרה."]], "match": [["The match ended two to one.", "המשחק נגמר שתיים-אחת."], ["We have an important match on Saturday.", "יש לנו משחק חשוב בשבת."], ["She won the match in two sets.", "היא ניצחה במשחק בשתי מערכות."]], "score": [["What was the final score?", "מה הייתה התוצאה הסופית?"], ["I got a high score on the test.", "קיבלתי ציון גבוה במבחן."], ["The score is tied.", "התוצאה שוויונית."]], "fitness": [["Running is great for fitness.", "ריצה מצוינת לכושר."], ["She takes a fitness class twice a week.", "היא הולכת לשיעור כושר פעמיים בשבוע."], ["Good fitness helps you work better.", "כושר טוב עוזר לך לעבוד טוב יותר."]], "season": [["The football season starts in August.", "עונת הכדורגל מתחילה באוגוסט."], ["Summer is my favorite season.", "הקיץ הוא העונה האהובה עליי."], ["It was a great season for the team.", "זו הייתה עונה נהדרת לקבוצה."]], "confidence": [["Practice gives you confidence.", "תרגול נותן ביטחון עצמי."], ["She speaks with confidence.", "היא מדברת בביטחון."], ["I lost confidence after the mistake.", "איבדתי ביטחון אחרי הטעות."]], "focus": [["I need to focus on my work.", "אני צריכה להתמקד בעבודה שלי."], ["Turn off your phone so you can focus.", "כבי את הטלפון כדי שתוכלי להתרכז."], ["Our focus this year is on customers.", "הדגש שלנו השנה הוא על הלקוחות."]], "motivation": [["Music gives me motivation.", "מוזיקה נותנת לי מוטיבציה."], ["What is your motivation to learn English?", "מה המוטיבציה שלך ללמוד אנגלית?"], ["Motivation comes and goes, habits stay.", "מוטיבציה באה והולכת, הרגלים נשארים."]], "success": [["Hard work is the key to success.", "עבודה קשה היא המפתח להצלחה."], ["The project was a big success.", "הפרויקט היה הצלחה גדולה."], ["Success means different things to different people.", "הצלחה היא דברים שונים לאנשים שונים."]], "mistake": [["It's okay to make a mistake.", "זה בסדר לעשות טעות."], ["I made a mistake in the email.", "עשיתי טעות במייל."], ["We learn from our mistakes.", "אנחנו לומדים מהטעויות שלנו."]], "improve": [["My English will improve with practice.", "האנגלית שלי תשתפר עם תרגול."], ["I want to improve my pronunciation.", "אני רוצה לשפר את ההגייה שלי."], ["The weather will improve tomorrow.", "מזג האוויר ישתפר מחר."]], "routine": [["My morning routine is short and simple.", "שגרת הבוקר שלי קצרה ופשוטה."], ["Exercise is part of my daily routine.", "פעילות גופנית היא חלק מהשגרה היומית שלי."], ["A good routine makes mornings easier.", "שגרה טובה מקלה על הבקרים."]], "investment": [["Education is a good investment.", "השכלה היא השקעה טובה."], ["Buying a home is a big investment.", "קניית בית היא השקעה גדולה."], ["This course was a great investment.", "הקורס הזה היה השקעה מעולה."]], "interest": [["The bank pays three percent interest.", "הבנק משלם שלושה אחוז ריבית."], ["Interest rates went up this year.", "הריבית עלתה השנה."], ["I pay a lot of interest on my loan.", "אני משלמת הרבה ריבית על ההלוואה."]], "debt": [["He paid off all his debt.", "הוא החזיר את כל החוב שלו."], ["Credit cards can lead to debt.", "כרטיסי אשראי יכולים להוביל לחובות."], ["They want to be free of debt.", "הם רוצים להשתחרר מחובות."]], "shares": [["She bought shares in a tech company.", "היא קנתה מניות בחברת טכנולוגיה."], ["The price of the shares went up.", "מחיר המניות עלה."], ["He sold his shares last week.", "הוא מכר את המניות שלו בשבוע שעבר."]], "savings": [["I keep my savings in the bank.", "אני שומרת את החסכונות שלי בבנק."], ["She used her savings to travel.", "היא השתמשה בחסכונות שלה כדי לטייל."], ["My savings grow a little every month.", "החסכונות שלי גדלים קצת כל חודש."]], "risk": [["Every investment has some risk.", "לכל השקעה יש סיכון מסוים."], ["Don't take a big risk with your money.", "אל תיקחי סיכון גדול עם הכסף שלך."], ["Smoking increases the risk of disease.", "עישון מגביר את הסיכון למחלות."]], "advisor": [["I asked a financial advisor for help.", "ביקשתי עזרה מיועץ פיננסי."], ["Our advisor explained the plan clearly.", "היועצת שלנו הסבירה את התוכנית בבהירות."], ["He works as an investment advisor.", "הוא עובד כיועץ השקעות."]], "revenue": [["The company's revenue grew last year.", "ההכנסות של החברה גדלו בשנה שעברה."], ["Most of our revenue comes from online sales.", "רוב ההכנסות שלנו מגיעות ממכירות באינטרנט."], ["Revenue doubled in two years.", "ההכנסות הוכפלו בשנתיים."]], "negotiate": [["I want to negotiate a better salary.", "אני רוצה לנהל משא ומתן על משכורת טובה יותר."], ["They negotiated for hours.", "הם ניהלו משא ומתן במשך שעות."], ["You can always negotiate the price.", "תמיד אפשר להתמקח על המחיר."]], "strategy": [["We need a new marketing strategy.", "אנחנו צריכים אסטרטגיית שיווק חדשה."], ["What's your strategy for learning new words?", "מה האסטרטגיה שלך ללמידת מילים חדשות?"], ["The coach changed the team's strategy.", "המאמן שינה את האסטרטגיה של הקבוצה."]], "competitor": [["Our main competitor lowered its prices.", "המתחרה הראשי שלנו הוריד מחירים."], ["We study what our competitors do.", "אנחנו בודקים מה המתחרים שלנו עושים."], ["She is a tough competitor.", "היא מתחרה קשוחה."]], "deadline": [["The deadline for the report is Friday.", "המועד האחרון לדוח הוא יום שישי."], ["I always finish before the deadline.", "אני תמיד מסיימת לפני המועד האחרון."], ["We missed the deadline by one day.", "פספסנו את המועד האחרון ביום אחד."]], "entrepreneur": [["She is a young entrepreneur with big ideas.", "היא יזמית צעירה עם רעיונות גדולים."], ["Every entrepreneur takes risks.", "כל יזם לוקח סיכונים."], ["He became an entrepreneur after university.", "הוא נהיה יזם אחרי האוניברסיטה."]], "supplier": [["Our supplier delivers every Monday.", "הספק שלנו מביא סחורה כל יום שני."], ["We found a cheaper supplier.", "מצאנו ספק זול יותר."], ["The supplier was late again.", "הספק שוב איחר."]], "endurance": [["Long runs build endurance.", "ריצות ארוכות בונות סיבולת."], ["Swimming improves your endurance.", "שחייה משפרת את הסיבולת שלך."], ["A marathon is a test of endurance.", "מרתון הוא מבחן של סיבולת."]], "tournament": [["They won the tennis tournament.", "הם ניצחו בטורניר הטניס."], ["The tournament starts next week.", "הטורניר מתחיל בשבוע הבא."], ["Sixteen teams play in the tournament.", "שש-עשרה קבוצות משחקות בטורניר."]], "injury": [["He missed the game because of an injury.", "הוא החמיץ את המשחק בגלל פציעה."], ["She is back after a long injury.", "היא חזרה אחרי פציעה ארוכה."], ["Warm up before training to avoid injury.", "תתחממי לפני אימון כדי להימנע מפציעה."]], "athlete": [["Athletes train almost every day.", "ספורטאים מתאמנים כמעט כל יום."], ["She is a professional athlete.", "היא ספורטאית מקצועית."], ["Athletes need good food and sleep.", "ספורטאים צריכים אוכל טוב ושינה."]], "pressure": [["She plays well under pressure.", "היא משחקת טוב תחת לחץ."], ["I feel a lot of pressure at work.", "אני מרגישה הרבה לחץ בעבודה."], ["Don't put pressure on yourself.", "אל תלחיצי את עצמך."]], "discipline": [["Learning a language takes discipline.", "לימוד שפה דורש משמעת."], ["Discipline is doing it even when you're tired.", "משמעת זה לעשות את זה גם כשאת עייפה."], ["Athletes need a lot of discipline.", "ספורטאים צריכים הרבה משמעת."]], "mindset": [["A positive mindset helps you grow.", "דפוס חשיבה חיובי עוזר לך לצמוח."], ["Change your mindset, change your life.", "תשני את דפוס החשיבה, תשני את החיים."], ["She has a growth mindset.", "יש לה דפוס חשיבה של צמיחה."]], "resilience": [["Resilience helps us after hard times.", "חוסן עוזר לנו אחרי תקופות קשות."], ["Children show amazing resilience.", "ילדים מגלים חוסן מדהים."], ["Sport builds resilience.", "ספורט בונה חוסן."]], "achieve": [["You can achieve your goals step by step.", "את יכולה להשיג את המטרות שלך צעד אחר צעד."], ["She achieved her dream of running a marathon.", "היא הגשימה את החלום שלה לרוץ מרתון."], ["What do you want to achieve this month?", "מה את רוצה להשיג החודש?"]], "growth": [["The company is in a period of growth.", "החברה נמצאת בתקופת צמיחה."], ["Reading is good for personal growth.", "קריאה טובה לצמיחה אישית."], ["The city saw fast growth.", "העיר צמחה מהר."]], "effort": [["Thank you for your effort.", "תודה על המאמץ שלך."], ["Learning English takes effort.", "לימוד אנגלית דורש מאמץ."], ["She made a real effort to be on time.", "היא באמת התאמצה להגיע בזמן."]], "inflation": [["Inflation makes everything more expensive.", "האינפלציה מייקרת הכול."], ["Inflation was high last year.", "האינפלציה הייתה גבוהה בשנה שעברה."], ["Salaries don't always keep up with inflation.", "המשכורות לא תמיד עומדות בקצב האינפלציה."]], "portfolio": [["She checks her portfolio once a month.", "היא בודקת את תיק ההשקעות שלה פעם בחודש."], ["A good portfolio has different kinds of investments.", "בתיק השקעות טוב יש סוגים שונים של השקעות."], ["The designer showed us her portfolio.", "המעצבת הראתה לנו את תיק העבודות שלה."]], "dividend": [["The company pays a dividend every year.", "החברה משלמת דיבידנד כל שנה."], ["I reinvest every dividend I get.", "אני משקיעה מחדש כל דיבידנד שאני מקבלת."], ["The dividend was paid in March.", "הדיבידנד שולם במרץ."]], "asset": [["A house is a valuable asset.", "בית הוא נכס בעל ערך."], ["Your skills are your biggest asset.", "הכישורים שלך הם הנכס הגדול ביותר שלך."], ["The company sold some of its assets.", "החברה מכרה חלק מהנכסים שלה."]], "cash flow": [["Good cash flow keeps a business alive.", "תזרים מזומנים טוב שומר על עסק בחיים."], ["Small businesses often have cash flow problems.", "לעסקים קטנים יש לעיתים קרובות בעיות תזרים."], ["Check your cash flow every week.", "בדקי את תזרים המזומנים שלך כל שבוע."]], "purchasing power": [["High prices reduce our purchasing power.", "מחירים גבוהים מורידים את כוח הקנייה שלנו."], ["Inflation lowers purchasing power.", "האינפלציה מורידה את כוח הקנייה."], ["Young families have less purchasing power.", "למשפחות צעירות יש פחות כוח קנייה."]], "stakeholder": [["We sent the report to every stakeholder.", "שלחנו את הדוח לכל בעלי העניין."], ["Customers are important stakeholders.", "לקוחות הם בעלי עניין חשובים."], ["We met with all the stakeholders.", "נפגשנו עם כל בעלי העניין."]], "acquisition": [["The acquisition made the company much bigger.", "הרכישה הפכה את החברה לגדולה הרבה יותר."], ["The acquisition cost two billion dollars.", "הרכישה עלתה שני מיליארד דולר."], ["The startup was a great acquisition.", "הסטארטאפ היה רכישה מצוינת."]], "merger": [["The two banks announced a merger.", "שני הבנקים הודיעו על מיזוג."], ["After the merger, many jobs changed.", "אחרי המיזוג, הרבה תפקידים השתנו."], ["The merger will close next year.", "המיזוג יושלם בשנה הבאה."]], "leverage": [["They used leverage to buy more property.", "הם השתמשו במינוף כדי לקנות עוד נכסים."], ["Leverage can increase both profit and risk.", "מינוף יכול להגדיל גם רווח וגם סיכון."], ["Use your experience as leverage in negotiations.", "השתמשי בניסיון שלך כקלף מיקוח במשא ומתן."]], "reputation": [["The restaurant has an excellent reputation.", "למסעדה יש מוניטין מצוין."], ["It takes years to build a good reputation.", "לוקח שנים לבנות מוניטין טוב."], ["One mistake can hurt your reputation.", "טעות אחת יכולה לפגוע במוניטין שלך."]], "opponent": [["Her opponent was very strong.", "היריבה שלה הייתה מאוד חזקה."], ["Respect your opponent.", "תכבדי את היריב שלך."], ["He beat his opponent in three sets.", "הוא ניצח את היריב שלו בשלוש מערכות."]], "championship": [["They won the championship last year.", "הם זכו באליפות בשנה שעברה."], ["The championship final is on Sunday.", "גמר האליפות ביום ראשון."], ["It was their first championship in ten years.", "זו הייתה האליפות הראשונה שלהם מזה עשר שנים."]], "performance": [["Sleep affects your performance.", "השינה משפיעה על הביצועים שלך."], ["Her performance at work is excellent.", "הביצועים שלה בעבודה מצוינים."], ["The team's performance improved after the break.", "הביצועים של הקבוצה השתפרו אחרי ההפסקה."]], "recovery": [["Rest is important for recovery.", "מנוחה חשובה להתאוששות."], ["The economy is in recovery.", "הכלכלה בהתאוששות."], ["Her recovery after the injury was fast.", "ההחלמה שלה אחרי הפציעה הייתה מהירה."]], "procrastinate": [["I procrastinate when a task feels too big.", "אני דוחה משימות כשהן מרגישות גדולות מדי."], ["Stop procrastinating and start now.", "תפסיקי לדחות ותתחילי עכשיו."], ["Many students procrastinate before exams.", "הרבה סטודנטים דוחים דברים לפני מבחנים."]], "accountability": [["A study partner gives you accountability.", "שותפה ללמידה עוזרת לך לקחת אחריות."], ["Good leaders take accountability for mistakes.", "מנהלים טובים לוקחים אחריות על טעויות."], ["Weekly check-ins create accountability.", "פגישות מעקב שבועיות יוצרות מחויבות."]], "self-awareness": [["Self-awareness helps you understand your feelings.", "מודעות עצמית עוזרת לך להבין את הרגשות שלך."], ["Writing a journal builds self-awareness.", "כתיבת יומן בונה מודעות עצמית."], ["Self-awareness is the first step to change.", "מודעות עצמית היא הצעד הראשון לשינוי."]], "consistency": [["Consistency is more important than speed.", "עקביות חשובה יותר ממהירות."], ["Ten minutes a day, with consistency, works.", "עשר דקות ביום, בעקביות, עובד."], ["Customers like consistency in quality.", "לקוחות אוהבים עקביות באיכות."]], "diversify": [["It's smart to diversify your investments.", "חכם לפזר את ההשקעות שלך."], ["The company wants to diversify its products.", "החברה רוצה לגוון את המוצרים שלה."], ["Diversify so one loss doesn't hurt too much.", "תפזרי כדי שהפסד אחד לא יכאב יותר מדי."]], "volatility": [["The market showed high volatility this week.", "השוק הראה תנודתיות גבוהה השבוע."], ["Crypto is known for its volatility.", "הקריפטו ידוע בתנודתיות שלו."], ["Long-term investors can handle volatility.", "משקיעים לטווח ארוך יכולים להתמודד עם תנודתיות."]], "recession": [["Many people lost their jobs in the recession.", "הרבה אנשים איבדו את העבודה שלהם במיתון."], ["Experts are worried about a recession.", "מומחים מודאגים ממיתון."], ["Prices often fall during a recession.", "מחירים יורדים לעיתים קרובות בזמן מיתון."]], "due diligence": [["Do your due diligence before you invest.", "תעשי בדיקת נאותות לפני שאת משקיעה."], ["The buyers did careful due diligence.", "הקונים עשו בדיקת נאותות קפדנית."], ["Due diligence takes a few weeks.", "בדיקת נאותות לוקחת כמה שבועות."]], "bottleneck": [["The approval process is our biggest bottleneck.", "תהליך האישורים הוא צוואר הבקבוק הכי גדול שלנו."], ["One slow machine created a bottleneck.", "מכונה איטית אחת יצרה צוואר בקבוק."], ["Let's find the bottleneck in our process.", "בואו נמצא את צוואר הבקבוק בתהליך שלנו."]], "scalable": [["We need a scalable business model.", "אנחנו צריכים מודל עסקי שאפשר להרחיב."], ["Software is more scalable than a restaurant.", "תוכנה ניתנת להרחבה יותר ממסעדה."], ["Is this idea scalable?", "הרעיון הזה ניתן להרחבה?"]], "perseverance": [["Perseverance turns small steps into big results.", "התמדה הופכת צעדים קטנים לתוצאות גדולות."], ["Her perseverance finally paid off.", "ההתמדה שלה סוף סוף השתלמה."], ["Learning a language is about perseverance.", "לימוד שפה הוא עניין של התמדה."]], "delayed gratification": [["Saving money is a form of delayed gratification.", "חיסכון כסף הוא סוג של דחיית סיפוקים."], ["Delayed gratification is hard but powerful.", "דחיית סיפוקים היא קשה אבל עוצמתית."], ["Studying now instead of watching TV is delayed gratification.", "ללמוד עכשיו במקום לראות טלוויזיה זו דחיית סיפוקים."]], "benchmark": [["We compare our results to an industry benchmark.", "אנחנו משווים את התוצאות שלנו למדד ייחוס בתעשייה."], ["This test is a benchmark for new phones.", "המבחן הזה הוא נקודת ייחוס לטלפונים חדשים."], ["Set a benchmark and measure your progress.", "קבעי נקודת ייחוס ומדדי את ההתקדמות שלך."]], "comeback": [["The team made an amazing comeback.", "הקבוצה עשתה קאמבק מדהים."], ["After her injury, she made a strong comeback.", "אחרי הפציעה, היא עשתה קאמבק חזק."], ["Vinyl records are making a comeback.", "תקליטי ויניל חוזרים לאופנה."]]};
+function exList(k,en){const out=(EX[en]||[]).slice();const m=S.my&&S.my[k];if(m){if(m.ex)out.push([m.ex,m.exHe||""]);(m.exs||[]).forEach(x=>out.push(x));}const seen=new Set();return out.filter(x=>x[0]&&!seen.has(x[0])&&seen.add(x[0]));}
+function nextEx(k,en){const L=exList(k,en);if(!L.length)return ["",""];S.exi=S.exi||{};const i=(S.exi[k]||0)%L.length;S.exi[k]=i+1;return L[i];}
+function firstEx(en){const L=EX[en];return L?L[0]:["",""];}
+const GQ=[
+ {id:"g1",l:1,s:"Yesterday I ___ to the bank.",o:["go","went","will go"],a:1,he:"אתמול הלכתי לבנק.",why:"yesterday = עבר, ולכן went (צורת העבר של go)."},
+ {id:"g2",l:1,s:"She ___ in an office every day.",o:["work","works","working"],a:1,he:"היא עובדת במשרד כל יום.",why:"every day = הרגל, הווה פשוט. אחרי she מוסיפים s: works."},
+ {id:"g3",l:1,s:"Tomorrow we ___ the new product.",o:["will show","showed","shows"],a:0,he:"מחר נציג את המוצר החדש.",why:"tomorrow = עתיד, ולכן will + פועל."},
+ {id:"g4",l:1,s:"Last week they ___ the game.",o:["win","won","will win"],a:1,he:"בשבוע שעבר הם ניצחו במשחק.",why:"last week = עבר. win הוא פועל חריג, ובעבר: won."},
+ {id:"g5",l:1,s:"I ___ coffee every morning.",o:["drink","drinks","drinking"],a:0,he:"אני שותה קפה כל בוקר.",why:"הרגל בהווה. אחרי I לא מוסיפים s."},
+ {id:"g6",l:1,s:"He ___ his salary next Monday.",o:["got","gets","will get"],a:2,he:"הוא יקבל את המשכורת שלו ביום שני הבא.",why:"next Monday = עתיד: will get."},
+ {id:"g7",l:1,s:"The shop ___ at ten every day.",o:["open","opens","opening"],a:1,he:"החנות נפתחת בעשר כל יום.",why:"the shop = it, ולכן בהווה פשוט מוסיפים s."},
+ {id:"g8",l:1,s:"We ___ pizza last night.",o:["eat","ate","will eat"],a:1,he:"אכלנו פיצה אתמול בלילה.",why:"last night = עבר. eat חריג: ate."},
+ {id:"g9",l:1,s:"___ you like your job?",o:["Do","Does","Is"],a:0,he:"את אוהבת את העבודה שלך?",why:"שאלה בהווה עם you מתחילה ב-Do. Does רק עם he / she / it."},
+ {id:"g10",l:1,s:"She ___ like expensive clothes.",o:["don't","doesn't","isn't"],a:1,he:"היא לא אוהבת בגדים יקרים.",why:"שלילה בהווה עם she: doesn't + פועל."},
+ {id:"g11",l:1,s:"I ___ the bill yesterday.",o:["pay","paid","will pay"],a:1,he:"שילמתי את החשבון אתמול.",why:"yesterday = עבר. pay חריג: paid."},
+ {id:"g12",l:1,s:"Next year I ___ more money.",o:["save","saved","will save"],a:2,he:"בשנה הבאה אחסוך יותר כסף.",why:"next year = עתיד: will save."},
+ {id:"g13",l:2,s:"Look! The team ___ now.",o:["trains","is training","trained"],a:1,he:"תראי! הקבוצה מתאמנת עכשיו.",why:"now / Look! = קורה ממש עכשיו: הווה מתמשך is + ing."},
+ {id:"g14",l:2,s:"I ___ going to open a savings account.",o:["am","is","are"],a:0,he:"אני הולכת לפתוח חשבון חיסכון.",why:"תוכנית לעתיד: am / is / are + going to. עם I תמיד am: I am going to."},
+ {id:"g15",l:2,s:"Listen, she ___ on the phone.",o:["is talking","talks","talked"],a:0,he:"תקשיבי, היא מדברת בטלפון.",why:"Listen = עכשיו, הווה מתמשך."},
+ {id:"g16",l:2,s:"We ___ a meeting at the moment.",o:["have","are having","had"],a:1,he:"אנחנו באמצע פגישה כרגע.",why:"at the moment = עכשיו: are having."},
+ {id:"g17",l:2,s:"They ___ a profit last year.",o:["didn't make","don't make","won't make"],a:0,he:"הם לא עשו רווח בשנה שעברה.",why:"שלילה בעבר: didn't + פועל רגיל."},
+ {id:"g18",l:2,s:"He ___ run a marathon next spring.",o:["is going to","went to","goes to"],a:0,he:"הוא הולך לרוץ מרתון באביב הבא.",why:"תוכנית לעתיד: is going to + פועל."},
+ {id:"g19",l:2,s:"What ___ you doing right now?",o:["are","do","did"],a:0,he:"מה את עושה עכשיו?",why:"right now + doing = הווה מתמשך: are you doing."},
+ {id:"g20",l:2,s:"My boss usually ___ early.",o:["arrive","arrives","is arriving"],a:1,he:"המנהל שלי בדרך כלל מגיע מוקדם.",why:"usually = הרגל, הווה פשוט עם s."},
+ {id:"g21",l:3,s:"I ___ to London twice.",o:["have been","am","will be"],a:0,he:"הייתי בלונדון פעמיים.",why:"חוויה עד היום (twice) = present perfect: have been."},
+ {id:"g22",l:3,s:"She has just ___ the report.",o:["finish","finished","finishing"],a:1,he:"היא בדיוק סיימה את הדוח.",why:"has + V3: finished."},
+ {id:"g23",l:3,s:"I was working when you ___.",o:["call","called","will call"],a:1,he:"עבדתי כשהתקשרת.",why:"פעולה ארוכה (was working) שנקטעה ע\"י פעולה קצרה בעבר: called."},
+ {id:"g24",l:3,s:"They ___ dinner when the lights went out.",o:["were having","have","are having"],a:0,he:"הם אכלו ארוחת ערב כשהאורות כבו.",why:"עבר מתמשך: were + ing."},
+ {id:"g25",l:3,s:"If you practice every day, you ___ improve.",o:["will","would","did"],a:0,he:"אם תתאמני כל יום, תשתפרי.",why:"תנאי ראשון: If + הווה, will + פועל."},
+ {id:"g26",l:3,s:"If the price ___ down, I will buy shares.",o:["goes","went","will go"],a:0,he:"אם המחיר ירד, אקנה מניות.",why:"אחרי if בתנאי ראשון כותבים הווה, לא will."},
+ {id:"g27",l:3,s:"Have you ever ___ a business?",o:["start","started","starting"],a:1,he:"פתחת פעם עסק?",why:"have + V3: started."},
+ {id:"g28",l:3,s:"We ___ in this city since 2020.",o:["live","have lived","lived"],a:1,he:"אנחנו גרים בעיר הזאת מאז 2020.",why:"since = מתחיל בעבר ונמשך עד היום: have lived."},
+ {id:"g29",l:4,s:"If I ___ more time, I would train more.",o:["have","had","will have"],a:1,he:"אם היה לי יותר זמן, הייתי מתאמנת יותר.",why:"תנאי שני (דמיוני): If + עבר, would + פועל."},
+ {id:"g30",l:4,s:"The report ___ by the manager yesterday.",o:["wrote","was written","is writing"],a:1,he:"הדוח נכתב על ידי המנהל אתמול.",why:"סביל בעבר: was + V3."},
+ {id:"g31",l:4,s:"I have been ___ English for three months.",o:["learn","learned","learning"],a:2,he:"אני לומדת אנגלית כבר שלושה חודשים.",why:"have been + ing: פעולה שנמשכת עד עכשיו."},
+ {id:"g32",l:4,s:"By next year, we will have ___ off the loan.",o:["pay","paid","paying"],a:1,he:"עד השנה הבאה נסיים להחזיר את ההלוואה.",why:"עתיד מושלם: will have + V3."},
+ {id:"g33",l:4,s:"These phones ___ in China.",o:["make","are made","making"],a:1,he:"הטלפונים האלה מיוצרים בסין.",why:"סביל בהווה: are + V3."},
+ {id:"g34",l:4,s:"If she ___ rich, she would travel the world.",o:["is","were","will be"],a:1,he:"אילו הייתה עשירה, הייתה מטיילת בעולם.",why:"בתנאי שני משתמשים ב-were לכל הגופים."},
+ {id:"g35",l:5,s:"If we had invested earlier, we ___ more.",o:["would have earned","will earn","earned"],a:0,he:"אילו השקענו מוקדם יותר, היינו מרוויחים יותר.",why:"תנאי שלישי: If + had + V3, would have + V3."},
+ {id:"g36",l:5,s:"She had already ___ when the meeting started.",o:["leave","left","leaving"],a:1,he:"היא כבר עזבה כשהפגישה התחילה.",why:"עבר מושלם: had + V3."},
+ {id:"g37",l:5,s:"The deal ___ right now.",o:["is being negotiated","negotiates","was negotiated"],a:0,he:"העסקה נמצאת במשא ומתן ממש עכשיו.",why:"סביל מתמשך: is being + V3."},
+ {id:"g38",l:5,s:"By the time we arrived, the show ___.",o:["had started","has started","starts"],a:0,he:"עד שהגענו, ההופעה כבר התחילה.",why:"משהו שקרה לפני פעולה אחרת בעבר: had + V3."}
+];
+const RULES=[
+ {id:"r1",l:1,t:"Plural -s",he:"רבים: מוסיפים s",rule:"כדי להפוך שם עצם לרבים, ברוב המילים פשוט מוסיפים s בסוף.",f:[["book","books"],["car","cars"],["coin","coins"]],ex:[["I have two cars.","יש לי שתי מכוניות."],["She reads three books a month.","היא קוראת שלושה ספרים בחודש."]],note:"אחרי מספר גדול מ-1 תמיד רבים: one book, two books.",q:{s:"I bought three new ___.",o:["shirt","shirts","shirtes"],a:1,he:"קניתי שלוש חולצות חדשות.",why:"three = רבים, ולכן מוסיפים s: shirts."}},
+ {id:"r2",l:1,t:"Plural -es",he:"רבים: מתי מוסיפים es",rule:"כשהמילה נגמרת ב-s, ss, sh, ch, x (ולפעמים o) מוסיפים es, כי קשה להגות s לבד.",f:[["bus","buses"],["box","boxes"],["watch","watches"],["potato","potatoes"]],ex:[["The buses are late today.","האוטובוסים מאחרים היום."],["We sell boxes online.","אנחנו מוכרים קופסאות באינטרנט."]],note:"שימי לב: photo → photos, piano → pianos (בלי e).",q:{s:"He has two ___ on the table.",o:["boxs","boxes","boxies"],a:1,he:"יש לו שתי קופסאות על השולחן.",why:"box נגמרת ב-x, ולכן boxes."}},
+ {id:"r3",l:1,t:"Plural -y → -ies",he:"רבים: y הופכת ל-ies",rule:"אם לפני ה-y יש עיצור (לא a e i o u), מחליפים את ה-y ב-ies. אם לפני ה-y יש תנועה, רק מוסיפים s.",f:[["city","cities"],["company","companies"],["day","days"],["key","keys"]],ex:[["Many companies work from home.","הרבה חברות עובדות מהבית."],["I visited three cities.","ביקרתי בשלוש ערים."]],note:"day → days, כי לפני ה-y יש a.",q:{s:"Big ___ pay high taxes.",o:["companys","companies","companyes"],a:1,he:"חברות גדולות משלמות מסים גבוהים.",why:"company: לפני ה-y יש n (עיצור), ולכן companies."}},
+ {id:"r4",l:1,t:"Irregular plurals",he:"רבים חריגים",rule:"יש מילים שלא מקבלות s ברבים, אלא משתנות לגמרי. אותן פשוט זוכרים.",f:[["man","men"],["woman","women"],["child","children"],["person","people"],["foot","feet"],["tooth","teeth"]],ex:[["Two women started the company.","שתי נשים הקימו את החברה."],["Many people save money for a trip.","הרבה אנשים חוסכים כסף לטיול."]],note:"people כבר רבים: people are, לא people is.",q:{s:"There are ten ___ in the meeting.",o:["persons","people","peoples"],a:1,he:"יש עשרה אנשים בפגישה.",why:"person ברבים הוא people."}},
+ {id:"r5",l:1,t:"Possessive 's",he:"שייכות: 's",rule:"כדי לומר שמשהו שייך למישהו, מוסיפים 's לשם הבעלים. Dana's car = המכונית של דנה.",f:[["Dana","Dana's car"],["my boss","my boss's office"],["the team","the team's coach"]],ex:[["This is Tom's phone.","זה הטלפון של טום."],["My sister's job is in Tel Aviv.","העבודה של אחותי בתל אביב."]],note:"הסדר הפוך מעברית: קודם הבעלים, אחר כך החפץ.",q:{s:"This is ___ laptop.",o:["Maya","Mayas","Maya's"],a:2,he:"זה המחשב הנייד של מאיה.",why:"שייכות: Maya's = של מאיה."}},
+ {id:"r6",l:1,t:"Plural possessive s'",he:"שייכות ברבים: s'",rule:"אם הבעלים כבר ברבים ונגמרים ב-s, מוסיפים רק גרש אחרי ה-s. אם הרבים חריג (children), מוסיפים 's רגיל.",f:[["the players","the players' coach"],["my parents","my parents' house"],["children","children's books"]],ex:[["The players' salaries are very high.","המשכורות של השחקנים גבוהות מאוד."],["We shop at the women's store.","אנחנו קונים בחנות לנשים."]],note:"the player's coach = המאמן של שחקן אחד. the players' coach = המאמן של כמה שחקנים.",q:{s:"My ___ house is near the sea.",o:["parent's","parents'","parents's"],a:1,he:"הבית של ההורים שלי ליד הים.",why:"parents ברבים ונגמר ב-s, ולכן רק גרש: parents'."}},
+ {id:"r7",l:1,t:"he / she / it + s",he:"הווה: s אחרי he / she / it",rule:"בהווה פשוט, כשהנושא הוא he, she, it (או שם של אדם אחד), מוסיפים s לפועל. עם I, you, we, they לא מוסיפים.",f:[["I work","she works"],["I go","he goes"],["I study","she studies"],["I have","he has"]],ex:[["My brother works in a bank.","אחי עובד בבנק."],["The shop opens at nine.","החנות נפתחת בתשע."]],note:"have הופך ל-has, ו-go, do, watch מקבלים es.",q:{s:"My manager ___ to work by bus.",o:["go","goes","gos"],a:1,he:"המנהל שלי נוסע לעבודה באוטובוס.",why:"my manager = he, ו-go מקבל es: goes."}},
+ {id:"r8",l:1,t:"a / an",he:"a או an",rule:"לפני מילה שמתחילה בצליל של תנועה (a, e, i, o, u) כותבים an. לפני צליל של עיצור כותבים a. הקובע הוא הצליל, לא האות.",f:[["a car","an apple"],["a job","an idea"],["a university","an hour"]],ex:[["I have an idea for a business.","יש לי רעיון לעסק."],["She found a new job.","היא מצאה עבודה חדשה."]],note:"an hour, כי ה-h לא נשמעת. a university, כי u נשמעת כמו יו.",q:{s:"He wants to open ___ online shop.",o:["a","an","the a"],a:1,he:"הוא רוצה לפתוח חנות אונליין.",why:"online מתחילה בצליל תנועה (o), ולכן an."}},
+ {id:"r9",l:1,t:"it's / its",he:"it's או its",rule:"it's = it is (או it has). its = שלו / שלה לחפץ או לבעל חיים, בלי גרש.",f:[["it is","it's"],["the company + its","its workers"]],ex:[["It's cold today.","קר היום."],["The company pays its workers on time.","החברה משלמת לעובדים שלה בזמן."]],note:"טריק: אם אפשר לומר it is, כותבים it's.",q:{s:"The team lost ___ last game.",o:["it's","its","its'"],a:1,he:"הקבוצה הפסידה במשחק האחרון שלה.",why:"שייכות (של הקבוצה) = its, בלי גרש."}},
+ {id:"r10",l:2,t:"Past -ed",he:"עבר: מוסיפים ed",rule:"ברוב הפעלים, כדי לדבר על עבר מוסיפים ed. אם הפועל נגמר ב-e, מוסיפים רק d.",f:[["work","worked"],["live","lived"],["stop","stopped"],["study","studied"]],ex:[["I worked late yesterday.","עבדתי עד מאוחר אתמול."],["We saved a lot of money last year.","חסכנו הרבה כסף בשנה שעברה."]],note:"מילה קצרה שנגמרת בעיצור-תנועה-עיצור מכפילה אות: stop → stopped, plan → planned. עיצור + y → ied.",q:{s:"Last month we ___ a trip to Rome.",o:["planed","planned","planied"],a:1,he:"בחודש שעבר תכננו טיול לרומא.",why:"plan קצרה ונגמרת בעיצור-תנועה-עיצור, ולכן מכפילים n: planned."}},
+ {id:"r11",l:2,t:"Adding -ing",he:"הוספת ing",rule:"מוסיפים ing לפועל (בהווה מתמשך ועוד). אם הפועל נגמר ב-e שקטה, מורידים אותה. מילה קצרה של עיצור-תנועה-עיצור מכפילה את האות האחרונה.",f:[["play","playing"],["make","making"],["run","running"],["swim","swimming"]],ex:[["She is running in the park.","היא רצה בפארק עכשיו."],["I am making a budget.","אני מכינה תקציב."]],note:"see → seeing (שתי e נשארות), lie → lying.",q:{s:"Look, he is ___ in the pool.",o:["swiming","swimming","swimeing"],a:1,he:"תראי, הוא שוחה בבריכה.",why:"swim: עיצור-תנועה-עיצור, ולכן מכפילים m: swimming."}},
+ {id:"r12",l:2,t:"-er / -est",he:"השוואה: יותר והכי",rule:"למילת תואר קצרה מוסיפים er (יותר) ו-est (הכי). למילה ארוכה משתמשים ב-more ו-the most.",f:[["cheap","cheaper","the cheapest"],["big","bigger","the biggest"],["easy","easier","the easiest"],["expensive","more expensive","the most expensive"]],ex:[["This phone is cheaper than that one.","הטלפון הזה זול יותר מההוא."],["It's the most expensive car in the shop.","זו המכונית הכי יקרה בחנות."]],note:"חריגים: good → better → the best, bad → worse → the worst.",q:{s:"This plan is ___ than the old one.",o:["more good","gooder","better"],a:2,he:"התוכנית הזאת טובה יותר מהישנה.",why:"good חריגה: better (יותר טוב)."}},
+ {id:"r13",l:2,t:"Adverbs -ly",he:"תואר הפועל: ly",rule:"כדי לתאר איך עושים משהו, מוסיפים ly לתואר. quick (מהיר) → quickly (במהירות).",f:[["quick","quickly"],["careful","carefully"],["easy","easily"],["good","well"]],ex:[["She speaks English slowly and clearly.","היא מדברת אנגלית לאט ובבירור."],["He plays tennis very well.","הוא משחק טניס טוב מאוד."]],note:"good הופך ל-well. y בסוף הופכת ל-ily: easy → easily.",q:{s:"Please drive ___.",o:["careful","carefully","carefuly"],a:1,he:"בבקשה סעי בזהירות.",why:"מתארים איך נוהגים, ולכן ly: carefully."}},
+ {id:"r14",l:2,t:"Uncountable nouns",he:"מילים שלא סופרים",rule:"יש מילים שאי אפשר לספור, ולכן אין להן s ואין להן a: money, information, advice, news, furniture. משתמשים ב-much, a lot of, some.",f:[["money","a lot of money"],["advice","some advice"],["information","much information"]],ex:[["Can you give me some advice?","את יכולה לתת לי עצה?"],["We don't have much money.","אין לנו הרבה כסף."]],note:"לא אומרים advices או an information. אומרים a piece of advice.",q:{s:"Thanks for the useful ___.",o:["informations","information","an information"],a:1,he:"תודה על המידע השימושי.",why:"information לא נספרת, ולכן בלי s."}},
+ {id:"r15",l:2,t:"some / any",he:"some או any",rule:"some במשפט חיובי, any בשאלה ובשלילה.",f:[["I have some time.","Do you have any time?"],["She bought some apples.","She didn't buy any apples."]],ex:[["I need some help.","אני צריכה קצת עזרה."],["We don't have any milk.","אין לנו בכלל חלב."]],note:"בהצעה מנומסת משתמשים ב-some גם בשאלה: Would you like some coffee?",q:{s:"Do you have ___ questions?",o:["some","any","a"],a:1,he:"יש לך שאלות?",why:"שאלה רגילה = any."}},
+ {id:"r16",l:3,t:"-er / -or (people)",he:"סיומת לבעל מקצוע",rule:"מוסיפים er או or לפועל כדי לתאר את מי שעושה את הפעולה.",f:[["teach","teacher"],["invest","investor"],["play","player"],["manage","manager"]],ex:[["The investor bought ten percent of the company.","המשקיע קנה עשרה אחוזים מהחברה."],["She is a great manager.","היא מנהלת מצוינת."]],note:"אין חוק מדויק מתי or. זוכרים: actor, visitor, investor, director.",q:{s:"A person who runs a business is a business ___.",o:["owning","owner","ownor"],a:1,he:"אדם שמנהל עסק הוא בעל עסק.",why:"own + er = owner (מי שמחזיק)."}},
+ {id:"r17",l:3,t:"-ful / -less",he:"עם ובלי: ful ו-less",rule:"ful = מלא ב- (יש). less = בלי (אין).",f:[["help","helpful","helpless"],["care","careful","careless"],["use","useful","useless"]],ex:[["This app is very useful.","האפליקציה הזאת מאוד שימושית."],["It was a careless mistake.","זו הייתה טעות של חוסר תשומת לב."]],note:"ful כותבים עם l אחת בלבד: beautiful, helpful.",q:{s:"Without a charger, my phone is ___.",o:["useful","useless","usefull"],a:1,he:"בלי מטען, הטלפון שלי חסר תועלת.",why:"בלי תועלת = less: useless."}},
+ {id:"r18",l:3,t:"un- / dis- / im-",he:"תחיליות של הפך",rule:"מוסיפים בתחילת המילה כדי להפוך את המשמעות: un, dis, im, in.",f:[["happy","unhappy"],["agree","disagree"],["possible","impossible"],["correct","incorrect"]],ex:[["I disagree with this idea.","אני לא מסכימה עם הרעיון הזה."],["Nothing is impossible.","שום דבר אינו בלתי אפשרי."]],note:"im לפני p ו-m: impossible, impatient.",q:{s:"Your answer is not right. It's ___.",o:["uncorrect","incorrect","discorrect"],a:1,he:"התשובה שלך לא נכונה. היא שגויה.",why:"correct מקבל in: incorrect."}},
+ {id:"r19",l:3,t:"-ment / -tion",he:"מפועל לשם עצם",rule:"מוסיפים ment או tion (sion) לפועל, ומקבלים שם עצם.",f:[["pay","payment"],["invest","investment"],["inform","information"],["decide","decision"]],ex:[["This is a good investment.","זו השקעה טובה."],["We need to make a decision today.","אנחנו צריכים לקבל החלטה היום."]],note:"decide → decision, כי de-ci-de הופך ל-sion.",q:{s:"The first ___ is due next week.",o:["pay","paying","payment"],a:2,he:"התשלום הראשון צריך להיות משולם בשבוע הבא.",why:"צריך שם עצם (התשלום): pay + ment."}},
+ {id:"r20",l:3,t:"-ed vs -ing adjectives",he:"bored או boring",rule:"ed = איך אני מרגישה. ing = מה גורם להרגשה.",f:[["bored","boring"],["interested","interesting"],["tired","tiring"]],ex:[["The meeting was boring, so I was bored.","הפגישה הייתה משעממת, אז השתעממתי."],["I am interested in investing.","אני מתעניינת בהשקעות."]],note:"I am boring = אני משעממת (אחרים). I am bored = משעמם לי.",q:{s:"This book about money is very ___.",o:["interested","interesting","interest"],a:1,he:"הספר הזה על כסף מאוד מעניין.",why:"הספר גורם לעניין, ולכן ing: interesting."}},
+ {id:"r21",l:4,t:"-able",he:"סיומת able: אפשר",rule:"able = שאפשר לעשות לו את הפעולה.",f:[["afford","affordable"],["rely","reliable"],["predict","predictable"]],ex:[["We are looking for an affordable apartment.","אנחנו מחפשים דירה במחיר סביר."],["He is a reliable worker.","הוא עובד אמין."]],note:"y אחרי עיצור הופכת ל-i: rely → reliable.",q:{s:"I can pay for it. The price is ___.",o:["affordful","affordable","affordless"],a:1,he:"אני יכולה לשלם על זה. המחיר סביר.",why:"אפשר לעמוד בו = able: affordable."}},
+ {id:"r22",l:4,t:"-ness / -ity",he:"מתואר לשם עצם",rule:"מוסיפים ness או ity לתואר, ומקבלים שם עצם (מושג).",f:[["happy","happiness"],["kind","kindness"],["possible","possibility"],["able","ability"]],ex:[["Money doesn't buy happiness.","כסף לא קונה אושר."],["She has the ability to lead a team.","יש לה את היכולת להוביל צוות."]],note:"y הופכת ל-i: happy → happiness, lazy → laziness.",q:{s:"Health is more important than ___.",o:["rich","richness","riches"],a:2,he:"בריאות חשובה יותר מעושר.",why:"riches = עושר (שם עצם). richness פירושו עשירות של טעם או צבע."}},
+ {id:"r23",l:4,t:"Saying -ed and -s",he:"איך הוגים ed ו-s",rule:"ed נשמעת כמו t אחרי צלילים כמו k, p, s, sh, ch; כמו d אחרי רוב השאר; וכמו id אחרי t או d. אותו דבר עם s: s, z, או iz אחרי s, sh, ch.",f:[["worked","work-t"],["played","play-d"],["wanted","want-id"],["watches","watch-iz"]],ex:[["She wanted a new job.","היא רצתה עבודה חדשה."],["He watches the news every day.","הוא צופה בחדשות כל יום."]],note:"לחצי על כפתור ההשמעה כדי לשמוע את ההבדל.",q:{s:"In which word does -ed sound like 'id'? ___",o:["worked","played","needed"],a:2,he:"באיזו מילה ed נשמעת כמו 'איד'?",why:"need נגמרת ב-d, ולכן needed נהגית need-id."}},
+ {id:"r24",l:4,t:"fewer / less",he:"fewer או less",rule:"fewer עם דברים שסופרים (ברבים). less עם דברים שלא סופרים.",f:[["fewer people","less time"],["fewer mistakes","less money"]],ex:[["I want to spend less money this month.","אני רוצה להוציא פחות כסף החודש."],["There were fewer customers today.","היו פחות לקוחות היום."]],note:"customers נספרים, ולכן fewer. money לא נספר, ולכן less.",q:{s:"I made ___ mistakes this time.",o:["less","fewer","little"],a:1,he:"עשיתי פחות טעויות הפעם.",why:"mistakes נספרות (רבים), ולכן fewer."}}
+];
+const TENSES={
+ ps:{en:"Present Simple",he:"הווה פשוט",l:1,form:"I / you / we / they + verb · he / she / it + verb+s",use:"הרגלים, עובדות ודברים שקורים באופן קבוע. מילות סימן: every day, usually, always.",ex:"She works in an office.",neg:"I don't / she doesn't + verb"},
+ past:{en:"Past Simple",he:"עבר פשוט",l:1,form:"verb+ed (worked) · irregular: went, paid, won",use:"פעולה שהתחילה והסתיימה בעבר. מילות סימן: yesterday, last year, ago.",ex:"He paid for the coffee.",neg:"didn't + verb (no -ed)"},
+ will:{en:"Future: will",he:"עתיד עם will",l:1,form:"will + verb",use:"החלטה של הרגע, הבטחה או תחזית לעתיד.",ex:"I will call the bank tomorrow.",neg:"won't + verb"},
+ pc:{en:"Present Continuous",he:"הווה מתמשך",l:2,form:"am / is / are + verb+ing",use:"משהו שקורה עכשיו, ממש בזמן הדיבור, או בתקופה הזאת.",ex:"The team is training now.",neg:"am not / isn't / aren't + verb+ing"},
+ going:{en:"Future: going to",he:"עתיד עם going to",l:2,form:"am / is / are + going to + verb",use:"תוכנית או כוונה שכבר החלטת עליה.",ex:"I am going to open a savings account.",neg:"I'm not going to + verb"},
+ pp:{en:"Present Perfect",he:"הווה מושלם",l:3,form:"have / has + V3 (saved, won, been)",use:"חוויה או תוצאה שרלוונטית עכשיו, בלי זמן מדויק. מילות סימן: ever, never, already, yet.",ex:"She has never lost a match.",neg:"haven't / hasn't + V3"},
+ pastc:{en:"Past Continuous",he:"עבר מתמשך",l:3,form:"was / were + verb+ing",use:"פעולה שהייתה באמצע כשמשהו אחר קרה.",ex:"I was working when you called.",neg:"wasn't / weren't + verb+ing"},
+ cond1:{en:"First Conditional",he:"משפט תנאי ראשון",l:3,form:"If + present simple, will + verb",use:"תנאי אמיתי ואפשרי בעתיד.",ex:"If you practice every day, you will improve.",neg:""},
+ ppc:{en:"Present Perfect Continuous",he:"הווה מושלם מתמשך",l:4,form:"have / has been + verb+ing",use:"פעולה שהתחילה בעבר ועדיין נמשכת (for / since).",ex:"I have been learning English for three months.",neg:""},
+ cond2:{en:"Second Conditional",he:"משפט תנאי שני",l:4,form:"If + past simple, would + verb",use:"מצב דמיוני או לא סביר בהווה.",ex:"If I had more time, I would train more.",neg:""},
+ passive:{en:"Passive Voice",he:"סביל",l:4,form:"be + V3 (is written, was sold)",use:"כשהפעולה חשובה יותר ממי שעשה אותה.",ex:"The report was written by the manager.",neg:""},
+ fp:{en:"Future Perfect",he:"עתיד מושלם",l:4,form:"will have + V3",use:"משהו שיסתיים עד נקודת זמן בעתיד.",ex:"By next year, we will have paid off the loan.",neg:""},
+ pastp:{en:"Past Perfect",he:"עבר מושלם",l:5,form:"had + V3",use:"פעולה שקרתה לפני פעולה אחרת בעבר.",ex:"She had already left when the meeting started.",neg:""},
+ cond3:{en:"Third Conditional",he:"משפט תנאי שלישי",l:5,form:"If + had + V3, would have + V3",use:"חרטה או דמיון על העבר, משהו שכבר לא אפשר לשנות.",ex:"If we had invested earlier, we would have earned more.",neg:""}
+};
+const S_=(en,he,tense,l,x)=>({en,he,tense,l,x:x||[]});
+const SENTENCES=[
+ S_("I save money every month.","אני חוסכת כסף כל חודש.","ps",1,["saves"]),
+ S_("She works in an office.","היא עובדת במשרד.","ps",1,["work"]),
+ S_("We play football on Friday.","אנחנו משחקים כדורגל ביום שישי.","ps",1,["plays"]),
+ S_("Does he like his job?","האם הוא אוהב את העבודה שלו?","ps",1,["Do"]),
+ S_("My boss doesn't drink coffee.","המנהל שלי לא שותה קפה.","ps",1,["don't"]),
+ S_("He paid for the coffee.","הוא שילם על הקפה.","past",1,["pays"]),
+ S_("I learned five new words yesterday.","למדתי חמש מילים חדשות אתמול.","past",1,["learn"]),
+ S_("They won the game.","הם ניצחו במשחק.","past",1,["win"]),
+ S_("We didn't buy the car.","לא קנינו את המכונית.","past",1,["bought"]),
+ S_("I will call the bank tomorrow.","אני אתקשר לבנק מחר.","will",1,["called"]),
+ S_("The price will go up.","המחיר יעלה.","will",1,["goes"]),
+ S_("I am reading a book about habits.","אני קוראת עכשיו ספר על הרגלים.","pc",2,["read"]),
+ S_("The team is training now.","הקבוצה מתאמנת עכשיו.","pc",2,["train"]),
+ S_("Are you working from home today?","את עובדת מהבית היום?","pc",2,["Do"]),
+ S_("I am going to open a savings account.","אני הולכת לפתוח חשבון חיסכון.","going",2,["will"]),
+ S_("She is going to run a marathon.","היא הולכת לרוץ מרתון.","going",2,["runs"]),
+ S_("We didn't make a profit last year.","לא עשינו רווח בשנה שעברה.","past",2,["made"]),
+ S_("Our company sells products online.","החברה שלנו מוכרת מוצרים באינטרנט.","ps",2,["sell"]),
+ S_("Will you come to the meeting?","תבואי לפגישה?","will",2,["Do"]),
+ S_("I have saved enough money for a car.","חסכתי מספיק כסף למכונית.","pp",3,["save"]),
+ S_("She has never lost a match.","היא אף פעם לא הפסידה במשחק.","pp",3,["lose"]),
+ S_("They have invested in a new startup.","הם השקיעו בסטארטאפ חדש.","pp",3,["invests"]),
+ S_("Have you ever started a business?","פתחת פעם עסק?","pp",3,["Did"]),
+ S_("I was working when you called.","עבדתי כשהתקשרת.","pastc",3,["am"]),
+ S_("We were talking about the budget.","דיברנו (היינו באמצע שיחה) על התקציב.","pastc",3,["are"]),
+ S_("If you practice every day, you will improve.","אם תתאמני כל יום, תשתפרי.","cond1",3,["practiced"]),
+ S_("If the price goes down, I will buy shares.","אם המחיר ירד, אקנה מניות.","cond1",3,["went"]),
+ S_("I have been learning English for three months.","אני לומדת אנגלית כבר שלושה חודשים.","ppc",4,["am"]),
+ S_("By next year, we will have paid off the loan.","עד השנה הבאה נסיים להחזיר את ההלוואה.","fp",4,["pay"]),
+ S_("If I had more time, I would train more.","אם היה לי יותר זמן, הייתי מתאמנת יותר.","cond2",4,["will"]),
+ S_("The report was written by the manager.","הדוח נכתב על ידי המנהל.","passive",4,["wrote"]),
+ S_("She has been running every morning since January.","היא רצה כל בוקר מאז ינואר.","ppc",4,["runs"]),
+ S_("If we had invested earlier, we would have earned more.","אילו השקענו מוקדם יותר, היינו מרוויחים יותר.","cond3",5,["will"]),
+ S_("She had already left when the meeting started.","היא כבר עזבה כשהפגישה התחילה.","pastp",5,["has"]),
+ S_("The deal is being negotiated right now.","העסקה נמצאת ממש עכשיו במשא ומתן.","passive",5,["negotiating"])
+];
+const Q=(q,qh,options,answer)=>({q,qh,options,answer});
+const PASSAGES=[
+ {id:"p1",t:"fin",l:1,title:"My First Budget",text:"My name is Dana. I work in a shop. Every month I get my salary. First, I pay my rent. Then I buy food. I save two hundred shekels every month. I put the money in the bank. I want to buy a new bike next year.",
+  qs:[Q("Where does Dana work?","איפה דנה עובדת?",["In a bank","In a shop","In a school"],1),Q("How much does she save every month?","כמה היא חוסכת כל חודש?",["100 shekels","200 shekels","500 shekels"],1),Q("What does she want to buy?","מה היא רוצה לקנות?",["A car","A phone","A bike"],2)]},
+ {id:"p2",t:"sport",l:1,title:"A Morning Run",text:"Tom gets up at six o'clock. He drinks a glass of water. Then he runs in the park for thirty minutes. He runs with his friend Ben. After the run, they eat breakfast together. Tom feels strong and happy.",
+  qs:[Q("What time does Tom get up?","באיזו שעה טום קם?",["At five","At six","At seven"],1),Q("Who runs with Tom?","מי רץ עם טום?",["His brother","His coach","His friend Ben"],2),Q("How long does he run?","כמה זמן הוא רץ?",["Thirty minutes","One hour","Ten minutes"],0)]},
+ {id:"p3",t:"grow",l:1,title:"Small Habits",text:"Small habits can change your life. Every day, I read ten pages of a book. I also learn five new English words. It is not a lot. But after one year, I read many books and I know many words. Start small and do it every day.",
+  qs:[Q("How many pages does the writer read every day?","כמה עמודים הכותב קורא כל יום?",["Five","Ten","Twenty"],1),Q("How many new words does the writer learn every day?","כמה מילים חדשות?",["Five","Ten","Fifteen"],0),Q("What is the main idea?","מה הרעיון המרכזי?",["Reading is boring","Small things every day make a big difference","You need a lot of time to learn"],1)]},
+ {id:"p4",t:"biz",l:1,title:"A Small Coffee Shop",text:"Maya has a small coffee shop. She opens the shop at seven in the morning. Many customers come before work. They buy coffee and cake. Maya has two workers. On Saturday the shop is closed. Maya is busy, but she loves her business.",
+  qs:[Q("When does Maya open the shop?","מתי מאיה פותחת את החנות?",["At seven","At eight","At nine"],0),Q("How many workers does Maya have?","כמה עובדים יש למאיה?",["One","Two","Three"],1),Q("When is the shop closed?","מתי החנות סגורה?",["On Friday","On Sunday","On Saturday"],2)]},
+ {id:"p5",t:"fin",l:2,title:"Saving vs. Spending",text:"Last year, Eli spent a lot of money on clothes and restaurants. At the end of every month, he had no money left. In January, he decided to make a budget. He wrote down his income and all his expenses. He found that he was spending eight hundred shekels a month on takeaway food. Now he cooks at home four days a week, and he is saving that money for a trip to London.",
+  qs:[Q("What did Eli spend a lot of money on?","על מה אלי הוציא הרבה כסף?",["Cars and phones","Clothes and restaurants","Books and courses"],1),Q("What did he decide to do in January?","מה הוא החליט בינואר?",["Make a budget","Find a new job","Sell his car"],0),Q("How much was he spending on takeaway food?","כמה הוציא על אוכל בהזמנה?",["400 shekels a month","800 shekels a month","800 shekels a week"],1),Q("What is he saving for?","בשביל מה הוא חוסך?",["A new phone","A car","A trip to London"],2)]},
+ {id:"p6",t:"sport",l:2,title:"The Comeback",text:"Our basketball team lost the first three games of the season. The players were tired and unhappy. Then a new coach arrived. She changed the training program. The team started to train in the morning, and everyone worked on their fitness. After two months, the team won seven games in a row. The coach said, \"Talent is important, but hard work is more important.\"",
+  qs:[Q("How many games did the team lose at the start?","כמה משחקים הפסידו בהתחלה?",["Two","Three","Seven"],1),Q("What did the new coach change?","מה המאמנת החדשה שינתה?",["The players","The training program","The stadium"],1),Q("How many games did they win in a row?","כמה משחקים ניצחו ברצף?",["Three","Five","Seven"],2),Q("What is the coach's message?","מה המסר של המאמנת?",["Talent is everything","Hard work is more important than talent","Rest is more important than training"],1)]},
+ {id:"p7",t:"grow",l:2,title:"My Morning Routine",text:"Two years ago, I always woke up late and felt stressed. Then I changed my morning routine. Now I wake up at six thirty. I don't look at my phone for the first hour. I drink water, I stretch for ten minutes, and I write three goals for the day. This simple routine helps me feel calm and focused. I am more productive at work, too.",
+  qs:[Q("What was the problem two years ago?","מה הייתה הבעיה לפני שנתיים?",["The writer woke up late and felt stressed","The writer had no job","The writer was sick"],0),Q("What does the writer NOT do in the first hour?","מה הכותב לא עושה בשעה הראשונה?",["Drink water","Look at the phone","Stretch"],1),Q("How many goals does the writer write?","כמה מטרות נכתבות?",["One","Two","Three"],2),Q("How does the routine help?","איך השגרה עוזרת?",["It makes the writer calm and focused","It makes the writer rich","It helps the writer sleep more"],0)]},
+ {id:"p8",t:"biz",l:2,title:"A Meeting with a New Customer",text:"Yesterday I had an important meeting with a new customer. The customer owns three restaurants and wants to buy our coffee machines. I prepared a short presentation about our products and prices. During the meeting, he asked many questions about the service. I explained that we fix every machine within twenty-four hours. At the end, he ordered five machines. My manager was very happy.",
+  qs:[Q("What does the customer own?","מה יש ללקוח?",["Three shops","Three restaurants","Three hotels"],1),Q("What does he want to buy?","מה הוא רוצה לקנות?",["Coffee machines","Coffee beans","Tables"],0),Q("How fast do they fix a machine?","תוך כמה זמן מתקנים מכונה?",["Within a week","Within 24 hours","Within two hours"],1),Q("How many machines did he order?","כמה מכונות הזמין?",["Three","Five","Ten"],1)]},
+ {id:"p9",t:"fin",l:3,title:"The Power of Compound Interest",text:"Imagine you invest ten thousand shekels and earn five percent interest every year. After the first year, you have ten thousand five hundred shekels. In the second year, you earn interest not only on your original money but also on the interest from the first year. This is called compound interest. Over a long time, the effect becomes huge. That is why many financial advisors say that the most important factor is not how much you invest, but how early you start. Even small amounts, invested regularly, can grow into a significant sum.",
+  qs:[Q("How much money do you have after the first year?","",["10,050 shekels","10,500 shekels","15,000 shekels"],1),Q("What is compound interest?","",["Interest only on your original money","Interest on your money and on earlier interest","A fee the bank takes"],1),Q("According to advisors, what matters most?","",["How much you invest","How early you start","Which bank you choose"],1),Q("Which sentence is true according to the text?","",["Only rich people can benefit","Small regular amounts can grow a lot","Interest is always ten percent"],1)]},
+ {id:"p10",t:"biz",l:3,title:"How to Negotiate Better",text:"Negotiation is part of everyday business, from agreeing on a salary to closing a deal with a supplier. Good negotiators prepare carefully. Before the meeting, they research the market and decide on their minimum acceptable price. During the conversation, they listen more than they talk, and they ask open questions to understand what the other side really needs. Finally, they look for a solution where both sides win, because a good relationship is often worth more than a single deal.",
+  qs:[Q("What do good negotiators do before the meeting?","",["They relax and don't prepare","They research the market and decide on a minimum price","They send a contract"],1),Q("During the conversation, good negotiators...","",["talk more than they listen","listen more than they talk","only ask yes/no questions"],1),Q("Why do they look for a win-win solution?","",["Because a good relationship is worth more than one deal","Because it is faster","Because the law says so"],0),Q("Which example of negotiation is mentioned?","",["Buying a house","Agreeing on a salary","Choosing a restaurant"],1)]},
+ {id:"p11",t:"sport",l:3,title:"Training the Mind",text:"Professional athletes train their minds as well as their bodies. Many top tennis players, for example, work with sports psychologists. They practise visualization: before a match, they imagine themselves playing well and winning important points. They also learn to control their breathing when they feel nervous. Research shows that athletes who use these techniques recover faster from mistakes and perform better under pressure.",
+  qs:[Q("Who do many top tennis players work with?","",["Nutrition experts","Sports psychologists","Business coaches"],1),Q("What is visualization?","",["Watching videos of other players","Imagining yourself playing well before a match","Training with your eyes closed"],1),Q("When do athletes control their breathing?","",["When they feel nervous","When they sleep","After they win"],0),Q("What does research show about these techniques?","",["They don't help","Athletes recover faster from mistakes","Athletes train less"],1)]},
+ {id:"p12",t:"grow",l:3,title:"The Power of \"Yet\"",text:"Psychologist Carol Dweck described two types of mindset. People with a fixed mindset believe their talents cannot change. When they fail, they often give up. People with a growth mindset believe they can develop their abilities through effort and learning. For them, a mistake is information, not a disaster. The good news is that a growth mindset can be learned. One simple step is to add the word \"yet\" to your sentences: not \"I can't speak English\", but \"I can't speak English yet\".",
+  qs:[Q("What do people with a fixed mindset believe?","",["Their talents cannot change","They can learn anything","Mistakes are useful"],0),Q("For people with a growth mindset, a mistake is...","",["a disaster","information","a reason to stop"],1),Q("Can a growth mindset be learned?","",["No, you are born with it","Yes","Only by children"],1),Q("What simple step does the text suggest?","",["Read more books","Add the word \"yet\" to your sentences","Never make mistakes"],1)]},
+ {id:"p13",t:"fin",l:4,title:"Understanding Inflation",text:"Inflation is the rate at which prices rise over time. When inflation is high, the same amount of money buys fewer goods and services, so the purchasing power of your savings decreases. Central banks usually try to keep inflation at around two percent a year. To fight high inflation, they often raise interest rates, which makes borrowing more expensive and encourages people to save rather than spend. For individuals, this is one reason why keeping all of your savings in cash may be risky in the long term.",
+  qs:[Q("What is inflation?","",["The rate at which prices rise","The rate at which salaries fall","A type of bank account"],0),Q("What happens to purchasing power when inflation is high?","",["It increases","It decreases","It stays the same"],1),Q("What inflation rate do central banks usually aim for?","",["Zero percent","About two percent","About ten percent"],1),Q("How do central banks often fight high inflation?","",["By printing money","By raising interest rates","By lowering taxes"],1)]},
+ {id:"p14",t:"biz",l:4,title:"Building a Personal Brand",text:"In today's job market, your reputation often reaches people before you do. A personal brand is the way others see your skills, values and experience. Building one does not require a big budget. It starts with consistency: sharing useful ideas about your field, keeping your online profile up to date, and delivering on your promises. Over time, colleagues and potential clients begin to associate your name with a specific area of expertise. That trust can open doors to opportunities you would never have found by sending applications alone.",
+  qs:[Q("What is a personal brand?","",["A company logo","The way others see your skills, values and experience","An expensive advertising campaign"],1),Q("According to the text, building a personal brand starts with...","",["a big budget","consistency","a new job"],1),Q("Which action is NOT mentioned?","",["Sharing useful ideas","Keeping your profile up to date","Buying online ads"],2),Q("What can a strong personal brand lead to?","",["Opportunities you would not find otherwise","Fewer emails","A lower salary"],0)]},
+ {id:"p15",t:"sport",l:4,title:"Data in Modern Football",text:"Twenty years ago, football decisions were based mostly on a coach's instinct. Today, top clubs employ teams of data analysts. Players wear small GPS devices during training, which measure how far they run, how fast they accelerate and how tired they are. This information helps coaches reduce the risk of injury by deciding when a player needs rest. Clubs also use data to find talented young players in smaller leagues before their competitors notice them, which can save millions in transfer fees.",
+  qs:[Q("What were football decisions based on twenty years ago?","",["Data","Mostly the coach's instinct","Fan votes"],1),Q("What do GPS devices measure?","",["Distance, acceleration and tiredness","Heart surgery results","Ticket sales"],0),Q("How does data help reduce injuries?","",["By showing when a player needs rest","By changing the ball","By making training longer"],0),Q("How can data save clubs money?","",["By finding young talent before competitors","By selling more shirts","By paying players less"],0)]}
+];
+const yv=id=>"https://www.youtube.com/watch?v="+id;
+const VIDEOS=[
+ {id:"v1",t:"gen",l:1,title:"Speak With Me: Real Life English Conversation",by:"Speak English With Vanessa",he:"תרגול שיחה יום-יומית: ונסה שואלת, ואת עונה בקול. מסבירה לאט וברור.",url:yv("F3Wy5iHfEMw")},
+ {id:"v2",t:"gen",l:1,title:"Talk About Your Day in English",by:"Ms. English Channel",he:"שגרת יום בהווה פשוט, הבסיס לכל השאר. מתאים בדיוק להתחלה.",url:yv("McG32IZvC70")},
+ {id:"v3",t:"biz",l:1,title:"Job Vocabulary For Beginners",by:"My English Pages",he:"מילים בסיסיות מעולם העבודה, עם חידון בסוף.",url:yv("2vQLHUG5G3k")},
+ {id:"v4",t:"sport",l:1,title:"Essential A2 Vocabulary: Sports and Leisure",by:"Robin Landry",he:"אוצר מילים של ספורט ופנאי ברמה בסיסית.",url:yv("yKVJRMlkcaI")},
+ {id:"v5",t:"fin",l:2,title:"Money and lifestyle - 6 Minute English",by:"BBC Learning English",he:"שיחה קצרה על כסף ואורח חיים, עם הסבר על המילים החדשות.",url:yv("zsOnAHAY6to")},
+ {id:"v6",t:"gen",l:2,title:"How to learn and remember English vocabulary",by:"English with Lucy",he:"שיטות לזכור מילים חדשות. מתאים לעבודה עם \"המילים שלי\".",url:yv("olP6nBCXcw8")},
+ {id:"v7",t:"gen",l:2,title:"Intro to Linking: American English Pronunciation",by:"Rachel's English",he:"איך מחברים מילים בדיבור כדי להישמע טבעי.",url:yv("EvhZPWJSub4")},
+ {id:"v8",t:"biz",l:2,title:"Speak More Confidently in English Meetings",by:"Learn English with Harry",he:"36 משפטים מוכנים לפגישות: להציג, להסכים, לא להסכים ולסכם.",url:yv("QOUOsneeB-w")},
+ {id:"v9",t:"fin",l:2,title:"Why You NEED an Emergency Fund!",by:"Two Cents (PBS)",he:"למה כדאי שתהיה קרן חירום, בסרטון קצר ומאויר.",url:yv("vftjBTjFlzI")},
+ {id:"v10",t:"fin",l:3,title:"You Aren't Using These Sneaky Budget Tricks",by:"Two Cents (PBS)",he:"טריקים לבניית תקציב שעובד.",url:yv("2yWDKDm-ZD8")},
+ {id:"v11",t:"fin",l:3,title:"What gives a dollar bill its value?",by:"TED-Ed",he:"שיעור מונפש קצר: למה לכסף יש ערך. אפשר להפעיל כתוביות.",url:yv("XNu5ppFZbHo")},
+ {id:"v12",t:"grow",l:3,title:"How To Hack Your Habits",by:"Ali Abdaal x Dr Julie Smith",he:"שיחה על בניית הרגלים ושינוי התנהגות, באנגלית בריטית ברורה.",url:yv("m8d1yVpCryA")},
+ {id:"v13",t:"grow",l:3,title:"The power of believing that you can improve",by:"TED · Carol Dweck",he:"ההרצאה המפורסמת על growth mindset, הנושא של אחד מקטעי ההאזנה.",url:yv("_X0mgOOSpLU")},
+ {id:"v14",t:"sport",l:3,title:"A Beginner's Guide to Visualization for Athletes",by:"Sam Martin - Peak Performance",he:"איך ספורטאים משתמשים בדמיון מודרך לפני תחרות.",url:yv("EAGKsvhAPME")},
+ {id:"v15",t:"gen",l:3,title:"Present Perfect Tense (grammar + 100 example phrases)",by:"Club James Studios",he:"הזמן שהכי מבלבל דוברי עברית, עם המון דוגמאות.",url:yv("uzAgx_ybpr8")},
+ {id:"v16",t:"fin",l:3,title:"Why are prices going up? 6 Minute English",by:"BBC Learning English",he:"אינפלציה ועליית מחירים, עם הסבר על אוצר המילים.",url:yv("FKwmUNffu7M")},
+ {id:"v17",t:"grow",l:4,title:"Why you procrastinate, and how to still get things done",by:"TED · Tim Urban",he:"הרצאה מצחיקה על דחיינות. רמה מתקדמת, כדאי עם כתוביות.",url:yv("Rk5C149J9C0")}
+];
+const BADGES=[
+ {k:"day1",t:"צעד ראשון",d:"נכנסת לאפליקציה",ok:()=>S.days>=1},
+ {k:"streak3",t:"3 ימים ברצף",d:"נכנסת 3 ימים רצופים",ok:()=>S.streak.best>=3},
+ {k:"streak7",t:"שבוע שלם",d:"7 ימים ברצף",ok:()=>S.streak.best>=7},
+ {k:"words5",t:"אספנית מילים",d:"הוספת 5 מילים משלך",ok:()=>Object.values(S.my).filter(w=>w.src==="mine").length>=5},
+ {k:"known25",t:"25 עלים",d:"25 מילים שאת יודעת",ok:()=>knownCount()>=25},
+ {k:"sent20",t:"בנאית משפטים",d:"20 משפטים נכונים",ok:()=>Object.keys(S.sentDone).length>=20},
+ {k:"listen5",t:"אוזן קשבת",d:"סיימת 5 קטעי האזנה",ok:()=>Object.keys(S.passDone).length>=5},
+ {k:"chat1",t:"שיחה ראשונה",d:"ענית למורה",ok:()=>(S.xpBy.speaking||0)>0},
+ {k:"video3",t:"צופה מתמידה",d:"צפית ב-3 סרטונים",ok:()=>Object.keys(S.videos).length>=3},
+ {k:"fruit5",t:"5 פירות",d:"עמדת ביעד היומי 5 פעמים",ok:()=>S.fruits>=5},
+ {k:"lvl2",t:"רמה 2",d:"עלית לרמה A2",ok:()=>unlocked()>=2},
+ {k:"lvl3",t:"רמה 3",d:"עלית לרמה B1",ok:()=>unlocked()>=3}
+];
+const MISSION_POOL=[
+ {k:"memory",n:1,t:"לסיים משחק זיכרון"},
+ {k:"sentences",n:5,t:"לבנות 5 משפטים נכונים"},
+ {k:"review",n:8,t:"לחזור על 8 מילים בכרטיסיות"},
+ {k:"listening",n:1,t:"לסיים קטע האזנה"},
+ {k:"speaking",n:3,t:"לענות 3 פעמים למורה בשיחה"},
+ {k:"video",n:1,t:"לצפות בסרטון באנגלית"},
+ {k:"addword",n:2,t:"להוסיף 2 מילים שנתקלת בהן"},
+ {k:"swipe",n:10,t:"להחליק 10 כרטיסיות מילים"}
+];
+const STAGES=[{d:0,n:"נבט"},{d:3,n:"שתיל"},{d:7,n:"עץ צעיר"},{d:14,n:"עץ מלבלב"},{d:30,n:"עץ גדול"},{d:60,n:"עץ פורח"}];
+
+/* ---------------- state ---------------- */
+const KEY="english-path-v1";
+const blankToday=d=>({date:d,xp:0,goal:false,c:{},done:{}});
+const blank=()=>({xp:0,xpBy:{memory:0,sentences:0,listening:0,speaking:0,words:0,videos:0,daily:0},words:{},my:{},sentDone:{},passDone:{},videos:{},streak:{last:null,count:0,best:0},days:0,fruits:0,today:blankToday(null),chosen:null,aiSentences:[],aiPassages:[],srs:{},updatedAt:0});
+function merge(d){const s=Object.assign(blank(),d||{});s.xpBy=Object.assign(blank().xpBy,s.xpBy||{});s.streak=Object.assign({last:null,count:0,best:0},s.streak||{});s.today=Object.assign(blankToday(null),s.today||{});s.today.c=s.today.c||{};s.today.done=s.today.done||{};s.my=s.my||{};s.srs=s.srs||{};s.gq=s.gq||{};s.rq=s.rq||{};s.videos=s.videos||{};return s;}
+let S=blank();
+try{const raw=localStorage.getItem(KEY);if(raw)S=merge(JSON.parse(raw));}catch(e){}
+
+let dbDoc=null,dbBusy=false,dbDirty=false,dbTimer=null;
+function save(){
+  S.updatedAt=Date.now();
+  try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
+  if(dbDoc){dbDirty=true;clearTimeout(dbTimer);dbTimer=setTimeout(flushDb,1500);}
+}
+async function flushDb(){
+  if(!dbDoc||dbBusy||!dbDirty)return;
+  dbBusy=true;dbDirty=false;
+  try{await dbDoc.set(JSON.parse(JSON.stringify(S)));}catch(e){if(e&&e.code==="invalid_argument")dbDoc=null;}
+  dbBusy=false;if(dbDirty)flushDb();
+}
+async function initDb(){
+  try{
+    const [db,user]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+    if(!db||!user)return;
+    const id=await user.id();if(!id)return;
+    const ref=db.doc("data/users/"+id+"/progress");
+    const snap=await ref.get();
+    if(snap.exists){const d=snap.data();if(d&&(d.updatedAt||0)>(S.updatedAt||0)){S=merge(d);try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}}
+    dbDoc=ref;
+    $("syncNote").textContent="ההתקדמות נשמרת בחשבון שלך ומסונכרנת בין המכשירים.";
+    if(!snap.exists||((snap.data()||{}).updatedAt||0)<S.updatedAt){dbDirty=true;flushDb();}
+  }catch(e){}
+}
+
+const dstr=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const today=()=>dstr(new Date());
+function ensureToday(){if(S.today.date!==today())S.today=blankToday(today());}
+let visited=false,watered=false;
+function visit(){
+  if(visited)return;visited=true;setTimeout(openSwipe,watered?1800:300);
+  const t=today();
+  ensureToday();
+  if(S.streak.last!==t){
+    const y=new Date();y.setDate(y.getDate()-1);
+    S.streak.count=(S.streak.last===dstr(y))?S.streak.count+1:1;S.streak.last=t;
+    S.streak.best=Math.max(S.streak.best||0,S.streak.count);
+    S.days=(S.days||0)+1;watered=true;
+    addXP("daily",5,true);
+  }
+  save();renderAll();
+  if(watered)setTimeout(()=>toast(S.days===1?"שתלת את העץ שלך! כל יום שתיכנסי הוא יגדל. +5 XP":"השקית את העץ ליום "+S.days+". +5 XP",3200),400);
+}
+const unlocked=()=>{let n=1;for(const L of LEVELS)if(S.xp>=L.min)n=L.n;return n;};
+const lvl=()=>S.chosen?Math.min(S.chosen,unlocked()):unlocked();
+function addXP(area,n,silent){
+  ensureToday();
+  const before=unlocked();
+  S.xp+=n;S.xpBy[area]=(S.xpBy[area]||0)+n;S.today.xp+=n;
+  if(!silent)floatXP(n);
+  if(!S.today.goal&&S.today.xp>=DAILY_GOAL){S.today.goal=true;S.fruits=(S.fruits||0)+1;setTimeout(()=>toast("הגעת ליעד היומי! פרי חדש צמח על העץ.",3400),900);}
+  const after=unlocked();
+  if(after>before){S.chosen=null;setTimeout(()=>toast("עלית לרמה "+after+" · "+LEVELS[after-1].name+"! התרגילים נעשים מאתגרים יותר.",4200),300);}
+  save();renderHeader();if(tab==="home")renderHome();
+}
+function progress(k,n){
+  ensureToday();S.today.c[k]=(S.today.c[k]||0)+(n||1);
+  const m=todaysMissions().find(x=>x.k===k);
+  if(m&&!S.today.done[k]&&S.today.c[k]>=m.n){S.today.done[k]=true;addXP("daily",10);setTimeout(()=>toast("משימה הושלמה: "+m.t+" · +10 XP",3000),200);}
+  save();
+}
+function todaysMissions(){
+  const d=new Date();let seed=d.getFullYear()*400+d.getMonth()*32+d.getDate();
+  const pool=MISSION_POOL.slice();const out=[];
+  while(out.length<3){seed=(seed*9301+49297)%233280;out.push(pool.splice(seed%pool.length,1)[0]);}
+  return out;
+}
+function knownCount(){
+  const set=new Set();
+  for(const k in S.my)if(S.my[k].status==="known")set.add(k);
+  for(const k in S.srs)if(S.srs[k].box>=3&&!(S.my[k]&&S.my[k].status==='focus'))set.add(k);
+  for(const k in S.words)if(S.words[k]>=3&&!(S.my[k]&&S.my[k].status==="focus"))set.add(k);
+  return set.size;
+}
+
+/* ---------------- helpers ---------------- */
+const $=id=>document.getElementById(id);
+const el=(tag,attrs,...kids)=>{const e=document.createElement(tag);if(attrs)for(const k in attrs){if(k==="class")e.className=attrs[k];else if(k==="text")e.textContent=attrs[k];else if(k.startsWith("on"))e.addEventListener(k.slice(2),attrs[k]);else e.setAttribute(k,attrs[k]);}for(const c of kids){if(c==null)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+let toastT;function toast(msg,ms){const t=$("toast");t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,ms||2600);}
+const norm=s=>s.toLowerCase().replace(/[.,!?;:"]/g,"").replace(/\s+/g," ").trim();
+const SPEAK_SVG='<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>';
+function speakBtn(text){const b=el("button",{class:"icon-btn","aria-label":"השמעה",type:"button"});b.innerHTML=SPEAK_SVG;b.onclick=e=>{e.stopPropagation();speak(text,{rate:0.85});};return b;}
+function floatXP(n){const p=$("hXpPill");const f=el("span",{class:"float",text:"+"+n});p.append(f);setTimeout(()=>f.remove(),1300);}
+const wkey=s=>s.trim().toLowerCase();
+
+/* ---------------- speech ---------------- */
+const hasTTS="speechSynthesis" in window;
+let voice=null;
+function pickVoice(){
+  if(!hasTTS)return;const vs=speechSynthesis.getVoices().filter(v=>/^en[-_]/i.test(v.lang));
+  voice=vs.find(v=>/en[-_]US/i.test(v.lang)&&/Google|Samantha|Aria|Jenny|Natural/i.test(v.name))||vs.find(v=>/en[-_]US/i.test(v.lang))||vs.find(v=>/en[-_]GB/i.test(v.lang))||vs[0]||null;
+}
+if(hasTTS){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
+function speak(text,opts){
+  opts=opts||{};
+  if(!hasTTS){toast("הדפדפן הזה לא תומך בהקראה");return;}
+  if(!opts.queue)speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang=voice?voice.lang:"en-US";if(voice)u.voice=voice;u.rate=opts.rate||0.9;
+  if(opts.onend){u.onend=opts.onend;u.onerror=opts.onend;}
+  speechSynthesis.speak(u);
+}
+
+/* ---------------- AI (sample) ---------------- */
+let sample=null,aiOff=false;
+function aiReady(){return !!sample&&!aiOff;}
+function aiErr(e){
+  const c=e&&e.code;
+  if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(c)){aiOff=true;updateAI();return "תכונות ה-AI לא אושרו בדף הזה.";}
+  if(c==="rate_limited")return "יותר מדי בקשות ברגע זה. נסי שוב בעוד דקה.";
+  if(c==="session_expired")return "צריך להתחבר מחדש ל-Claude.";
+  if(c==="invalid_json"||c==="empty_completion")return "התשובה לא הגיעה בפורמט הנכון. נסי שוב.";
+  return "משהו השתבש בחיבור. נסי שוב.";
+}
+function updateAI(){
+  const ok=aiReady();
+  ["sGen","lGen","spStart"].forEach(id=>{$(id).disabled=!ok;$(id).title=ok?"":"זמין כשהדף פתוח ב-Claude";});
+  $("wAiNote").textContent=ok?"אם לא כתבת תרגום, Claude ישלים תרגום ומשפט דוגמה.":"כדי ש-Claude ישלים תרגום ומשפט דוגמה, פתחי את הדף ב-Claude. בינתיים אפשר לכתוב את התרגום לבד.";
+}
+const LEVEL_DESC=n=>"CEFR "+LEVELS[n-1].cefr+" (level "+n+" of 5"+(n<=2?", a beginner: very short sentences, the most common 1000 words":"")+")";
+function focusWords(){return Object.values(S.my).filter(w=>w.status!=="known").sort((a,b)=>(b.status==="focus")-(a.status==="focus")).slice(0,12).map(w=>w.en);}
+
+/* ---------------- tabs ---------------- */
+let tab="home";
+function go(t){
+  tab=t;
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t?"true":"false"));
+  document.querySelectorAll("section.view").forEach(s=>s.hidden=s.id!=="v-"+t);
+  if(hasTTS)speechSynthesis.cancel();lStopFlag=true;
+  if(t==="home")renderHome();
+  if(t==="words")renderWords();
+  if(t==="memory"){renderMemTopics();if(!mem.cards.length)newMemory();}
+  if(t==="sentences"&&!cur)nextSentence();
+  if(t==="listening")renderList();
+  if(t==="videos")renderVideos();
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("nav.tabs button[data-tab]").forEach(b=>b.onclick=()=>go(b.dataset.tab));
+document.querySelectorAll("[data-swipe]").forEach(b=>b.onclick=()=>openSwipe());
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+
+/* ---------------- header & home ---------------- */
+function renderHeader(){
+  const u=unlocked(),L=LEVELS[u-1],N=LEVELS[u];
+  $("hLevel").textContent="רמה "+lvl()+" · "+LEVELS[lvl()-1].cefr+(lvl()<u?" (תרגול)":"");
+  $("hXp").textContent=S.xp;$("hStreak").textContent=S.streak.count||0;
+  const pct=N?Math.round((S.xp-L.min)/(N.min-L.min)*100):100;
+  $("lvlBar").style.width=Math.max(2,Math.min(100,pct))+"%";
+  $("lvlBar").parentElement.title=N?("עוד "+(N.min-S.xp)+" XP לרמה "+N.n):"הרמה הגבוהה ביותר";
+}
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function stageOf(days){let s=0;STAGES.forEach((x,i)=>{if(days>=x.d&&x.d>0)s=i;});return days>=STAGES[1].d?s:0;}
+function treeSVG(days,leaves,fruits){
+  const st=stageOf(days);const R=rng(17);
+  const base=196,cx=120;
+  const h=[26,50,80,100,118,128][st],w=[3,4,7,10,13,15][st];
+  const vb=["50 120 140 115","40 95 160 140","20 50 200 190","10 30 220 210","0 0 240 240","0 0 240 240"][st];
+  let s='<svg viewBox="'+vb+'" role="img" aria-label="העץ שלך, שלב '+STAGES[st].n+'">';
+  s+='<ellipse cx="120" cy="226" rx="70" ry="7" fill="var(--soil)" opacity=".35"/>';
+  const top=base-h;
+  if(st>=2){
+    const br=[[0.55,-1],[0.62,1],[0.75,-1],[0.8,1]].slice(0,st);
+    br.forEach(([f,dir],i)=>{const y=base-h*f;const len=18+st*5+i*2;s+='<path d="M'+cx+' '+y+' Q '+(cx+dir*len*0.6)+' '+(y-8)+' '+(cx+dir*len)+' '+(y-20)+'" stroke="var(--trunk)" stroke-width="'+Math.max(2,w*0.45)+'" fill="none" stroke-linecap="round"/>';});
+  }
+  s+='<path d="M'+cx+' '+base+' C '+(cx-3)+' '+(base-h*0.45)+', '+(cx+4)+' '+(base-h*0.7)+', '+cx+' '+top+'" stroke="var(--trunk)" stroke-width="'+w+'" fill="none" stroke-linecap="round"/>';
+  const greens=["var(--leaf1)","var(--leaf2)","var(--leaf3)"];
+  if(st<2){
+    const n=st===0?2:4;
+    for(let i=0;i<n;i++){const y=top+6+i*10;const dir=i%2?1:-1;s+='<ellipse class="leaf" style="animation-delay:-'+(i*0.7)+'s" cx="'+(cx+dir*9)+'" cy="'+y+'" rx="9" ry="5" transform="rotate('+(dir*-25)+' '+(cx+dir*9)+' '+y+')" fill="'+greens[i%3]+'"/>';}
+    s+='<circle cx="'+cx+'" cy="'+(top-2)+'" r="4" fill="var(--leaf2)"/>';
+  }else{
+    const Rx=[0,0,40,54,68,78][st],Ry=Rx*0.78,ccy=top+Ry*0.25;
+    const n=Math.min([0,0,22,38,60,80][st],12+leaves*2);
+    s+='<ellipse cx="'+cx+'" cy="'+ccy+'" rx="'+(Rx*0.9)+'" ry="'+(Ry*0.85)+'" fill="var(--leaf3)" opacity=".55"/>';
+    const pts=[];
+    for(let i=0;i<n;i++){const a=R()*Math.PI*2,r=Math.sqrt(R());const x=cx+Math.cos(a)*r*Rx,y=ccy+Math.sin(a)*r*Ry;pts.push([x,y]);
+      s+='<circle class="leaf" style="animation-delay:-'+(R()*5).toFixed(2)+'s" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(8+R()*6).toFixed(1)+'" fill="'+greens[i%3]+'" opacity=".95"/>';}
+    if(st>=5){for(let i=0;i<14;i++){const p=pts[Math.floor(R()*pts.length)];s+='<circle cx="'+(p[0]+R()*8-4).toFixed(1)+'" cy="'+(p[1]+R()*8-4).toFixed(1)+'" r="3" fill="var(--bloom)"/>';}}
+    const fr=Math.min(fruits,[0,0,5,9,14,20][st]);
+    for(let i=0;i<fr;i++){const p=pts[(i*7+3)%pts.length];s+='<circle cx="'+p[0].toFixed(1)+'" cy="'+(p[1]+3).toFixed(1)+'" r="5.5" fill="var(--fruit)" stroke="var(--pot-rim)" stroke-width="1"/>';}
+  }
+  s+='<path d="M86 198 h68 l-8 30 h-52z" fill="var(--pot)"/><rect x="80" y="190" width="80" height="12" rx="4" fill="var(--pot-rim)"/>';
+  s+='</svg>';
+  return {svg:s,st};
+}
+function renderHome(){
+  ensureToday();
+  const known=knownCount();
+  const t=treeSVG(S.days||1,known,S.fruits||0);
+  const box=$("treeBox");box.innerHTML=t.svg;
+  if(watered){box.insertAdjacentHTML("beforeend",'<svg class="drop-anim" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C9 7 6 10 6 14a6 6 0 0 0 12 0c0-4-3-7-6-12z" fill="var(--biz)"/></svg>');watered=false;}
+  $("treeStageTag").textContent=STAGES[t.st].n;
+  const next=STAGES[t.st+1];
+  $("treeTitle").textContent="העץ שלך ביום "+(S.days||1);
+  $("treeSub").textContent=next?("עוד "+(next.d-(S.days||1))+" ימי כניסה והוא יהפוך ל"+next.n+". כל מילה שאת יודעת מוסיפה עלה."):"העץ שלך בשיא פריחתו. כל הכבוד על ההתמדה!";
+  $("fDays").textContent=S.days||1;$("fLeaves").textContent=known;$("fFruits").textContent=S.fruits||0;
+  const pct=Math.min(1,S.today.xp/DAILY_GOAL);
+  $("ringArc").setAttribute("stroke-dasharray",(pct*213.6).toFixed(1)+" 214");
+  $("ringTxt").textContent=Math.round(pct*100)+"%";
+  $("goalTxt").textContent=S.today.goal?("עמדת ביעד היום ("+S.today.xp+" XP). פרי חדש צמח על העץ!"):(S.today.xp+" מתוך "+DAILY_GOAL+" XP היום. כשמגיעים ליעד, צומח פרי על העץ.");
+  const ms=$("missions");ms.textContent="";
+  todaysMissions().forEach(m=>{
+    const c=Math.min(m.n,S.today.c[m.k]||0),done=!!S.today.done[m.k];
+    const go2={memory:"memory",sentences:"sentences",review:"words",swipe:"swipe",listening:"listening",speaking:"speaking",video:"videos",addword:"words"}[m.k];
+    const row=el("div",{class:"mission"+(done?" done":"")});
+    const chk=el("span",{class:"chk"});chk.innerHTML='<svg viewBox="0 0 24 24"><path d="M9 16.2l-4.2-4.2-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>';
+    const mb=el("div",{class:"mbar"},el("span",{text:m.t}),el("div",{},el("i",{style:"width:"+(c/m.n*100)+"%"})));
+    row.append(chk,mb,el("span",{class:"small muted",style:"font-variant-numeric:tabular-nums",text:c+"/"+m.n}));
+    if(!done)row.append(el("button",{class:"btn ghost small",style:"padding:3px 10px",text:"לתרגול",onclick:()=>go2==="swipe"?openSwipe():go(go2)}));
+    ms.append(row);
+  });
+  const bx=$("badges");bx.textContent="";let on=0;
+  BADGES.forEach(b=>{const ok=b.ok();if(ok)on++;bx.append(el("div",{class:"badge"+(ok?" on":""),title:b.d},el("div",{class:"medal",text:ok?"★":"?"}),el("b",{text:b.t}),el("span",{class:"small",text:b.d})));});
+  $("badgeCount").textContent=on+" מתוך "+BADGES.length;
+  const dc=dueCount();$("swRoomTxt").textContent=dc?(dc+" מילים מחכות לחזרה"):"ימינה = יודעת, שמאלה = עוד לא";
+  renderWotd();
+}
+function renderWotd(){
+  const pool=VOCAB.filter(w=>w.l===lvl());const d=new Date();const i=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%pool.length;
+  const w=pool[i];$("wotdEn").textContent=w.en;const e=firstEx(w.en);$("wotdHe").innerHTML="";$("wotdHe").append(w.he+" · "+TOPICS[w.t],el("div",{class:"en small",style:"margin-top:4px",text:e[0]}),el("div",{class:"small",text:e[1]}));
+  $("wotdSpeak").innerHTML=SPEAK_SVG;$("wotdSpeak").onclick=()=>speak(w.en,{rate:0.8});
+  const has=!!S.my[wkey(w.en)];$("wotdAdd").disabled=has;$("wotdAdd").textContent=has?"ברשימה שלך":"הוספה למילים שלי";
+  $("wotdAdd").onclick=()=>{addWord(w.en,w.he,e[0],"app");if(S.my[wkey(w.en)])S.my[wkey(w.en)].exHe=e[1];save();renderWotd();};
+}
+function renderAll(){renderHeader();renderTenseTable();if(tab==="home")renderHome();if(tab==="words")renderWords();if(tab==="listening")renderList();if(tab==="videos")renderVideos();}
+
+/* ---------------- my words ---------------- */
+let wFilter="all",flashQ=[],flashI=0;
+function addWord(en,he,ex,src){
+  const k=wkey(en);if(!k)return;
+  if(S.my[k]){toast("המילה כבר ברשימה");return;}
+  if(!(he||"").trim()){const v=VOCAB.find(x=>wkey(x.en)===k);if(v)he=v.he;}
+  S.my[k]={en:en.trim(),he:(he||"").trim(),ex:ex||"",status:"new",src:src||"mine",added:Date.now(),seen:0};
+  if(src==="mine")progress("addword");
+  addXP("words",2);toast("נוספה לרשימה: "+en.trim());
+  if(!S.my[k].he||!S.my[k].ex||!S.my[k].exHe)aiFill(k);
+}
+async function aiFill(k){
+  if(!aiReady())return;const w=S.my[k];if(!w)return;
+  w.loading=true;if(tab==="words")renderWords();
+  try{
+    const r=await sample.json('A Hebrew-speaking English learner at '+LEVEL_DESC(lvl())+' saved the English word or phrase: "'+w.en+'"'+(w.he?' (she wrote the Hebrew: "'+w.he+'")':'')+'.\nGive the most common meaning. Reply with only JSON: {"en":"the word, spelling corrected if needed","he":"short Hebrew translation (in Hebrew letters)","ex":"one short, simple example sentence in English using it","exHe":"Hebrew translation of the example sentence"}'+(w.ex?' Use this example sentence: "'+w.ex+'"':''),{modelTier:"quick"});
+    if(r&&S.my[k]){if(!S.my[k].he&&r.he)S.my[k].he=String(r.he);if(!S.my[k].ex&&r.ex)S.my[k].ex=String(r.ex);if(!S.my[k].exHe&&r.exHe)S.my[k].exHe=String(r.exHe);if(r.en&&norm(String(r.en))!==norm(S.my[k].en))S.my[k].fix=String(r.en);}
+  }catch(e){toast(aiErr(e),3000);}
+  if(S.my[k])delete S.my[k].loading;save();if(tab==="words")renderWords();
+}
+let bulkBusy=false,bulkTried=false;
+function missingKeys(){return Object.keys(S.my).filter(k=>!S.my[k].he||!S.my[k].ex||!S.my[k].exHe);}
+async function translateMissing(){
+  const keys=missingKeys();
+  keys.forEach(k=>{if(!S.my[k].he){const v=VOCAB.find(x=>wkey(x.en)===k);if(v)S.my[k].he=v.he;}});
+  if(!keys.length||!aiReady()||bulkBusy){save();renderWords();return;}
+  bulkBusy=true;keys.slice(0,30).forEach(k=>S.my[k].loading=true);renderWords();
+  try{
+    const items=keys.slice(0,30).map(k=>({en:S.my[k].en,he:S.my[k].he||"",ex:S.my[k].ex||""}));
+    const arr=await sample.json("A Hebrew-speaking English learner at "+LEVEL_DESC(lvl())+" keeps this word list. For each item fill in what is missing: he = short Hebrew translation in Hebrew letters (keep hers if given), ex = one short, simple English example sentence (keep hers if given), exHe = Hebrew translation of ex.\n"+JSON.stringify(items)+'\nReply with only a JSON array in the same order: [{"en":"...","he":"...","ex":"...","exHe":"..."}]',{modelTier:"quick"});
+    (Array.isArray(arr)?arr:[]).forEach(r=>{const k=r&&wkey(String(r.en||""));const w=k&&S.my[k];if(!w)return;if(!w.he&&r.he)w.he=String(r.he);if(!w.ex&&r.ex)w.ex=String(r.ex);if(!w.exHe&&r.exHe)w.exHe=String(r.exHe);});
+  }catch(e){toast(aiErr(e),3000);}
+  keys.forEach(k=>{if(S.my[k])delete S.my[k].loading;});bulkBusy=false;save();renderWords();
+}
+$("wForm").addEventListener("submit",e=>{e.preventDefault();const en=$("wEn").value,he=$("wHe").value;if(!en.trim()){toast("כתבי מילה באנגלית");return;}addWord(en,he,"","mine");$("wEn").value="";$("wHe").value="";$("wEn").focus();renderWords();});
+function setStatus(k,st){const w=S.my[k];if(!w)return;const was=w.status;w.status=(w.status===st)?"learning":st;if(w.status==="known"&&was!=="known")addXP("words",3);save();}
+function renderWords(){
+  const all=Object.entries(S.my).sort((a,b)=>b[1].added-a[1].added);
+  const cnt={all:all.length,focus:0,learning:0,known:0};
+  all.forEach(([k,w])=>{if(w.status==="focus")cnt.focus++;else if(w.status==="known")cnt.known++;else cnt.learning++;});
+  const fb=$("wFilters");fb.textContent="";
+  [["all","הכול"],["focus","להתעכב"],["learning","בלמידה"],["known","יודעת בוודאות"]].forEach(([k,t])=>fb.append(el("button",{class:"chip","aria-pressed":wFilter===k?"true":"false",text:t+" ("+cnt[k]+")",onclick:()=>{wFilter=k;renderWords();}})));
+  const list=$("wList");list.textContent="";
+  const rows=all.filter(([k,w])=>wFilter==="all"||(wFilter==="learning"?(w.status!=="focus"&&w.status!=="known"):w.status===wFilter));
+  if(!rows.length)list.append(el("p",{class:"muted",style:"padding:12px 0",text:all.length?"אין מילים בסינון הזה.":"הרשימה ריקה. הוסיפי מילה שנתקלת בה בסרטון, בעבודה או בקטע האזנה, או הוסיפי את מילת היום מהמסך הראשי."}));
+  rows.forEach(([k,w])=>{
+    const r=el("div",{class:"wrow"});
+    const mid=el("div",{style:"min-width:0"});
+    mid.append(el("div",{class:"row",style:"gap:6px"},el("span",{class:"en w-en",text:w.en}),el("span",{class:"muted",text:w.he?("· "+w.he):""}),w.loading?el("span",{class:"spin"}):null));
+    if(w.fix)mid.append(el("div",{class:"small",style:"color:var(--sport)",text:"אולי התכוונת: "},el("span",{class:"en",text:w.fix})));
+    if(w.ex)mid.append(el("div",{class:"en w-ex",text:w.ex}));
+    if(w.exHe)mid.append(el("div",{class:"w-ex",text:w.exHe}));
+    if(!w.he&&!w.loading)mid.append(el("button",{class:"btn alt small",style:"padding:2px 10px;margin-top:4px",text:"תרגום לעברית",onclick:()=>{if(aiReady())aiFill(k);else toast("התרגום האוטומטי עובד כשהדף פתוח ב-Claude. אפשר גם להוסיף את המילה מחדש עם תרגום.",3600);}}));
+    const seg=el("div",{class:"seg"});
+    seg.append(el("button",{class:w.status==="known"?"on-known":"",title:"יודעת בוודאות","aria-pressed":w.status==="known"?"true":"false",text:"יודעת ✓",onclick:()=>{setStatus(k,"known");renderWords();}}));
+    seg.append(el("button",{class:w.status==="focus"?"on-focus":"",title:"להתעכב עליה","aria-pressed":w.status==="focus"?"true":"false",text:"להתעכב ★",onclick:()=>{setStatus(k,"focus");renderWords();}}));
+    const del=el("button",{class:"del",title:"הסרה",text:"✕"});
+    del.onclick=()=>{if(del.dataset.sure){delete S.my[k];save();renderWords();}else{del.dataset.sure="1";del.textContent="להסיר?";setTimeout(()=>{if(del.isConnected){delete del.dataset.sure;del.textContent="✕";}},3000);}};
+    seg.append(del);
+    r.append(speakBtn(w.en),mid,seg);list.append(r);
+  });
+  $("wPractice").disabled=!all.length;
+  const miss=missingKeys().length;
+  if(miss&&!bulkBusy){list.prepend(el("div",{class:"row",style:"padding:8px 0;justify-content:space-between"},el("span",{class:"small muted",text:miss+" מילים בלי תרגום מלא"}),el("button",{class:"btn alt small",style:"padding:4px 12px",text:"תרגום כל החסרות",onclick:translateMissing})));}
+  if(miss&&aiReady()&&!bulkTried&&!bulkBusy){bulkTried=true;setTimeout(translateMissing,50);}
+}
+$("wPractice").onclick=()=>{
+  const all=Object.keys(S.my);
+  let q=all.filter(k=>S.my[k].status==="focus").concat(shuffle(all.filter(k=>S.my[k].status!=="focus"&&S.my[k].status!=="known")));
+  if(!q.length)q=shuffle(all);
+  flashQ=q.slice(0,15);flashI=0;$("flash").hidden=false;showFlash();window.scrollTo(0,0);
+};
+function showFlash(){
+  if(flashI>=flashQ.length){$("flash").hidden=true;toast("סיימת סבב של "+flashQ.length+" מילים. כל הכבוד!",3000);renderWords();return;}
+  const w=S.my[flashQ[flashI]];if(!w){flashI++;return showFlash();}
+  $("fProg").textContent="מילה "+(flashI+1)+" מתוך "+flashQ.length+(w.status==="focus"?" · מילה שרצית להתעכב עליה":"");
+  $("fEn").textContent=w.en;$("fHe").textContent=w.he||"(אין תרגום עדיין)";$("fEx").textContent=w.ex||"";$("fExHe").textContent=w.exHe||"";
+  $("fSpeak").innerHTML=SPEAK_SVG;$("fSpeak").onclick=()=>speak(w.en,{rate:0.8});
+  $("fBack").hidden=true;$("fBtns").hidden=true;$("fReveal").hidden=false;
+  speak(w.en,{rate:0.85});
+}
+$("fReveal").onclick=()=>{$("fBack").hidden=false;$("fBtns").hidden=false;$("fReveal").hidden=true;const w=S.my[flashQ[flashI]];if(w&&w.ex)speak(w.ex,{rate:0.85});};
+function flashAnswer(st){
+  const k=flashQ[flashI];const w=S.my[k];
+  if(w){w.seen=(w.seen||0)+1;if(st==="again"){if(w.status!=="focus")w.status="learning";flashQ.push(k);}else{const was=w.status;w.status=st;if(st==="known"&&was!=="known")addXP("words",1);}}
+  addXP("words",2);progress("review");flashI++;showFlash();
+}
+$("fKnown").onclick=()=>flashAnswer("known");
+$("fAgain").onclick=()=>flashAnswer("again");
+$("fFocus").onclick=()=>flashAnswer("focus");
+$("fClose").onclick=()=>{$("flash").hidden=true;renderWords();};
+
+/* ---------------- memory ---------------- */
+const mem={topic:"all",cards:[],open:[],lock:false,moves:0,matched:0,pairs:0,words:[]};
+function myPool(){return Object.values(S.my).filter(w=>w.he&&w.status!=="known").map(w=>({en:w.en,he:w.he,t:"mine",l:1,focus:w.status==="focus"}));}
+function renderMemTopics(){
+  const box=$("memTopics");box.textContent="";
+  const keys=Object.keys(TOPICS);if(myPool().length>=2)keys.splice(1,0,"mine");
+  keys.forEach(k=>box.append(el("button",{class:"chip","aria-pressed":mem.topic===k?"true":"false",text:k==="mine"?"המילים שלי":TOPICS[k],onclick:()=>{mem.topic=k;renderMemTopics();newMemory();}})));
+}
+function newMemory(){
+  const L=lvl();const n=[4,6,6,8,8][L-1];
+  let pool;
+  if(mem.topic==="mine"){pool=myPool().map(w=>({w,k:(w.focus?0:1)+Math.random()*1.5})).sort((a,b)=>a.k-b.k).map(x=>x.w).slice(0,n);}
+  else{
+    pool=VOCAB.filter(w=>w.l<=L&&(mem.topic==="all"||w.t===mem.topic)&&!(S.my[wkey(w.en)]&&S.my[wkey(w.en)].status==="known"));
+    pool=pool.map(w=>({w,k:(w.l===L?0:1.2)+(S.words[w.en]||0)*0.6+Math.random()*1.5-((S.my[wkey(w.en)]||{}).status==="focus"?2:0)})).sort((a,b)=>a.k-b.k).map(x=>x.w).slice(0,n);
+  }
+  if(pool.length<2){toast("אין מספיק מילים בנושא הזה");mem.topic="all";renderMemTopics();return newMemory();}
+  mem.words=pool;mem.pairs=pool.length;mem.matched=0;mem.moves=0;mem.open=[];mem.lock=false;
+  mem.cards=shuffle(pool.flatMap((w,i)=>[{i,side:"en",w},{i,side:"he",w}]));
+  $("memDone").hidden=true;renderMem();
+}
+function renderMem(){
+  const g=$("memGrid");g.textContent="";
+  mem.cards.forEach((c,idx)=>{
+    const b=el("button",{class:"mcard"+(c.open?" open":"")+(c.done?" matched":""),"aria-label":c.open||c.done?(c.side==="en"?c.w.en:c.w.he):"קלף סגור"});
+    const inn=el("div",{class:"in"});
+    inn.append(el("div",{class:"face back",text:"?"}));
+    const f=el("div",{class:"face front"+(c.side==="en"?" en":""),text:c.side==="en"?c.w.en:c.w.he});
+    if(c.side==="he")f.setAttribute("dir","rtl");
+    inn.append(f);b.append(inn);b.onclick=()=>flip(idx);g.append(b);
+  });
+  $("memMoves").textContent=mem.moves;$("memPairs").textContent=mem.matched+"/"+mem.pairs;
+}
+function flip(idx){
+  const c=mem.cards[idx];if(mem.lock||c.open||c.done)return;
+  c.open=true;mem.open.push(c);if(c.side==="en")speak(c.w.en,{rate:0.85});
+  if(mem.open.length===2){
+    mem.moves++;const [a,b]=mem.open;
+    if(a.i===b.i){
+      a.done=b.done=true;a.open=b.open=false;mem.open=[];mem.matched++;
+      S.words[a.w.en]=(S.words[a.w.en]||0)+1;addXP("memory",3);
+      if(mem.matched===mem.pairs)finishMem();
+    }else{
+      mem.lock=true;renderMem();
+      setTimeout(()=>{a.open=b.open=false;mem.open=[];mem.lock=false;renderMem();},1000);return;
+    }
+  }
+  renderMem();
+}
+function finishMem(){
+  const perfect=mem.moves<=mem.pairs+2;const bonus=perfect?15:8;addXP("memory",bonus);progress("memory");
+  $("memDone").hidden=false;
+  $("memDoneTxt").textContent=mem.moves+" מהלכים · +"+(bonus+mem.pairs*3)+" XP"+(perfect?" · זיכרון מצוין!":"");
+  renderMemReview();
+}
+function renderMemReview(){
+  const r=$("memReview");r.textContent="";
+  mem.words.forEach(w=>{
+    const k=wkey(w.en);const my=S.my[k];
+    const s=el("div",{class:"wrow"});
+    const seg=el("div",{class:"seg"});
+    seg.append(el("button",{class:my&&my.status==="known"?"on-known":"",text:"יודעת ✓",onclick:()=>{if(!my)S.my[k]={en:w.en,he:w.he,ex:"",status:"new",src:"app",added:Date.now(),seen:0};setStatus(k,"known");renderMemReview();}}));
+    seg.append(el("button",{class:my&&my.status==="focus"?"on-focus":"",text:"להתעכב ★",onclick:()=>{if(!my)S.my[k]={en:w.en,he:w.he,ex:"",status:"new",src:"app",added:Date.now(),seen:0};setStatus(k,"focus");renderMemReview();}}));
+    const ex=exList(k,w.en)[Math.floor(Math.random()*Math.max(1,exList(k,w.en).length))]||["",""];
+    const info=el("div",{style:"min-width:0"},el("span",{class:"en w-en",text:w.en}),el("span",{class:"muted",text:" · "+w.he}));
+    if(ex[0])info.append(el("div",{class:"en w-ex",text:ex[0]}),el("div",{class:"w-ex",text:ex[1]}));
+    s.append(speakBtn(w.en),info,seg);r.append(s);
+  });
+}
+$("memNew").onclick=newMemory;
+
+/* ---------------- sentences ---------------- */
+let cur=null,placed=[],tiles=[],tries=0,checked=false;
+function sentencePool(){return SENTENCES.concat(S.aiSentences||[]).filter(s=>s.l<=lvl());}
+function loadSentence(s){
+  const L=lvl();cur=s;tries=0;checked=false;placed=[];
+  const extra=(L>=2&&cur.x)?cur.x.slice(0,L>=4?2:1):[];
+  tiles=shuffle(cur.en.split(" ").concat(extra).map((t,i)=>({t,i,used:false})));
+  renderSentence();
+}
+function nextSentence(){
+  const L=lvl();const pool=sentencePool();
+  const notDone=pool.filter(s=>!S.sentDone[s.en]);
+  const cand=notDone.filter(s=>s.l===L).concat(notDone.filter(s=>s.l===L-1));
+  const list=cand.length?cand:(notDone.length?notDone:pool);
+  let pick=list[Math.floor(Math.random()*list.length)];
+  if(cur&&list.length>1&&pick.en===cur.en)pick=list.find(s=>s.en!==cur.en);
+  loadSentence(pick);
+}
+function tenseInfo(s){return TENSES[s.tense]||{en:s.tense||"",he:"",form:"",use:"",ex:"",neg:""};}
+function renderSentence(){
+  const T=tenseInfo(cur);
+  $("sTense").textContent=T.en+(T.he?" · "+T.he:"");
+  $("sSource").textContent=cur.ai?"משפט מ-Claude":"";
+  $("sHe").textContent=cur.he;
+  const gr=$("sGrammar");gr.hidden=true;gr.textContent="";
+  gr.append(el("b",{text:T.he+" ("+T.en+")"}),el("div",{},"מבנה: ",el("code",{text:T.form})),el("div",{text:T.use}));
+  if(T.neg)gr.append(el("div",{},"שלילה: ",el("code",{text:T.neg})));
+  if(T.ex)gr.append(el("div",{},"דוגמה: ",el("code",{text:T.ex})));
+  $("sExplainBtn").textContent="מה החוק?";
+  renderTiles();
+  $("sResult").hidden=true;$("sNext").hidden=true;$("sListen").hidden=true;$("sCheck").hidden=false;$("sReset").hidden=false;
+  $("sSlots").className="slots en";
+}
+function renderTiles(){
+  const sl=$("sSlots"),bk=$("sBank");sl.textContent="";bk.textContent="";
+  if(!placed.length)sl.append(el("span",{class:"muted small",dir:"rtl",text:"לחצי על המילים לפי הסדר"}));
+  placed.forEach((tile,pi)=>sl.append(el("button",{class:"tile",text:tile.t,onclick:()=>{if(checked)return;tile.used=false;placed.splice(pi,1);renderTiles();}})));
+  tiles.forEach(tile=>bk.append(el("button",{class:"tile"+(tile.used?" used":""),text:tile.t,tabindex:tile.used?"-1":"0",onclick:()=>{if(checked||tile.used)return;tile.used=true;placed.push(tile);renderTiles();}})));
+}
+$("sReset").onclick=()=>{if(checked)return;tiles.forEach(t=>t.used=false);placed=[];$("sSlots").className="slots en";$("sResult").hidden=true;renderTiles();};
+$("sExplainBtn").onclick=()=>{const g=$("sGrammar");g.hidden=!g.hidden;$("sExplainBtn").textContent=g.hidden?"מה החוק?":"הסתרת החוק";};
+$("sCheck").onclick=()=>{
+  if(!placed.length){toast("קודם מסדרים מילים");return;}
+  tries++;
+  const ok=norm(placed.map(t=>t.t).join(" "))===norm(cur.en);
+  const r=$("sResult");r.hidden=false;r.textContent="";
+  if(ok){
+    checked=true;const pts=tries===1?8:4;
+    $("sSlots").className="slots en ok";r.className="result ok";
+    r.append(el("b",{text:tries===1?"מעולה! נכון מהניסיון הראשון. +"+pts+" XP":"נכון! +"+pts+" XP"}));
+    S.sentDone[cur.en]=1;addXP("sentences",pts);progress("sentences");speak(cur.en);
+    $("sNext").hidden=false;$("sListen").hidden=false;$("sCheck").hidden=true;$("sReset").hidden=true;
+  }else{
+    $("sSlots").className="slots en no";r.className="result no";
+    if(tries<2){
+      r.append(el("b",{text:"עוד לא. "}),"בדקי את סדר המילים ואת צורת הפועל. "+(cur.x&&cur.x.length&&lvl()>=2?"שימי לב, יש בבנק מילה שלא שייכת למשפט.":""));
+      $("sGrammar").hidden=false;$("sExplainBtn").textContent="הסתרת החוק";
+    }else{
+      checked=true;
+      r.append(el("b",{text:"התשובה הנכונה:"}),el("div",{class:"en",style:"font-size:1.15rem;margin-top:4px",text:cur.en}),el("div",{class:"small muted",style:"margin-top:4px",text:"המשפט יחזור שוב בהמשך כדי לתרגל."}));
+      addXP("sentences",1);speak(cur.en);
+      $("sNext").hidden=false;$("sListen").hidden=false;$("sCheck").hidden=true;$("sReset").hidden=true;
+    }
+  }
+};
+$("sListen").onclick=()=>speak(cur.en);
+$("sNext").onclick=nextSentence;
+$("toggleTenses").onclick=()=>{$("tenseRef").hidden=!$("tenseRef").hidden;$("toggleTenses").textContent=$("tenseRef").hidden?"כל החוקים":"הסתרת החוקים";};
+function renderTenseTable(){
+  const box=$("tenseTable");box.textContent="";const L=unlocked();
+  Object.values(TENSES).forEach(T=>{
+    const it=el("div",{class:"tense-item"+(T.l>L?" locked":"")});
+    it.append(el("b",{text:T.he}),el("div",{class:"en small muted",text:T.en+(T.l>L?" · נפתח ברמה "+T.l:"")}),el("div",{class:"small",style:"margin-top:6px"},el("code",{text:T.form})),el("div",{class:"small",style:"margin-top:4px",text:T.use}),el("div",{class:"en small",style:"margin-top:4px",text:T.ex}));
+    box.append(it);
+  });
+  box.append(el("h3",{style:"grid-column:1/-1;margin-top:10px",text:"חוקי כתיב ודקדוק"}));
+  RULES.forEach(r=>{
+    const it=el("div",{class:"tense-item"+(r.l>L?" locked":"")});
+    it.append(el("b",{text:r.he}),el("div",{class:"en small muted",text:r.t+(r.l>L?" · נפתח ברמה "+r.l:"")}),el("div",{class:"small",style:"margin-top:6px",text:r.rule}),el("div",{class:"small",style:"margin-top:6px"},...r.f.slice(0,3).map(f=>el("code",{style:"margin-inline-end:4px;display:inline-block;margin-top:3px",text:f.join(" → ")}))));
+    box.append(it);
+  });
+}
+$("sGen").onclick=async()=>{
+  if(!aiReady())return;
+  const b=$("sGen");b.disabled=true;b.innerHTML='<span class="spin"></span> מכינה משפטים...';
+  const L=lvl();const allowed=Object.entries(TENSES).filter(([k,T])=>T.l<=L).map(([k,T])=>k+" ("+T.en+")").join(", ");
+  const mine=focusWords();
+  const prompt="Create 6 English sentences for a Hebrew-speaking English learner at "+LEVEL_DESC(L)+".\n"+
+    "Topics: personal finance, business, sport, personal development (mix them).\n"+
+    (mine.length?"Where natural, use some of the learner's own practice words: "+mine.join(", ")+".\n":"")+
+    "Use these tenses only, and vary them: "+allowed+". Focus on the newest tense of this level.\n"+
+    "Sentence length: "+(L<=1?"4-7 words":L===2?"5-9 words":L===3?"7-11 words":"8-14 words")+". Natural, everyday English.\n"+
+    "For each sentence give: en (the sentence), he (natural Hebrew translation, feminine 'you' if addressed to the learner), tense (one key from the list), x (an array with ONE tempting wrong word, usually the same verb in the wrong form, that is NOT in the sentence).\n"+
+    'Reply with only a JSON array, e.g. [{"en":"I am saving for a trip.","he":"אני חוסכת לטיול.","tense":"pc","x":["save"]}]';
+  try{
+    const arr=await sample.json(prompt,{modelTier:"default",cache:false});
+    const good=(Array.isArray(arr)?arr:[]).filter(s=>s&&typeof s.en==="string"&&typeof s.he==="string"&&s.en.split(" ").length>=3).map(s=>({en:s.en.trim(),he:s.he.trim(),tense:TENSES[s.tense]?s.tense:"ps",l:L,x:Array.isArray(s.x)?s.x.map(String).filter(w=>!s.en.split(" ").includes(w)).slice(0,1):[],ai:true}));
+    if(!good.length)throw{code:"invalid_json"};
+    S.aiSentences=(S.aiSentences||[]).concat(good).slice(-60);save();
+    toast("נוספו "+good.length+" משפטים חדשים");loadSentence(good[0]);
+  }catch(e){toast(aiErr(e),3600);}
+  b.disabled=!aiReady();b.textContent="צרי משפטים חדשים";
+};
+
+/* ---------------- listening ---------------- */
+let lTopic="all",lCur=null,lStopFlag=true,lAnswers={};
+function allPassages(){return PASSAGES.concat(S.aiPassages||[]);}
+function renderList(){
+  $("lList").hidden=false;$("lDetail").hidden=true;
+  const tb=$("lTopics");tb.textContent="";
+  ["all","fin","biz","sport","grow"].forEach(k=>tb.append(el("button",{class:"chip","aria-pressed":lTopic===k?"true":"false",text:TOPICS[k],onclick:()=>{lTopic=k;renderList();}})));
+  const L=lvl();const box=$("lCards");box.textContent="";
+  const list=allPassages().filter(p=>p.l<=L&&(lTopic==="all"||p.t===lTopic)).sort((a,b)=>(b.l===L)-(a.l===L)||(!!S.passDone[a.id])-(!!S.passDone[b.id])||b.l-a.l);
+  if(!list.length)box.append(el("p",{class:"muted",text:"אין עדיין קטעים בנושא הזה ברמה שלך. אפשר ליצור קטע חדש למטה."}));
+  list.forEach(p=>{
+    const done=S.passDone[p.id];const col=TCOL[p.t]||"gen";
+    const c=el("button",{class:"pcard",onclick:()=>openPassage(p)});
+    const body=el("div",{class:"body"});
+    body.append(el("div",{class:"row",style:"gap:6px"},el("span",{class:"tag",style:"background:var(--"+col+"-soft)",text:TOPICS[p.t]||"כללי"}),el("span",{class:"small muted",text:LEVELS[p.l-1].cefr+(p.ai?" · מ-Claude":"")})),
+      el("span",{class:"en",text:p.title}),
+      el("span",{class:"small muted",text:done?("ענית נכון על "+done.c+" מתוך "+done.n):(p.qs.length+" שאלות")}));
+    c.append(el("div",{class:"band",style:"background:var(--"+col+")"}),body);box.append(c);
+  });
+}
+function openPassage(p){
+  lCur=p;lAnswers={};
+  $("lList").hidden=true;$("lDetail").hidden=false;
+  $("lTag").textContent=(TOPICS[p.t]||"כללי")+" · "+LEVELS[p.l-1].cefr;$("lTag").style.background="var(--"+(TCOL[p.t]||"gen")+"-soft)";
+  $("lTitle").textContent=p.title;
+  const tx=$("lText");tx.textContent="";tx.hidden=true;$("lShow").textContent="הצגת הטקסט";
+  const sents=p.text.match(/[^.!?]+[.!?]+["”]?\s*/g)||[p.text];
+  lCur._s=sents.map(s=>s.trim());
+  lCur._s.forEach((s,i)=>{tx.append(el("span",{"data-i":i,text:s,onclick:()=>speak(s,{rate:+$("lRate").value})}));tx.append(" ");});
+  renderQs();window.scrollTo(0,0);
+}
+function renderQs(){
+  const box=$("lQs");box.textContent="";const p=lCur;
+  p.qs.forEach((q,qi)=>{
+    const d=el("div",{class:"q"});
+    d.append(el("div",{class:"en",style:"font-weight:600;text-align:left",text:(qi+1)+". "+q.q}));
+    if(q.qh&&lvl()<=2)d.append(el("div",{class:"small muted",text:q.qh}));
+    const o=el("div",{class:"opts"});
+    q.options.forEach((op,oi)=>{
+      const a=lAnswers[qi];let cls="opt";
+      if(a!=null){if(oi===q.answer)cls+=" right";else if(oi===a)cls+=" wrong";}
+      o.append(el("button",{class:cls,text:op,onclick:()=>answer(qi,oi)}));
+    });
+    d.append(o);box.append(d);
+  });
+  if(Object.keys(lAnswers).length===p.qs.length){
+    const c=p.qs.filter((q,i)=>lAnswers[i]===q.answer).length;
+    $("lScore").textContent="ענית נכון על "+c+" מתוך "+p.qs.length+". "+(c===p.qs.length?"מושלם!":"כדאי לפתוח את הטקסט ולהקשיב שוב למשפטים שפספסת.");
+  }else $("lScore").textContent="";
+}
+function answer(qi,oi){
+  if(lAnswers[qi]!=null)return;
+  lAnswers[qi]=oi;const q=lCur.qs[qi];
+  if(oi===q.answer)addXP("listening",5);
+  if(Object.keys(lAnswers).length===lCur.qs.length){
+    const c=lCur.qs.filter((q,i)=>lAnswers[i]===q.answer).length;
+    const prev=S.passDone[lCur.id];if(!prev||c>prev.c)S.passDone[lCur.id]={c,n:lCur.qs.length};
+    progress("listening");
+    if(!prev)addXP("listening",5);else save();
+  }
+  renderQs();
+}
+function playFrom(i){
+  const s=lCur._s;
+  document.querySelectorAll("#lText span").forEach(x=>x.classList.toggle("now",+x.dataset.i===i));
+  if(lStopFlag||i>=s.length){lStopFlag=true;$("lPlay").textContent="השמעה";document.querySelectorAll("#lText span.now").forEach(x=>x.classList.remove("now"));return;}
+  speak(s[i],{rate:+$("lRate").value,queue:i>0,onend:()=>playFrom(i+1)});
+}
+$("lPlay").onclick=()=>{if(!hasTTS){toast("הדפדפן הזה לא תומך בהקראה");return;}lStopFlag=true;speechSynthesis.cancel();setTimeout(()=>{lStopFlag=false;$("lPlay").textContent="השמעה מההתחלה";playFrom(0);},60);};
+$("lStop").onclick=()=>{lStopFlag=true;if(hasTTS)speechSynthesis.cancel();};
+$("lShow").onclick=()=>{const t=$("lText");t.hidden=!t.hidden;$("lShow").textContent=t.hidden?"הצגת הטקסט":"הסתרת הטקסט";};
+$("lBack").onclick=()=>{lStopFlag=true;if(hasTTS)speechSynthesis.cancel();renderList();};
+$("lGen").onclick=async()=>{
+  if(!aiReady())return;
+  const b=$("lGen");b.disabled=true;b.innerHTML='<span class="spin"></span> כותבת קטע...';
+  const L=lvl();const topicKey=lTopic==="all"?["fin","biz","sport","grow"][Math.floor(Math.random()*4)]:lTopic;
+  const topicEn={fin:"personal finance or investing",biz:"business, work or entrepreneurship",sport:"sport, fitness or athletes",grow:"personal development, habits or psychology"}[topicKey];
+  const seen=allPassages().map(p=>p.title).join("; ");const mine=focusWords();
+  const prompt="Write a short listening passage for a Hebrew-speaking English learner at "+LEVEL_DESC(L)+". Topic: "+topicEn+".\n"+
+    "Length: "+(L<=1?"6-8 very short sentences, present simple only":L===2?"7-9 sentences, simple past and present":L===3?"110-140 words":"140-180 words")+". Make it interesting and real-world, with names and numbers spelled out in words. It will be read aloud by text-to-speech.\n"+
+    (mine.length?"If they fit naturally, include a few of the learner's practice words: "+mine.join(", ")+".\n":"")+
+    "Avoid these existing titles: "+seen+".\n"+
+    "Then write "+(L<=2?"3":"4")+" multiple-choice comprehension questions in English with 3 options each; only one correct. "+(L<=2?"Add a short Hebrew translation of each question in qh.":"Set qh to \"\".")+"\n"+
+    'Reply with only JSON: {"title":"...","text":"...","qs":[{"q":"...","qh":"...","options":["...","...","..."],"answer":0}]}';
+  try{
+    const p=await sample.json(prompt,{modelTier:"default",cache:false});
+    if(!p||typeof p.text!=="string"||!Array.isArray(p.qs)||!p.qs.length)throw{code:"invalid_json"};
+    const qs=p.qs.filter(q=>q&&Array.isArray(q.options)&&q.options.length>=2&&Number.isInteger(+q.answer)).map(q=>({q:String(q.q),qh:String(q.qh||""),options:q.options.map(String),answer:Math.max(0,Math.min(q.options.length-1,+q.answer))}));
+    const np={id:"ai"+Date.now(),t:topicKey,l:L,title:String(p.title||"New passage"),text:p.text,qs,ai:true};
+    S.aiPassages=(S.aiPassages||[]).concat([np]).slice(-15);save();
+    openPassage(np);
+  }catch(e){toast(aiErr(e),3600);}
+  b.disabled=!aiReady();b.textContent="צרי קטע חדש";
+};
+
+/* ---------------- speaking ---------------- */
+let chat={topic:"",turns:[]},busy=false,ctl=null;
+function rules(){
+  const L=lvl();const mine=focusWords();
+  let topic=chat.topic;
+  if(topic==="the learner's own word list")topic=mine.length?("everyday situations where she can use her practice words: "+mine.join(", ")+". Gently encourage her to use them"):"daily life and hobbies";
+  return "You are Maya, a warm, encouraging English conversation tutor. The learner is a Hebrew speaker (a woman) at "+LEVEL_DESC(L)+". "+
+  "Conversation topic: "+topic+".\n"+
+  "Rules for your reply: keep it to "+(L<=2?"1-2 short, simple sentences":"2-3 sentences")+", use vocabulary suitable for this level, react naturally to what she said, and always end with ONE question that invites her to answer in a full sentence. "+
+  "Gradually make questions a little more challenging when she answers well (for example, ask about the past or the future so she practises tenses).\n"+
+  "Also give feedback on her LAST message only (grammar, word choice, sentence structure and whether she actually answered the question). Be kind and specific. Feedback explanations must be in simple Hebrew, addressed to a woman.\n"+
+  "If there is no learner message yet, start the conversation with a short greeting and your first question, and set feedback to null.\n"+
+  'Reply with only JSON: {"reply":"your English reply","reply_he":"Hebrew translation of your reply","feedback":{"score":1-5,"corrected":"her message rewritten in correct, natural English (same meaning)","explanation_he":"what was wrong and why, or praise if it was correct","tip_he":"one short tip or a useful phrase she can use next time"}}';
+}
+function renderChat(){
+  const box=$("chat");box.textContent="";
+  chat.turns.forEach(t=>{
+    if(t.role==="assistant"){
+      const m=el("div",{class:"msg ai"});
+      const top=el("div",{class:"row",style:"gap:6px;justify-content:flex-end;flex-wrap:nowrap"});
+      top.append(el("div",{class:"bubble",text:t.content}),speakBtn(t.content));m.append(top);
+      if(t.he&&lvl()<=3){const d=el("details",{class:"trans"});d.append(el("summary",{text:"תרגום"}),el("div",{text:t.he}));m.append(d);}
+      box.append(m);
+    }else if(t.role==="user"){
+      const m=el("div",{class:"msg me"});m.append(el("div",{class:"bubble",text:t.content}));
+      if(t.fb){
+        const f=el("div",{class:"fb"});const sc=Math.max(1,Math.min(5,+t.fb.score||3));
+        f.append(el("div",{class:"row",style:"gap:8px"},el("span",{class:"stars","aria-label":sc+" מתוך 5",text:"★".repeat(sc)+"☆".repeat(5-sc)}),el("b",{text:sc>=5?"מצוין!":sc>=4?"טוב מאוד":sc>=3?"טוב, עם כמה תיקונים":"בואי נתקן"})));
+        if(t.fb.corrected&&norm(t.fb.corrected)!==norm(t.content))f.append(el("div",{},"גרסה מתוקנת: ",el("span",{class:"en",text:t.fb.corrected}),speakBtn(t.fb.corrected)));
+        if(t.fb.explanation_he)f.append(el("div",{text:t.fb.explanation_he}));
+        if(t.fb.tip_he)f.append(el("div",{class:"small muted",text:"טיפ: "+t.fb.tip_he}));
+        m.append(f);
+      }else if(t.pending){m.append(el("div",{class:"small muted"},el("span",{class:"spin"})," בודקת..."));}
+      else if(t.err){m.append(el("div",{class:"small",style:"color:var(--bad)",text:t.err}));}
+      box.append(m);
+    }
+  });
+  if(busy&&!chat.turns.some(t=>t.pending))box.append(el("div",{class:"msg ai"},el("div",{class:"bubble muted"},el("span",{class:"spin"})," Maya is typing...")));
+  box.scrollTop=box.scrollHeight;
+}
+async function aiTurn(){
+  busy=true;$("spSend").disabled=true;renderChat();
+  const hist=chat.turns.filter(t=>!t.err).slice(-14).map(t=>({role:t.role,content:t.content}));
+  let msgs=[{role:"user",content:rules()}].concat(hist);
+  if(msgs[msgs.length-1].role!=="user")msgs.push({role:"user",content:"(continue)"});
+  ctl=new AbortController();
+  const lastUser=[...chat.turns].reverse().find(t=>t.role==="user");
+  try{
+    const r=await sample.json(msgs,{modelTier:"quick",cache:false,signal:ctl.signal});
+    if(!r||typeof r.reply!=="string")throw{code:"invalid_json"};
+    if(lastUser){lastUser.pending=false;if(r.feedback&&typeof r.feedback==="object"){lastUser.fb=r.feedback;addXP("speaking",4+Math.max(1,Math.min(5,+r.feedback.score||3)));progress("speaking");}}
+    chat.turns.push({role:"assistant",content:r.reply,he:r.reply_he||""});
+    if($("spAuto").checked)speak(r.reply);
+  }catch(e){
+    if(e&&e.code==="cancelled"){busy=false;return;}
+    if(lastUser){lastUser.pending=false;lastUser.err=aiErr(e);}else toast(aiErr(e),3600);
+  }
+  busy=false;$("spSend").disabled=!aiReady();$("spInput").disabled=!aiReady();renderChat();
+}
+$("spStart").onclick=()=>{
+  if(!aiReady())return;
+  if(ctl)ctl.abort();
+  chat={topic:$("spTopic").value,turns:[]};
+  $("spInput").disabled=false;$("spInput").value="";
+  aiTurn();
+};
+function send(){
+  const v=$("spInput").value.trim();if(!v||busy||!aiReady())return;
+  if(!chat.turns.length){toast("קודם לוחצים על התחלת שיחה");return;}
+  chat.turns.push({role:"user",content:v,pending:true});$("spInput").value="";aiTurn();
+}
+$("spSend").onclick=send;
+$("spInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send();}});
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null,recOn=false,micBlocked=false;
+if(SR){
+  $("spMic").hidden=false;
+  $("spMic").onclick=()=>{
+    if(micBlocked){toast("המיקרופון חסום בדף הזה. השתמשי בהכתבה של המקלדת.",3600);return;}
+    if(recOn){rec&&rec.stop();return;}
+    try{
+      rec=new SR();rec.lang="en-US";rec.interimResults=true;rec.continuous=false;
+      const base=$("spInput").value?($("spInput").value.trim()+" "):"";
+      rec.onresult=e=>{let s="";for(const r of e.results)s+=r[0].transcript;$("spInput").value=base+s;};
+      rec.onerror=e=>{if(e.error==="not-allowed"||e.error==="service-not-allowed"){micBlocked=true;$("spNote").textContent="הדפדפן לא מאפשר מיקרופון בתוך הדף הזה. אפשר לענות בדיבור דרך כפתור ההכתבה במקלדת של הטלפון או המחשב (בווינדוס: Win+H, במק: לחיצה כפולה על Fn), והטקסט ייכתב לבד.";}};
+      rec.onend=()=>{recOn=false;$("spMic").classList.remove("rec");};
+      rec.start();recOn=true;$("spMic").classList.add("rec");
+    }catch(err){micBlocked=true;toast("המיקרופון לא זמין כאן. השתמשי בהכתבה של המקלדת.",3600);}
+  };
+}
+
+/* ---------------- videos ---------------- */
+let vTopic="all";
+const PLAY_SVG='<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="rgba(255,255,255,.9)"/><path d="M19 15l15 9-15 9z" fill="currentColor"/></svg>';
+function renderVideos(){
+  const tb=$("vTopics");tb.textContent="";
+  ["all","gen","fin","biz","sport","grow"].forEach(k=>tb.append(el("button",{class:"chip","aria-pressed":vTopic===k?"true":"false",text:k==="gen"?"אנגלית כללית":TOPICS[k],onclick:()=>{vTopic=k;renderVideos();}})));
+  const L=lvl();const g=$("vGrid");g.textContent="";
+  const list=VIDEOS.filter(v=>(vTopic==="all"||v.t===vTopic)).sort((a,b)=>(a.l>L)-(b.l>L)||(!!S.videos[a.id])-(!!S.videos[b.id])||Math.abs(a.l-L)-Math.abs(b.l-L));
+  list.forEach(v=>{
+    const col=TCOL[v.t];const seen=!!S.videos[v.id];
+    const c=el("div",{class:"vcard"+(seen?" seen":"")});
+    const th=el("div",{class:"vthumb",style:"background:linear-gradient(135deg,var(--"+col+"),var(--"+col+"-soft));color:var(--"+col+")"});
+    th.innerHTML=PLAY_SVG;th.append(el("span",{class:"tag lv",style:"background:var(--card)",text:LEVELS[v.l-1].cefr+(v.l>L?" · מאתגר":"")}));
+    const body=el("div",{class:"vbody"});
+    body.append(el("span",{class:"en",text:v.title}),el("span",{class:"small muted",text:v.by+" · "+(v.t==="gen"?"אנגלית כללית":TOPICS[v.t])}),el("p",{class:"small",text:v.he}));
+    const row=el("div",{class:"row"});
+    row.append(el("a",{class:"btn",href:v.url,target:"_blank",rel:"noopener noreferrer",style:"background:var(--"+col+")",text:"לצפייה בסרטון"}));
+    row.append(el("button",{class:"btn ghost",disabled:seen?"disabled":null,text:seen?"צפית ✓":"צפיתי",onclick:()=>{if(S.videos[v.id])return;S.videos[v.id]=today();addXP("videos",10);progress("video");renderVideos();}}));
+    if(seen)row.lastChild.setAttribute("disabled","disabled");else row.lastChild.removeAttribute("disabled");
+    body.append(row);c.append(th,body);g.append(c);
+  });
+  $("vCount").textContent="צפית ב-"+Object.keys(S.videos).length+" מתוך "+VIDEOS.length;
+}
+
+
+/* ---------------- swipe deck (spaced repetition) ---------------- */
+const DAY=86400000;
+const INTERVALS=[0,1,2,4,8,16,32,64]; // days per box
+let deck=[],dIdx=0,dStats={yes:0,no:0},dLeft={};
+function swipePool(){
+  const L=lvl();const map=new Map();
+  Object.values(S.my).forEach(w=>{if(w.he)map.set(wkey(w.en),{en:w.en,he:w.he,t:"mine"});});
+  VOCAB.forEach(w=>{const k=wkey(w.en);if(!map.has(k))map.set(k,{en:w.en,he:w.he,t:w.t,l:w.l});});
+  return [...map.entries()].map(([k,w])=>Object.assign({k},w));
+}
+let exBusy=false;
+async function moreExamples(){
+  if(!aiReady()||exBusy)return;
+  const need=Object.entries(S.my).filter(([k,w])=>w.he&&exList(k,w.en).length<3).slice(0,12);
+  if(!need.length)return;exBusy=true;
+  try{
+    const arr=await sample.json("For a Hebrew-speaking English learner at "+LEVEL_DESC(lvl())+", write 3 different short, simple English example sentences for each word below, each in a different everyday situation (work, money, sport, home, feelings) so she builds varied associations. Add a natural Hebrew translation for each (feminine 'you' if addressed to her).\nWords: "+need.map(([k,w])=>w.en).join(", ")+'\nReply with only JSON: [{"en":"word","ex":[["English sentence","Hebrew translation"],["...","..."],["...","..."]]}]',{modelTier:"quick"});
+    (Array.isArray(arr)?arr:[]).forEach(r=>{const k=r&&wkey(String(r.en||""));const w=k&&S.my[k];if(!w||!Array.isArray(r.ex))return;w.exs=(w.exs||[]).concat(r.ex.filter(x=>Array.isArray(x)&&x[0]).map(x=>[String(x[0]),String(x[1]||"")])).slice(0,8);});
+    save();
+  }catch(e){}
+  exBusy=false;
+}
+function dueCount(){const now=Date.now();return swipePool().filter(w=>S.srs[w.k]&&S.srs[w.k].due<=now).length;}
+const HOUR=3600000;
+// Deck like a seasoned teacher builds a lesson: a few hard words spread out, some reviews, and mostly new words from across topics.
+function freshMix(list,n){
+  const L=lvl();
+  const near=list.filter(w=>w.t==="mine"||(w.l||1)<=L+1);
+  const src=near.length>=n?near:list;
+  const groups={};
+  shuffle(src).sort((a,b)=>Math.abs((a.l||L)-L)-Math.abs((b.l||L)-L)).forEach(w=>{(groups[w.t]=groups[w.t]||[]).push(w);});
+  const keys=shuffle(Object.keys(groups));if(groups.mine){keys.splice(keys.indexOf("mine"),1);keys.unshift("mine");}
+  const out=[];let mine=0;
+  while(out.length<n&&keys.some(k=>groups[k].length)){
+    for(const k of keys){if(out.length>=n)break;if(!groups[k].length)continue;if(k==="mine"&&mine>=4&&keys.some(x=>x!=="mine"&&groups[x].length))continue;out.push(groups[k].shift());if(k==="mine")mine++;}
+  }
+  return out;
+}
+function buildDeck(){
+  const now=Date.now();const pool=swipePool();
+  const due=pool.filter(w=>S.srs[w.k]&&S.srs[w.k].due<=now);
+  const hard=due.filter(w=>S.srs[w.k].box===0).sort((a,b)=>S.srs[a.k].due-S.srs[b.k].due).slice(0,4);
+  const rev=due.filter(w=>S.srs[w.k].box>0).sort((a,b)=>S.srs[a.k].due-S.srs[b.k].due).slice(0,4);
+  let fresh=freshMix(pool.filter(w=>!S.srs[w.k]),Math.max(6,14-hard.length-rev.length));
+  let base=shuffle(rev.concat(fresh));
+  if(base.length+hard.length<8){
+    // everything seen and nothing due: extra practice with the words seen longest ago
+    const used=new Set(base.concat(hard).map(w=>w.k));
+    base=base.concat(pool.filter(w=>!used.has(w.k)&&S.srs[w.k]).sort((a,b)=>(S.srs[a.k].last||0)-(S.srs[b.k].last||0)).slice(0,10-base.length-hard.length));
+  }
+  hard.forEach((w,i)=>base.splice(Math.min(base.length,2+i*3),0,w));
+  deck=base.map(w=>Object.assign({},w));
+  dIdx=0;dStats={yes:0,no:0};dLeft={};
+}
+
+/* ---------------- fill-the-gap quiz cards ---------------- */
+function vocabQuiz(w){
+  const L=exList(w.k,w.en);if(!L.length||w.en.includes(" "))return null;
+  const re=new RegExp("\\b"+w.en.replace(/[-]/g,"\\-")+"\\b","i");
+  const cand=shuffle(L).find(x=>re.test(x[0]));if(!cand)return null;
+  const m=cand[0].match(re);const shown=m[0];
+  const lv=w.l||1;const others=shuffle(VOCAB.filter(v=>v.en!==w.en&&!v.en.includes(" ")&&Math.abs(v.l-lv)<=1&&(v.t===w.t||Math.random()<.3))).slice(0,2);
+  if(others.length<2)return null;
+  const fix=x=>shown[0]===shown[0].toUpperCase()?x[0].toUpperCase()+x.slice(1):x;
+  const opts=shuffle([shown].concat(others.map(o=>fix(o.en))));
+  return {type:"quiz",kind:"word",k:w.k,s:cand[0].replace(re,"___"),o:opts,a:opts.indexOf(shown),he:cand[1],why:shown+" = "+w.he+(others.length?" · "+others.map(o=>o.en+" = "+o.he).join(" · "):"")};
+}
+function grammarQuizzes(n){
+  const L=lvl();S.gq=S.gq||{};const now=Date.now();
+  const pool=GQ.filter(q=>q.l<=L);
+  const due=pool.filter(q=>S.gq[q.id]&&S.gq[q.id].due<=now).sort((a,b)=>S.gq[a.id].due-S.gq[b.id].due);
+  const fresh=shuffle(pool.filter(q=>!S.gq[q.id])).sort((a,b)=>(b.l===L)-(a.l===L));
+  let list=due.concat(fresh);if(list.length<n)list=list.concat(shuffle(pool.filter(q=>!list.includes(q))));
+  return list.slice(0,n).map(q=>({type:"quiz",kind:"grammar",gid:q.id,s:q.s,o:q.o.slice(),a:q.a,he:q.he,why:q.why}));
+}
+function rulePick(n){
+  const L=lvl();S.rq=S.rq||{};const now=Date.now();
+  const pool=RULES.filter(r=>r.l<=L);
+  const due=pool.filter(r=>S.rq[r.id]&&S.rq[r.id].due<=now).sort((a,b)=>S.rq[a.id].due-S.rq[b.id].due);
+  const fresh=pool.filter(r=>!S.rq[r.id]);
+  return due.slice(0,1).concat(fresh).concat(due.slice(1)).slice(0,n);
+}
+function addRules(){
+  rulePick(2).forEach((r,i)=>{
+    const pos=Math.min(deck.length,1+i*7);deck.splice(pos,0,{type:"rule",k:"rule:"+r.id,rid:r.id});
+    const q=r.q;deck.splice(Math.min(deck.length,pos+3),0,{type:"quiz",kind:"grammar",gid:r.id,s:q.s,o:q.o.slice(),a:q.a,he:q.he,why:q.why});
+  });
+}
+function ruleEl(w,under){
+  const r=RULES.find(x=>x.id===w.rid);
+  const c=el("div",{class:"scard rule"+(under?" under":"")});
+  c.append(el("div",{class:"band",style:"background:var(--grow)"}));
+  c.append(el("span",{class:"tag",style:"background:var(--grow-soft)",text:"חוק דקדוק · "+(S.rq[r.id]?"חזרה":"חדש")}));
+  c.append(el("div",{},el("div",{class:"rtitle",text:r.t}),el("div",{class:"rhe",text:r.he})));
+  const fl=el("div",{class:"rforms"});
+  r.f.forEach(f=>{const row=el("div",{class:"rf"});f.forEach((x,i)=>{if(i)row.append(el("span",{class:"arr",text:"→"}));row.append(el("span",{class:i?"to":"",text:x}));});fl.append(row);});
+  c.append(fl,el("div",{class:"rrule",text:r.rule}));
+  const back=el("div",{class:"back",hidden:"hidden"});
+  r.ex.forEach(([e,h])=>back.append(el("div",{class:"rex"},el("div",{class:"en",text:e}),el("div",{class:"small muted",text:h}))));
+  if(r.note)back.append(el("div",{class:"qwhy",text:"שימי לב: "+r.note}));
+  c.append(back);
+  c.append(el("div",{class:"hint",text:dLeft[w.k]?"עוד הזדמנות אחת בסבב הזה":"הקישי לדוגמאות · ימינה: הבנתי · שמאלה: שוב"}));
+  c.append(el("span",{class:"stamp yes",text:"הבנתי"}),el("span",{class:"stamp no",text:"שוב"}));
+  return c;
+}
+function addQuizzes(){
+  const words=deck.filter(w=>!w.type);
+  const vq=shuffle(words).map(vocabQuiz).filter(Boolean).slice(0,2);
+  const gq=grammarQuizzes(2);
+  const qs=shuffle(vq.concat(gq));
+  qs.forEach((q,i)=>{const pos=Math.min(deck.length,2+i*3);deck.splice(pos,0,q);});
+}
+function quizEl(q,under){
+  const c=el("div",{class:"scard quiz"+(under?" under":"")});
+  c.append(el("div",{class:"band",style:"background:var(--"+(q.kind==="grammar"?"biz":"accent")+")"}));
+  c.append(el("span",{class:"tag",style:"background:var(--"+(q.kind==="grammar"?"biz":"accent")+"-soft)",text:q.kind==="grammar"?"דקדוק · השלימי את המשפט":"השלימי את המילה החסרה"}));
+  const sent=el("div",{class:"qsent"});const parts=q.s.split("___");sent.append(parts[0],el("span",{class:"gap",text:"?"}),parts[1]||"");c.append(sent);
+  if(under)return c;
+  const opts=el("div",{class:"qopts"});
+  q.o.forEach((o,i)=>opts.append(el("button",{text:(i+1)+". "+o,onclick:()=>answerQuiz(c,q,i)})));
+  c.append(opts);
+  return c;
+}
+function answerQuiz(c,q,i){
+  if(q.done)return;q.done=true;const ok=i===q.a;
+  c.querySelectorAll(".qopts button").forEach((b,j)=>{if(j===q.a)b.classList.add("right");else if(j===i)b.classList.add("wrong");b.disabled=true;});
+  c.querySelector(".gap").textContent=q.o[q.a];
+  const full=q.s.replace("___",q.o[q.a]);speak(full,{rate:0.85});
+  c.append(el("div",{class:"small",style:"font-weight:700;color:var(--"+(ok?"good":"bad")+")",text:ok?"נכון!":"לא בדיוק. התשובה הנכונה מסומנת בירוק."}));
+  if(q.he)c.append(el("div",{class:"muted",text:q.he}));
+  if(q.why){const wb=el("div",{class:"qwhy"});if(q.kind==="word")q.why.split(" · ").forEach(x=>{const [en,he]=x.split(" = ");wb.append(el("div",{},el("span",{class:"en",style:"font-weight:600",text:en}),"  =  "+he));});else wb.textContent=q.why;c.append(wb);}
+  c.querySelectorAll(".qopts button").forEach((b,j)=>{if(j!==q.a&&j!==i)b.hidden=true;});
+  c.append(el("button",{class:"btn",style:"background:var(--mine);margin-top:auto;flex:none",text:"המשך",onclick:()=>{if(deck[dIdx]!==q)return;dIdx++;renderCard();}}));
+  const now=Date.now();
+  if(q.kind==="grammar"){S.gq=S.gq||{};const st=S.gq[q.gid]||{box:0,due:now};st.box=ok?Math.min(st.box+1,INTERVALS.length-1):0;st.due=ok?now+INTERVALS[st.box]*DAY:now+HOUR;S.gq[q.gid]=st;}
+  else if(q.k&&!ok){const st=S.srs[q.k]||{box:0,due:now,seen:0,lapses:0};st.box=0;st.due=now+HOUR;S.srs[q.k]=st;}
+  if(!ok){if(!q.retry)deck.splice(Math.min(deck.length,dIdx+6),0,Object.assign({},q,{done:false,retry:true}));dStats.no++;}else dStats.yes++;
+  addXP("words",ok?3:1);progress("swipe");
+}
+function openSwipe(){
+  buildDeck();addQuizzes();addRules();moreExamples();
+  $("swipeOv").hidden=false;$("swDone").hidden=true;$("swStack").hidden=false;$("swBtns").hidden=false;$("swLegend").hidden=false;
+  $("swSpeak").innerHTML=SPEAK_SVG;
+  document.body.style.overflow="hidden";
+  renderCard();
+}
+function closeSwipe(){$("swipeOv").hidden=true;document.body.style.overflow="";if(hasTTS)speechSynthesis.cancel();renderAll();}
+$("swClose").onclick=closeSwipe;
+function cardEl(w,under){
+  if(!under&&!w._ex){const e=nextEx(w.k,w.en);w.ex=e[0];w.exHe=e[1];w._ex=1;}
+  if(under&&!w._ex){const L=exList(w.k,w.en);const e=L.length?L[((S.exi||{})[w.k]||0)%L.length]:['',''];w.ex=e[0];w.exHe=e[1];}
+  const c=el("div",{class:"scard"+(under?" under":"")});
+  c.append(el("div",{class:"band",style:"background:var(--"+(TCOL[w.t]||"gen")+")"}));
+  c.append(el("span",{class:"tag",style:"background:var(--"+(TCOL[w.t]||"gen")+"-soft)",text:w.t==="mine"?"מהמילים שלי":TOPICS[w.t]||""}));
+  c.append(el("div",{class:"w",text:w.en}));
+  if(w.ex){const exl=el("div",{class:"ex",style:"font-size:1.05rem;line-height:1.5;max-width:28ch"});exl.append(...hiWord(w.ex,w.en));c.append(exl);}
+  const back=el("div",{class:"back",hidden:"hidden"},el("div",{class:"he",text:w.he}));
+  if(w.exHe)back.append(el("div",{class:"small muted",style:"margin-top:4px",text:w.exHe}));
+  c.append(back);
+  const st=S.srs[w.k];const stub=st&&st.lapses>=3&&st.box===0;
+  if(stub&&!under){back.hidden=false;c.classList.add("flipped");}
+  c.append(el("div",{class:"hint",text:stub?"מילה עקשנית: קראי את התרגום והמשפט, ותני לה לשקוע":dLeft[w.k]?"עוד הזדמנות אחת בסבב הזה":(st?"חזרה":"מילה חדשה")+" · הקישי כדי לראות תרגום"}));
+  c.append(el("span",{class:"stamp yes",text:"יודעת"}),el("span",{class:"stamp no",text:"עוד לא"}));
+  return c;
+}
+function hiWord(sent,word){const i=sent.toLowerCase().indexOf(word.toLowerCase().split(' ')[0].slice(0,Math.max(3,word.length-2)));if(i<0)return [sent];let j=i;while(j<sent.length&&/[A-Za-z'-]/.test(sent[j]))j++;if(word.includes(' ')){const end=sent.toLowerCase().indexOf(word.toLowerCase().split(' ').pop(),i);if(end>0){j=end;while(j<sent.length&&/[A-Za-z'-]/.test(sent[j]))j++;}}return [sent.slice(0,i),el('b',{style:'color:var(--ink)',text:sent.slice(i,j)}),sent.slice(j)];}
+function renderCard(){
+  const stack=$("swStack");stack.textContent="";
+  $("swProg").style.width=Math.min(100,dIdx/deck.length*100)+"%";
+  if(dIdx>=deck.length)return finishDeck();
+  const w=deck[dIdx];
+  const mk=(x,u)=>x.type==="quiz"?quizEl(x,u):x.type==="rule"?ruleEl(x,u):cardEl(x,u);
+  const nx=deck[dIdx+1];if(nx)stack.append(mk(nx,true));
+  const isQ=w.type==="quiz";$("swBtns").hidden=isQ;$("swLegend").hidden=isQ;
+  if(isQ){stack.append(quizEl(w,false));return;}
+  const c=mk(w,false);stack.append(c);fitRule(c);
+  $("swLegend").children[0].textContent="← שמאלה: "+(w.type==="rule"?"שוב":"עוד לא");$("swLegend").children[1].textContent=(w.type==="rule"?"ימינה: הבנתי":"ימינה: יודעת")+" →";
+  if(w.type==="rule"){const r=RULES.find(x=>x.id===w.rid);$("swSpeak").onclick=()=>r.ex.forEach((e,i)=>speak(e[0],{rate:0.85,queue:i>0}));}
+  else{$("swSpeak").onclick=()=>{speak(w.en,{rate:0.8});if(w.ex)speak(w.ex,{rate:0.85,queue:true});};speak(w.en,{rate:0.85});}
+  attachDrag(c,w);
+}
+function fitRule(c){if(!c.classList.contains("rule"))return;c.classList.remove("tight","tighter");const over=()=>c.scrollHeight>c.clientHeight+1;if(over())c.classList.add("tight");if(over())c.classList.add("tighter");}
+function flipCard(c){const b=c.querySelector(".back");if(b.hidden){b.hidden=false;c.classList.add("flipped");fitRule(c);c.querySelector(".hint").textContent=c.classList.contains("rule")?"ימינה: הבנתי · שמאלה: שוב":"ימינה: יודעת · שמאלה: עוד לא";}}
+function attachDrag(c,w){
+  let x0=0,y0=0,dx=0,dragging=false,moved=false;
+  const yes=c.querySelector(".stamp.yes"),no=c.querySelector(".stamp.no");
+  c.addEventListener("pointerdown",e=>{dragging=true;moved=false;x0=e.clientX;y0=e.clientY;dx=0;c.setPointerCapture(e.pointerId);c.style.transition="none";});
+  c.addEventListener("pointermove",e=>{if(!dragging)return;dx=e.clientX-x0;const dy=e.clientY-y0;if(Math.abs(dx)>6)moved=true;c.style.transform="translate("+dx+"px,"+dy*0.2+"px) rotate("+(dx/18)+"deg)";yes.style.opacity=Math.max(0,Math.min(1,dx/90));no.style.opacity=Math.max(0,Math.min(1,-dx/90));});
+  const end=()=>{if(!dragging)return;dragging=false;
+    if(!moved){c.style.transform="";flipCard(c);return;}
+    if(dx>90)fly(c,1);else if(dx<-90)fly(c,-1);
+    else{c.style.transition="transform .25s";c.style.transform="";yes.style.opacity=0;no.style.opacity=0;}};
+  c.addEventListener("pointerup",end);c.addEventListener("pointercancel",end);
+}
+function fly(c,dir){
+  if(c._gone)return;c._gone=1;
+  c.style.transition="transform .3s ease-in, opacity .3s";c.style.transform="translate("+(dir*520)+"px,-30px) rotate("+(dir*28)+"deg)";c.style.opacity="0";
+  c.querySelector(dir>0?".stamp.yes":".stamp.no").style.opacity=1;
+  setTimeout(()=>decide(dir>0),260);
+}
+function decide(known){
+  const w=deck[dIdx];if(!w)return;const now=Date.now();
+  if(w.type==="rule"){
+    S.rq=S.rq||{};const st=S.rq[w.rid]||{box:0,due:now};
+    if(known){st.box=dLeft[w.k]?1:(S.rq[w.rid]?Math.min(st.box+1,INTERVALS.length-1):2);st.due=now+INTERVALS[st.box]*DAY;dStats.yes++;}
+    else{st.box=0;st.due=now+HOUR;dStats.no++;dLeft[w.k]=(dLeft[w.k]||0)+1;if(dLeft[w.k]===1)deck.splice(Math.min(deck.length,dIdx+6),0,Object.assign({},w));}
+    S.rq[w.rid]=st;addXP("words",2);progress("swipe");dIdx++;renderCard();return;
+  }
+  const st=S.srs[w.k]||{box:0,due:now,seen:0,lapses:0};
+  st.seen=(st.seen||0)+1;st.last=now;
+  if(known){
+    if(dLeft[w.k])st.box=1;                 // missed earlier in this round: start the ladder again
+    else st.box=S.srs[w.k]?Math.min(st.box+1,INTERVALS.length-1):3; // known on first sight: skip ahead
+    st.due=now+INTERVALS[st.box]*DAY;dStats.yes++;
+    if(S.my[w.k]&&st.box>=4&&S.my[w.k].status!=="known")S.my[w.k].status="known";
+  }else{
+    st.box=0;st.due=now+HOUR;st.lapses=(st.lapses||0)+1;dStats.no++;
+    dLeft[w.k]=(dLeft[w.k]||0)+1;
+    if(dLeft[w.k]===1)deck.splice(Math.min(deck.length,dIdx+6),0,Object.assign({},w,{_ex:0})); // one more look later in this round, then it rests
+    if(S.my[w.k]&&S.my[w.k].status!=="focus")S.my[w.k].status="learning";
+  }
+  S.srs[w.k]=st;
+  addXP("words",1);progress("swipe");
+  dIdx++;renderCard();
+}
+$("swYes").onclick=()=>{const c=$("swStack").querySelector(".scard:not(.under):not(.quiz)");if(c)fly(c,1);};
+$("swNo").onclick=()=>{const c=$("swStack").querySelector(".scard:not(.under):not(.quiz)");if(c)fly(c,-1);};
+document.addEventListener("keydown",e=>{if($("swipeOv").hidden)return;const cq=deck[dIdx];if(cq&&cq.type==="quiz"){const n=+e.key;if(n>=1&&n<=3){const c=$("swStack").querySelector(".scard.quiz:not(.under)");if(c)answerQuiz(c,cq,n-1);}else if(e.key==="Enter"&&cq.done){dIdx++;renderCard();}return;}if(e.key==="ArrowRight")$("swYes").click();else if(e.key==="ArrowLeft")$("swNo").click();else if(e.key===" "){e.preventDefault();const c=$("swStack").querySelector(".scard:not(.under)");if(c)flipCard(c);}else if(e.key==="Escape")closeSwipe();});
+function finishDeck(){
+  $("swStack").hidden=true;$("swBtns").hidden=true;$("swLegend").hidden=true;
+  addXP("words",5);
+  const nxt=Object.values(S.srs).filter(x=>x.due>Date.now()).sort((a,b)=>a.due-b.due)[0];
+  const d=$("swDone");d.hidden=false;d.textContent="";
+  d.append(el("h2",{text:"סיימת את הסבב!"}),
+    el("p",{text:"עברת "+(dStats.yes+dStats.no)+" כרטיסיות: "+dStats.yes+" ידעת ו-"+dStats.no+" לחזרה. מילים שהחלקת ימינה יחזרו בעוד כמה ימים, וככל שתכירי אותן שוב, הן יחזרו לעיתים רחוקות יותר. מילים שהחלקת שמאלה ינוחו קצת ויחזרו בסבב מאוחר יותר, משולבות בין מילים חדשות."}),
+    el("p",{class:"small muted",text:"+5 XP על סיום הסבב"}),
+    el("div",{class:"row",style:"justify-content:center"},el("button",{class:"btn",style:"background:var(--mine)",text:"סבב נוסף",onclick:openSwipe}),el("button",{class:"btn ghost",text:"למסך הבית",onclick:closeSwipe})));
+}
+
+/* ---------------- boot ---------------- */
+renderHeader();renderTenseTable();renderHome();updateAI();
+if(window.claude&&window.claude.use){
+  window.claude.use("sample").then(s=>{sample=s;updateAI();if(!s)$("spNote").textContent+=" (השיחה עם המורה זמינה כשהדף פתוח ב-Claude.)";});
+  let doneDb=false;const fin=()=>{if(doneDb)return;doneDb=true;visit();};
+  initDb().then(fin);setTimeout(fin,3000);
+}else{
+  $("spNote").textContent+=" השיחה עם המורה ויצירת תוכן חדש זמינות כשהדף פתוח ב-Claude.";
+  visit();
+}
+})();
+</script>
+
+</body>
+</html>
