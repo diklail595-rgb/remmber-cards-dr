@@ -125,6 +125,10 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 .wotd .en{font-size:1.6rem}
 
 /* my words */
+.wprev{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--mine-soft);display:flex;flex-direction:column;gap:6px}
+.wprev .tr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:1.15rem}
+.wprev .alts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.wprev .alts button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:2px 10px;font:inherit;font-size:.9rem;cursor:pointer}
 .addbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px}
 @media (max-width:560px){.addbar{grid-template-columns:1fr 1fr}.addbar .btn{grid-column:1/-1;justify-content:center}}
 .wlist{display:flex;flex-direction:column}
@@ -355,12 +359,13 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 <section class="view" id="v-words" hidden>
   <div class="row" style="justify-content:space-between"><h2>המילים שלי</h2><button class="btn" id="wPractice" style="background:var(--mine)">תרגול בכרטיסיות</button></div>
   <div class="card" style="display:flex;flex-direction:column;gap:10px">
-    <b>נתקלת במילה חדשה? הוסיפי אותה כאן</b>
+    <b>נתקלת במילה חדשה? כתבי אותה באנגלית או בעברית, והתרגום יופיע מיד</b>
     <form class="addbar" id="wForm">
-      <input type="text" id="wEn" class="en" placeholder="English word" autocomplete="off" aria-label="המילה באנגלית">
-      <input type="text" id="wHe" placeholder="תרגום (לא חובה)" autocomplete="off" aria-label="תרגום">
+      <input type="text" id="wEn" dir="auto" placeholder="מילה באנגלית או בעברית" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="מילה באנגלית או בעברית">
+      <input type="text" id="wHe" dir="auto" placeholder="התרגום יופיע כאן" autocomplete="off" autocapitalize="off" aria-label="תרגום">
       <button class="btn" type="submit" style="background:var(--mine)">הוספה</button>
     </form>
+    <div class="wprev" id="wPrev" hidden></div>
     <p class="small muted" id="wAiNote">אם לא כתבת תרגום, Claude ישלים תרגום ומשפט דוגמה.</p>
   </div>
 
@@ -878,7 +883,7 @@ function aiErr(e){
 function updateAI(){
   const ok=aiReady();
   ["sGen","lGen","spStart"].forEach(id=>{$(id).disabled=!ok;$(id).title=ok?"":"זמין כשהדף פתוח ב-Claude";});
-  $("wAiNote").textContent=ok?"אם לא כתבת תרגום, Claude ישלים תרגום ומשפט דוגמה.":"כדי ש-Claude ישלים תרגום ומשפט דוגמה, פתחי את הדף ב-Claude. בינתיים אפשר לכתוב את התרגום לבד.";
+  $("wAiNote").textContent=ok?"התרגום מתמלא לבד, ואפשר לבחור משמעות אחרת או לתקן. Claude יוסיף גם משפט דוגמה.":"התרגום מתמלא לבד (צריך חיבור לאינטרנט), ואפשר לבחור משמעות אחרת או לתקן.";
 }
 const LEVEL_DESC=n=>"CEFR "+LEVELS[n-1].cefr+" (level "+n+" of 5"+(n<=2?", a beginner: very short sentences, the most common 1000 words":"")+")";
 function focusWords(){return Object.values(S.my).filter(w=>w.status!=="known").sort((a,b)=>(b.status==="focus")-(a.status==="focus")).slice(0,12).map(w=>w.en);}
@@ -989,6 +994,73 @@ function renderAll(){renderHeader();renderTenseTable();if(tab==="home")renderHom
 
 /* ---------------- my words ---------------- */
 let wFilter="all",flashQ=[],flashI=0;
+const isHeb=t=>/[\u0590-\u05FF]/.test(t);
+const tCache={};
+function tfetch(u){const c=new AbortController();const t=setTimeout(()=>c.abort(),7000);return fetch(u,{signal:c.signal}).finally(()=>clearTimeout(t));}
+function tClean(x,toEn){x=String(x||"").trim().replace(/[.。]$/,"");if(toEn&&x===x.toUpperCase())x=x.toLowerCase();else if(toEn&&/^[A-Z][a-z]+$/.test(x))x=x.toLowerCase();return x;}
+function tUniq(a,skip){const seen=new Set(skip.map(x=>x.toLowerCase()));return a.filter(x=>{const k=x.toLowerCase();if(!x||seen.has(k))return false;seen.add(k);return true;});}
+async function gTranslate(q,he){
+  try{
+    const j=await (await tfetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl="+(he?"iw":"en")+"&tl="+(he?"en":"iw")+"&dt=t&dt=bd&q="+encodeURIComponent(q))).json();
+    const main=tClean((j[0]||[]).map(x=>(x&&x[0])||"").join(""),he);if(!main)return null;
+    const alts=[];(j[1]||[]).forEach(p=>(p&&p[1]||[]).forEach(t=>alts.push(tClean(t,he))));
+    return {main,alts:tUniq(alts,[main,q]).slice(0,4)};
+  }catch(e){return null;}
+}
+async function mmTranslate(q,he){
+  try{
+    const j=await (await tfetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(q)+"&langpair="+(he?"he|en":"en|he"))).json();
+    const main=tClean(j&&j.responseData&&j.responseData.translatedText,he);if(!main||main.toLowerCase()===q.toLowerCase())return null;
+    const alts=(j.matches||[]).filter(m=>String(m.segment||"").trim().toLowerCase()===q.toLowerCase()).map(m=>tClean(m.translation,he));
+    return {main,alts:tUniq(alts,[main,q]).slice(0,3)};
+  }catch(e){return null;}
+}
+async function translateWord(q){
+  q=q.trim();const k=q.toLowerCase();if(!q)return null;if(tCache[k])return tCache[k];
+  const he=isHeb(q);let r=null;
+  const split=x=>String(x||"").split(/[\/,;]| או /).map(y=>y.trim()).filter(Boolean);
+  const v=VOCAB.find(w=>he?split(w.he).includes(q):w.en.toLowerCase()===k);
+  if(v){const e=firstEx(v.en);r={main:he?v.en:v.he,alts:[],ex:e[0]?e:null};}
+  if(!r){const m=Object.values(S.my).find(w=>w.he&&(he?split(w.he).includes(q):w.en.toLowerCase()===k));if(m)r={main:he?m.en:m.he,alts:[],ex:m.ex?[m.ex,m.exHe||""]:null};}
+  if(!r&&aiReady()){
+    try{const j=await sample.json('Translate the '+(he?'Hebrew':'English')+' word or phrase "'+q+'" for a Hebrew-speaking English learner at '+LEVEL_DESC(lvl())+'. Reply with only JSON: {"t":"the most common translation into '+(he?'English':'Hebrew (Hebrew letters)')+'","alts":["up to 3 other common meanings, in the same language as t"],"ex":"one short, simple English example sentence using the English word","exHe":"Hebrew translation of ex"}',{modelTier:"quick"});
+      if(j&&j.t)r={main:tClean(j.t,he),alts:tUniq((Array.isArray(j.alts)?j.alts:[]).map(a=>tClean(a,he)),[String(j.t),q]).slice(0,3),ex:j.ex?[String(j.ex),String(j.exHe||"")]:null};
+    }catch(e){}
+  }
+  if(!r)r=await gTranslate(q,he);
+  if(!r)r=await mmTranslate(q,he);
+  if(r)tCache[k]=r;return r;
+}
+let tSeq=0,tTimer=null,tRes=null,heAuto=true;
+function wPair(){
+  const q=$("wEn").value.trim(),t=$("wHe").value.trim();
+  return isHeb(q)?{en:t,he:q}:{en:q,he:t};
+}
+function renderPrev(state){
+  const p=$("wPrev");const q=$("wEn").value.trim();
+  if(!q){p.hidden=true;return;}
+  p.hidden=false;p.textContent="";
+  if(state==="loading"){p.append(el("div",{class:"small muted"},el("span",{class:"spin"})," מתרגמת..."));return;}
+  if(!tRes){p.append(el("div",{class:"small",text:"לא מצאתי תרגום כרגע. אפשר לכתוב אותו בעצמך בשדה השני ולהוסיף."}));return;}
+  const {en,he}=wPair();
+  p.append(el("div",{class:"tr"},el("span",{class:"en",style:"font-weight:700",dir:"ltr",text:en}),el("span",{class:"muted",text:"="}),el("b",{text:he}),en?speakBtn(en):null));
+  if(tRes.alts&&tRes.alts.length){const a=el("div",{class:"alts"},el("span",{class:"small muted",text:"עוד משמעויות:"}));
+    tRes.alts.forEach(x=>a.append(el("button",{type:"button",dir:"auto",text:x,onclick:()=>{$("wHe").value=x;heAuto=false;renderPrev();}})));p.append(a);}
+  if(tRes.ex&&tRes.ex[0])p.append(el("div",{class:"en small",dir:"ltr",style:"text-align:left",text:tRes.ex[0]}),tRes.ex[1]?el("div",{class:"small muted",text:tRes.ex[1]}):"");
+  if(en&&S.my[wkey(en)])p.append(el("div",{class:"small",style:"color:var(--sport)",text:"המילה כבר ברשימה שלך."}));
+}
+async function runTranslate(){
+  const q=$("wEn").value.trim();const my=++tSeq;
+  $("wHe").placeholder=q?(isHeb(q)?"באנגלית (מתמלא לבד)":"בעברית (מתמלא לבד)"):"התרגום יופיע כאן";
+  if(q.length<2){tRes=null;renderPrev();return null;}
+  renderPrev("loading");
+  const r=await translateWord(q);
+  if(my!==tSeq)return null;
+  tRes=r;if(r&&heAuto)$("wHe").value=r.main;
+  renderPrev();return r;
+}
+$("wEn").addEventListener("input",()=>{heAuto=true;if(!$("wEn").value.trim())$("wHe").value="";clearTimeout(tTimer);tTimer=setTimeout(runTranslate,600);});
+$("wHe").addEventListener("input",()=>{heAuto=!$("wHe").value.trim();renderPrev();});
 function addWord(en,he,ex,src){
   const k=wkey(en);if(!k)return;
   if(S.my[k]){toast("המילה כבר ברשימה");return;}
@@ -999,7 +1071,12 @@ function addWord(en,he,ex,src){
   if(!S.my[k].he||!S.my[k].ex||!S.my[k].exHe)aiFill(k);
 }
 async function aiFill(k){
-  if(!aiReady())return;const w=S.my[k];if(!w)return;
+  const w=S.my[k];if(!w)return;
+  if(!aiReady()){
+    if(w.he)return;w.loading=true;if(tab==="words")renderWords();
+    const r=await translateWord(w.en);if(S.my[k]){delete S.my[k].loading;if(r&&!S.my[k].he)S.my[k].he=r.main;if(r&&r.ex&&!S.my[k].ex){S.my[k].ex=r.ex[0];S.my[k].exHe=r.ex[1];}}
+    save();if(tab==="words")renderWords();return;
+  }
   w.loading=true;if(tab==="words")renderWords();
   try{
     const r=await sample.json('A Hebrew-speaking English learner at '+LEVEL_DESC(lvl())+' saved the English word or phrase: "'+w.en+'"'+(w.he?' (she wrote the Hebrew: "'+w.he+'")':'')+'.\nGive the most common meaning. Reply with only JSON: {"en":"the word, spelling corrected if needed","he":"short Hebrew translation (in Hebrew letters)","ex":"one short, simple example sentence in English using it","exHe":"Hebrew translation of the example sentence"}'+(w.ex?' Use this example sentence: "'+w.ex+'"':''),{modelTier:"quick"});
@@ -1008,11 +1085,16 @@ async function aiFill(k){
   if(S.my[k])delete S.my[k].loading;save();if(tab==="words")renderWords();
 }
 let bulkBusy=false,bulkTried=false;
-function missingKeys(){return Object.keys(S.my).filter(k=>!S.my[k].he||!S.my[k].ex||!S.my[k].exHe);}
+function missingKeys(){return Object.keys(S.my).filter(k=>!S.my[k].he||(aiReady()&&(!S.my[k].ex||!S.my[k].exHe)));}
 async function translateMissing(){
   const keys=missingKeys();
   keys.forEach(k=>{if(!S.my[k].he){const v=VOCAB.find(x=>wkey(x.en)===k);if(v)S.my[k].he=v.he;}});
-  if(!keys.length||!aiReady()||bulkBusy){save();renderWords();return;}
+  if(!keys.length||bulkBusy){save();renderWords();return;}
+  if(!aiReady()){
+    bulkBusy=true;const todo=keys.filter(k=>!S.my[k].he).slice(0,15);todo.forEach(k=>S.my[k].loading=true);renderWords();
+    for(const k of todo){const w=S.my[k];if(!w)continue;const r=await translateWord(w.en);if(S.my[k]){delete S.my[k].loading;if(r&&!S.my[k].he)S.my[k].he=r.main;}}
+    bulkBusy=false;save();renderWords();return;
+  }
   bulkBusy=true;keys.slice(0,30).forEach(k=>S.my[k].loading=true);renderWords();
   try{
     const items=keys.slice(0,30).map(k=>({en:S.my[k].en,he:S.my[k].he||"",ex:S.my[k].ex||""}));
@@ -1021,7 +1103,17 @@ async function translateMissing(){
   }catch(e){toast(aiErr(e),3000);}
   keys.forEach(k=>{if(S.my[k])delete S.my[k].loading;});bulkBusy=false;save();renderWords();
 }
-$("wForm").addEventListener("submit",e=>{e.preventDefault();const en=$("wEn").value,he=$("wHe").value;if(!en.trim()){toast("כתבי מילה באנגלית");return;}addWord(en,he,"","mine");$("wEn").value="";$("wHe").value="";$("wEn").focus();renderWords();});
+$("wForm").addEventListener("submit",async e=>{
+  e.preventDefault();const q=$("wEn").value.trim();if(!q){toast("כתבי מילה באנגלית או בעברית");return;}
+  clearTimeout(tTimer);
+  if(heAuto&&(!tRes||!$("wHe").value.trim()))await runTranslate();
+  const {en,he}=wPair();
+  if(!en){toast("לא מצאתי את המילה באנגלית. כתבי אותה בשדה השני ונסי שוב.",3600);$("wHe").focus();return;}
+  const ex=tRes&&tRes.ex&&tRes.ex[0]?tRes.ex:null;
+  addWord(en,he,ex?ex[0]:"","mine");
+  if(ex&&S.my[wkey(en)]&&!S.my[wkey(en)].exHe)S.my[wkey(en)].exHe=ex[1];save();
+  $("wEn").value="";$("wHe").value="";tRes=null;heAuto=true;$("wHe").placeholder="התרגום יופיע כאן";renderPrev();$("wEn").focus();renderWords();
+});
 function setStatus(k,st){const w=S.my[k];if(!w)return;const was=w.status;w.status=(w.status===st)?"learning":st;if(w.status==="known"&&was!=="known")addXP("words",3);save();}
 function renderWords(){
   const all=Object.entries(S.my).sort((a,b)=>b[1].added-a[1].added);
@@ -1039,7 +1131,7 @@ function renderWords(){
     if(w.fix)mid.append(el("div",{class:"small",style:"color:var(--sport)",text:"אולי התכוונת: "},el("span",{class:"en",text:w.fix})));
     if(w.ex)mid.append(el("div",{class:"en w-ex",text:w.ex}));
     if(w.exHe)mid.append(el("div",{class:"w-ex",text:w.exHe}));
-    if(!w.he&&!w.loading)mid.append(el("button",{class:"btn alt small",style:"padding:2px 10px;margin-top:4px",text:"תרגום לעברית",onclick:()=>{if(aiReady())aiFill(k);else toast("התרגום האוטומטי עובד כשהדף פתוח ב-Claude. אפשר גם להוסיף את המילה מחדש עם תרגום.",3600);}}));
+    if(!w.he&&!w.loading)mid.append(el("button",{class:"btn alt small",style:"padding:2px 10px;margin-top:4px",text:"תרגום לעברית",onclick:()=>aiFill(k)}));
     const seg=el("div",{class:"seg"});
     seg.append(el("button",{class:w.status==="known"?"on-known":"",title:"יודעת בוודאות","aria-pressed":w.status==="known"?"true":"false",text:"יודעת ✓",onclick:()=>{setStatus(k,"known");renderWords();}}));
     seg.append(el("button",{class:w.status==="focus"?"on-focus":"",title:"להתעכב עליה","aria-pressed":w.status==="focus"?"true":"false",text:"להתעכב ★",onclick:()=>{setStatus(k,"focus");renderWords();}}));
@@ -1051,7 +1143,7 @@ function renderWords(){
   $("wPractice").disabled=!all.length;
   const miss=missingKeys().length;
   if(miss&&!bulkBusy){list.prepend(el("div",{class:"row",style:"padding:8px 0;justify-content:space-between"},el("span",{class:"small muted",text:miss+" מילים בלי תרגום מלא"}),el("button",{class:"btn alt small",style:"padding:4px 12px",text:"תרגום כל החסרות",onclick:translateMissing})));}
-  if(miss&&aiReady()&&!bulkTried&&!bulkBusy){bulkTried=true;setTimeout(translateMissing,50);}
+  if(miss&&!bulkTried&&!bulkBusy){bulkTried=true;setTimeout(translateMissing,50);}
 }
 $("wPractice").onclick=()=>{
   const all=Object.keys(S.my);
