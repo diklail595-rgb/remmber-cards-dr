@@ -223,12 +223,14 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 
 
 /* swipe deck */
-.swipe-ov{position:fixed;inset:0;z-index:30;background:var(--paper);background:color-mix(in srgb,var(--paper) 94%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.swipe-ov{position:fixed;inset:0;z-index:30;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
 .swipe-top{width:100%;max-width:380px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .swipe-dots{flex:1;height:6px;background:var(--line);border-radius:9px;overflow:hidden}
 .swipe-dots i{display:block;height:100%;background:var(--mine);transition:width .3s}
 .stack{position:relative;width:100%;max-width:340px;aspect-ratio:3/4;max-height:58vh}
 .scard{position:absolute;inset:0;border-radius:22px;background:var(--card);border:1px solid var(--line);box-shadow:0 14px 34px rgba(20,40,30,.16);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;overflow:hidden}
+.scard:not(.under){will-change:transform}
+.scard.gone{pointer-events:none;z-index:2}
 .scard.under{transform:scale(.94) translateY(14px);opacity:.7;pointer-events:none}
 .scard .band{position:absolute;inset:0 0 auto 0;height:10px}
 .scard .w{font-family:var(--f-en);font-size:clamp(1.9rem,8vw,2.6rem);font-weight:600;direction:ltr;overflow-wrap:anywhere}
@@ -591,9 +593,58 @@ const PACKS=[
  {id:"growth2",he:"מטרות והרגלים",t:"grow",w:[["dream","חלום",1,"My dream is to live abroad.","החלום שלי הוא לגור בחו\"ל."],["start","להתחיל",1,"Start with small steps.","תתחילי בצעדים קטנים."],["finish","לסיים",1,"I want to finish the book this week.","אני רוצה לסיים את הספר השבוע."],["step","צעד",1,"Take one small step every day.","עשי צעד קטן אחד כל יום."],["progress","התקדמות",2,"I see progress every week.","אני רואה התקדמות כל שבוע."],["patience","סבלנות",2,"Learning a language takes patience.","לימוד שפה דורש סבלנות."],["challenge","אתגר",2,"Speaking English is a fun challenge.","לדבר אנגלית זה אתגר כיפי."],["believe","להאמין",2,"Believe in yourself.","תאמיני בעצמך."],["fail","להיכשל",2,"It's okay to fail sometimes.","זה בסדר להיכשל לפעמים."],["priority","עדיפות",3,"Health is my first priority.","הבריאות היא העדיפות הראשונה שלי."],["balance","איזון",3,"I try to find balance between work and life.","אני מנסה למצוא איזון בין עבודה לחיים."],["commitment","מחויבות",3,"Learning every day needs commitment.","ללמוד כל יום דורש מחויבות."]]},
  {id:"meetings",he:"פגישות ועסקים",t:"biz",w:[["agenda","סדר יום (בפגישה)",3,"Let's look at today's agenda.","בואו נסתכל על סדר היום של היום."],["client","לקוח",2,"I have a call with a client.","יש לי שיחה עם לקוח."],["offer","הצעה / להציע",2,"We made them a good offer.","הצענו להם הצעה טובה."],["contract","חוזה",2,"Please sign the contract.","בבקשה חתמי על החוזה."],["sign","לחתום / שלט",2,"Sign here, please.","חתמי כאן, בבקשה."],["decision","החלטה",2,"We need a decision today.","אנחנו צריכים החלטה היום."],["quarter","רבעון / רבע",3,"Sales grew in the second quarter.","המכירות גדלו ברבעון השני."],["sales","מכירות",2,"Sales went up this quarter.","המכירות עלו ברבעון הזה."],["partner","שותף",2,"He is my business partner.","הוא השותף העסקי שלי."],["presentation","מצגת",3,"I'm preparing a presentation.","אני מכינה מצגת."],["proposal","הצעה (מסודרת)",3,"We sent the proposal yesterday.","שלחנו את ההצעה אתמול."],["follow up","לעקוב / להמשיך בקשר",3,"I'll follow up with an email.","אמשיך בקשר עם מייל."]]}
 ];
+const PACKS2=[
+ {id:"business2",he:"עסקים מתקדם",t:"biz",w:[["launch","להשיק / השקה",3,"We will launch the product in May.","נשיק את המוצר במאי."],["target","יעד / קהל יעד",3,"Our target customers are young families.","לקוחות היעד שלנו הם משפחות צעירות."],["growth rate","קצב צמיחה",4,"The growth rate was higher than expected.","קצב הצמיחה היה גבוה מהצפוי."],["campaign","קמפיין",3,"The new campaign brought many customers.","הקמפיין החדש הביא הרבה לקוחות."],["outsource","להעביר למיקור חוץ",4,"We outsource our customer service.","אנחנו מעבירים את שירות הלקוחות למיקור חוץ."],["supply chain","שרשרת אספקה",4,"The supply chain was slow this year.","שרשרת האספקה הייתה איטית השנה."],["margin","שולי רווח",4,"Our profit margin is ten percent.","שולי הרווח שלנו הם עשרה אחוזים."],["invoice","חשבונית",3,"Please send me the invoice.","בבקשה שלחי לי את החשבונית."],["warehouse","מחסן",3,"The products are in the warehouse.","המוצרים נמצאים במחסן."],["brand awareness","מודעות למותג",4,"Social media increases brand awareness.","רשתות חברתיות מגבירות את המודעות למותג."],["startup","סטארטאפ",3,"She founded a startup at twenty-five.","היא הקימה סטארטאפ בגיל עשרים וחמש."],["pitch","הצגה קצרה (למשקיעים)",4,"He gave a great pitch to the investors.","הוא הציג הצגה מעולה למשקיעים."]]},
+ {id:"office2",he:"מיילים ותקשורת בעבודה",t:"biz",w:[["attach","לצרף",3,"I attached the file to this email.","צירפתי את הקובץ למייל הזה."],["reply","להשיב / תשובה",3,"Please reply by Friday.","בבקשה השיבי עד יום שישי."],["remind","להזכיר",3,"Can you remind me about the meeting?","את יכולה להזכיר לי על הפגישה?"],["confirm","לאשר",3,"Please confirm your attendance.","בבקשה אשרי את ההגעה שלך."],["available","פנוי / זמין",3,"Are you available on Tuesday?","את פנויה ביום שלישי?"],["postpone","לדחות",4,"We need to postpone the meeting.","אנחנו צריכים לדחות את הפגישה."],["urgent","דחוף",3,"This is urgent, please call me.","זה דחוף, בבקשה תתקשרי אליי."],["get back to","לחזור אל (מישהו בתשובה)",4,"I will get back to you next week.","אחזור אלייך בשבוע הבא."],["in charge of","אחראי על",4,"She is in charge of marketing.","היא אחראית על השיווק."],["deadline extension","הארכת מועד",4,"I asked for a deadline extension.","ביקשתי הארכת מועד."],["regarding","בנוגע ל-",4,"I'm writing regarding your order.","אני כותבת בנוגע להזמנה שלך."],["clarify","להבהיר",4,"Could you clarify the last point?","את יכולה להבהיר את הנקודה האחרונה?"]]},
+ {id:"money3",he:"כסף והשקעות מתקדם",t:"fin",w:[["stock market","שוק המניות",3,"The stock market went up today.","שוק המניות עלה היום."],["mortgage","משכנתא",4,"We took a mortgage to buy the apartment.","לקחנו משכנתא כדי לקנות את הדירה."],["interest rate","ריבית",3,"The interest rate is five percent.","הריבית היא חמישה אחוזים."],["emergency fund","קרן חירום",4,"Everyone needs an emergency fund.","כל אחד צריך קרן חירום."],["savings account","חשבון חיסכון",3,"I opened a savings account for my kids.","פתחתי חשבון חיסכון לילדים שלי."],["index fund","קרן מחקה מדד",4,"Index funds have low fees.","לקרנות מחקות מדד יש עמלות נמוכות."],["credit score","דירוג אשראי",4,"A good credit score helps you get a loan.","דירוג אשראי טוב עוזר לקבל הלוואה."],["withdraw","למשוך (כסף)",3,"I want to withdraw some cash.","אני רוצה למשוך קצת מזומן."],["deposit","להפקיד / פיקדון",3,"I deposit part of my salary every month.","אני מפקידה חלק מהמשכורת שלי כל חודש."],["overdraft","מינוס (בבנק)",4,"Try to avoid an overdraft.","נסי להימנע ממינוס."],["long-term","לטווח ארוך",3,"Investing is a long-term plan.","השקעה היא תוכנית לטווח ארוך."],["financial freedom","חופש כלכלי",4,"My goal is financial freedom.","המטרה שלי היא חופש כלכלי."]]},
+ {id:"social2",he:"שיחות חברתיות",t:"grow",w:[["get along","להסתדר (עם מישהו)",3,"I get along well with my neighbors.","אני מסתדרת טוב עם השכנים שלי."],["catch up","להשלים פערים (בשיחה)",3,"Let's meet for coffee and catch up.","בואי ניפגש לקפה ונשלים פערים."],["hang out","לבלות",3,"We like to hang out at the beach.","אנחנו אוהבים לבלות בחוף."],["invite","להזמין",3,"She invited me to her birthday party.","היא הזמינה אותי למסיבת יום ההולדת שלה."],["small talk","שיחת חולין",4,"Small talk helps you meet new people.","שיחת חולין עוזרת להכיר אנשים חדשים."],["introduce","להציג (מישהו)",3,"Let me introduce my friend Dana.","תרשי לי להציג את החברה שלי דנה."],["compliment","מחמאה",4,"Thank you for the compliment.","תודה על המחמאה."],["awkward","מביך",4,"There was an awkward silence.","הייתה שתיקה מביכה."],["make plans","לתכנן תוכניות",3,"Let's make plans for the weekend.","בואי נתכנן תוכניות לסוף השבוע."],["keep in touch","לשמור על קשר",3,"We keep in touch on WhatsApp.","אנחנו שומרים על קשר בווטסאפ."],["sense of humor","חוש הומור",4,"He has a great sense of humor.","יש לו חוש הומור מעולה."],["trust","אמון / לסמוך",3,"I trust my best friend.","אני סומכת על החברה הכי טובה שלי."]]},
+ {id:"everyday2",he:"יום-יום מתקדם",t:"gen",w:[["errand","סידור (שליחות)",4,"I have a few errands to run today.","יש לי כמה סידורים לעשות היום."],["chores","מטלות בית",3,"We share the chores at home.","אנחנו מתחלקים במטלות הבית."],["groceries","מצרכים (קניות לבית)",3,"I buy groceries on Thursday.","אני קונה מצרכים ביום חמישי."],["laundry","כביסה",3,"I do the laundry on Sunday.","אני עושה כביסה ביום ראשון."],["commute","נסיעה לעבודה",4,"My commute takes forty minutes.","הנסיעה שלי לעבודה לוקחת ארבעים דקות."],["appliance","מכשיר חשמלי",4,"The washing machine is a useful appliance.","מכונת הכביסה היא מכשיר חשמלי שימושי."],["leftovers","שאריות (אוכל)",4,"We ate leftovers for lunch.","אכלנו שאריות לארוחת צהריים."],["run out of","להיגמר (מלאי)",4,"We ran out of milk.","נגמר לנו החלב."],["figure out","להבין / לפתור",4,"I need to figure out the new app.","אני צריכה להבין את האפליקציה החדשה."],["take care of","לטפל ב-",3,"I take care of my plants every day.","אני מטפלת בצמחים שלי כל יום."],["look forward to","לצפות בקוצר רוח ל-",4,"I look forward to the holiday.","אני מחכה בקוצר רוח לחופשה."],["get used to","להתרגל ל-",4,"I'm getting used to the new routine.","אני מתרגלת לשגרה החדשה."]]},
+ {id:"travel2",he:"טיולים מתקדם",t:"gen",w:[["itinerary","מסלול טיול",4,"Our itinerary includes three cities.","מסלול הטיול שלנו כולל שלוש ערים."],["check in","לעשות צ'ק-אין",3,"We can check in after two o'clock.","אפשר לעשות צ'ק-אין אחרי שתיים."],["sightseeing","סיור באתרים",4,"We spent the day sightseeing.","בילינו את היום בסיור באתרים."],["currency","מטבע (של מדינה)",3,"What currency do they use in Japan?","באיזה מטבע משתמשים ביפן?"],["boarding pass","כרטיס עלייה למטוס",4,"Please show your boarding pass.","בבקשה הציגי את כרטיס העלייה למטוס."],["round trip","הלוך ושוב",3,"I bought a round trip ticket.","קניתי כרטיס הלוך ושוב."],["accommodation","לינה",4,"Accommodation in the city is expensive.","הלינה בעיר יקרה."],["jet lag","ג'ט לג",4,"I had jet lag for three days.","היה לי ג'ט לג שלושה ימים."],["landmark","אתר מפורסם / ציון דרך",4,"The tower is a famous landmark.","המגדל הוא אתר מפורסם."],["delay","עיכוב",3,"There was a short delay at the airport.","היה עיכוב קצר בשדה התעופה."],["souvenir","מזכרת",3,"I bought a souvenir for my mom.","קניתי מזכרת לאמא שלי."],["local","מקומי",3,"We ate at a local restaurant.","אכלנו במסעדה מקומית."]]},
+ {id:"health2",he:"בריאות וכושר מתקדם",t:"sport",w:[["nutrition","תזונה",4,"Good nutrition helps recovery.","תזונה טובה עוזרת להתאוששות."],["protein","חלבון",3,"Eggs are full of protein.","ביצים מלאות בחלבון."],["stretch","למתוח / מתיחה",3,"Stretch for five minutes after running.","עשי מתיחות חמש דקות אחרי הריצה."],["sore","כואב (שריר)",4,"My legs are sore after the workout.","הרגליים שלי כואבות אחרי האימון."],["workout","אימון",3,"I do a short workout at home.","אני עושה אימון קצר בבית."],["hydrated","שותה מספיק (לא מיובש)",4,"Stay hydrated in the summer.","תשתי מספיק בקיץ."],["burn out","שחיקה / להישחק",4,"Too much work can cause burn out.","יותר מדי עבודה יכולה לגרום לשחיקה."],["well-being","רווחה / בריאות כללית",4,"Sleep is important for your well-being.","שינה חשובה לרווחה שלך."],["posture","יציבה",4,"Sitting all day is bad for your posture.","לשבת כל היום זה רע ליציבה."],["habit tracker","מעקב הרגלים",4,"I use a habit tracker on my phone.","אני משתמשת במעקב הרגלים בטלפון."],["mental health","בריאות נפשית",3,"Mental health is as important as physical health.","בריאות נפשית חשובה כמו בריאות גופנית."],["check-up","בדיקה תקופתית",3,"I have a check-up once a year.","אני עושה בדיקה תקופתית פעם בשנה."]]},
+ {id:"mind2",he:"התפתחות אישית מתקדם",t:"grow",w:[["self-confidence","ביטחון עצמי",3,"Practice builds self-confidence.","תרגול בונה ביטחון עצמי."],["overcome","להתגבר",4,"She overcame her fear of speaking.","היא התגברה על הפחד שלה מלדבר."],["comfort zone","אזור הנוחות",4,"Growth starts outside your comfort zone.","צמיחה מתחילה מחוץ לאזור הנוחות."],["goal setting","הצבת מטרות",4,"Goal setting helps me stay focused.","הצבת מטרות עוזרת לי להישאר ממוקדת."],["reflect","להתבונן / לחשוב לעומק",4,"I reflect on my week every Friday.","אני חושבת לעומק על השבוע שלי כל שישי."],["insight","תובנה",4,"The book gave me a new insight.","הספר נתן לי תובנה חדשה."],["potential","פוטנציאל",3,"You have great potential.","יש לך פוטנציאל גדול."],["mindful","קשוב / בתשומת לב",4,"Try to be mindful when you eat.","נסי להיות קשובה כשאת אוכלת."],["setback","נסיגה / מכשול",4,"A setback is part of the journey.","נסיגה היא חלק מהדרך."],["willpower","כוח רצון",4,"Habits are stronger than willpower.","הרגלים חזקים יותר מכוח רצון."],["purpose","תכלית / מטרה",4,"Find your purpose and follow it.","מצאי את התכלית שלך ולכי אחריה."],["boundaries","גבולות",4,"It's healthy to set boundaries.","זה בריא להציב גבולות."]]},
+ {id:"tech2",he:"טכנולוגיה מתקדם",t:"biz",w:[["artificial intelligence","בינה מלאכותית",3,"Artificial intelligence is changing many jobs.","בינה מלאכותית משנה הרבה מקצועות."],["software","תוכנה",3,"The company develops software for banks.","החברה מפתחת תוכנה לבנקים."],["user","משתמש",3,"The app has a million users.","לאפליקציה יש מיליון משתמשים."],["feature","תכונה / פיצ'ר",3,"This app has a useful new feature.","לאפליקציה הזאת יש פיצ'ר חדש ושימושי."],["privacy","פרטיות",4,"Protect your privacy online.","שמרי על הפרטיות שלך ברשת."],["subscription","מנוי",3,"I cancelled my subscription.","ביטלתי את המנוי שלי."],["notification","התראה",3,"Turn off notifications at night.","כבי התראות בלילה."],["backup","גיבוי",3,"Always keep a backup of your files.","תמיד תשמרי גיבוי של הקבצים שלך."],["platform","פלטפורמה",4,"The platform connects buyers and sellers.","הפלטפורמה מחברת בין קונים למוכרים."],["algorithm","אלגוריתם",4,"The algorithm shows you similar videos.","האלגוריתם מראה לך סרטונים דומים."],["cyber security","אבטחת סייבר",4,"Cyber security is a growing field.","אבטחת סייבר היא תחום צומח."],["digital","דיגיטלי",3,"We keep digital copies of all documents.","אנחנו שומרים עותקים דיגיטליים של כל המסמכים."]]},
+ {id:"feelings2",he:"רגשות ויחסים מתקדם",t:"grow",w:[["frustrated","מתוסכל",3,"I felt frustrated when I didn't understand.","הרגשתי מתוסכלת כשלא הבנתי."],["overwhelmed","מוצף",4,"I feel overwhelmed by all the tasks.","אני מרגישה מוצפת מכל המשימות."],["confident","בטוח בעצמו",3,"I feel more confident speaking English.","אני מרגישה בטוחה יותר בדיבור באנגלית."],["disappointed","מאוכזב",3,"He was disappointed with the result.","הוא היה מאוכזב מהתוצאה."],["embarrassed","נבוך",4,"I was embarrassed by my mistake.","הייתי נבוכה מהטעות שלי."],["jealous","מקנא",3,"She was a little jealous of her sister.","היא קצת קינאה באחותה."],["motivated","בעל מוטיבציה",3,"I feel motivated in the morning.","אני מרגישה מלאת מוטיבציה בבוקר."],["anxious","חרד / חושש",4,"I get anxious before exams.","אני נעשית חוששת לפני מבחנים."],["empathy","אמפתיה",4,"Good leaders show empathy.","מנהיגים טובים מגלים אמפתיה."],["supportive","תומך",4,"My family is very supportive.","המשפחה שלי מאוד תומכת."],["misunderstanding","אי הבנה",4,"It was just a misunderstanding.","זו הייתה רק אי הבנה."],["appreciate","להעריך",3,"I really appreciate your help.","אני מאוד מעריכה את העזרה שלך."]]}
+];
+PACKS.push(...PACKS2);
 PACKS.forEach(p=>p.w.forEach(([en,he,l,e1,e2])=>{VOCAB.push({en,he,t:p.t,l,p:p.id});EX[en]=[[e1,e2]];}));
 const dayNo=()=>Math.floor(new Date().setHours(12,0,0,0)/86400000);
-const todayPack=()=>PACKS[dayNo()%PACKS.length];
+// The menu of topics a teacher would offer; each one pulls words from its packs and topics.
+const INTERESTS=[
+ {id:"biz",he:"עסקים ועבודה",packs:["work","meetings","business2","office2"],t:["biz"]},
+ {id:"social",he:"חברתי ושיחות",packs:["talk","social2","feelings","feelings2","people"],t:[]},
+ {id:"daily",he:"יום-יום ובית",packs:["home","food","everyday2","shopping","city","weather","timecal","verbs","adjectives"],t:["gen"]},
+ {id:"travel",he:"טיולים וחו\"ל",packs:["travel","travel2"],t:[]},
+ {id:"money",he:"כסף והשקעות",packs:["money2","money3"],t:["fin"]},
+ {id:"health",he:"בריאות וספורט",packs:["health","health2","sport2"],t:["sport"]},
+ {id:"growth",he:"התפתחות אישית",packs:["growth2","mind2","school"],t:["grow"]},
+ {id:"tech",he:"טכנולוגיה",packs:["tech","tech2"],t:[]}
+];
+const I_TOPIC={biz:"biz",money:"fin",health:"sport",growth:"grow"};
+function interestsOf(w){if(w.i)return [w.i];return INTERESTS.filter(I=>w.p?I.packs.includes(w.p):I.t.includes(w.t)).map(I=>I.id);}
+// Topics she picked; until she picks, the topics her own words point to.
+function suggestInterests(){const c={};Object.values(S.my||{}).forEach(m=>{const v=VOCAB.find(x=>wkey(x.en)===wkey(m.en));if(v)interestsOf(v).forEach(i=>c[i]=(c[i]||0)+1);});return Object.keys(c).sort((a,b)=>c[b]-c[a]);}
+function effInterests(){return S.interests&&S.interests.length?S.interests:suggestInterests().slice(0,3);}
+function inInterests(w){const E=effInterests();if(!E.length||w.t==="mine")return true;return interestsOf(w).some(i=>E.includes(i));}
+// Level estimate from how she swipes: 1=A1 ... 5=C1. Starts at A2 so the first cards skip the very basic words.
+const LV_NAMES=["A1","A2","B1","B2","C1"];
+function est(){return S.est==null?2:S.est;}
+const estName=(e=est())=>LV_NAMES[Math.max(0,Math.min(4,Math.round(e)-1))];
+function minLevel(){return Math.max(1,Math.floor(est()));}
+function levelOK(w){return w.t==="mine"||(w.l||1)>=minLevel();}
+function learnLevel(w,known){
+  if(w.t==="mine"||!w.l)return;
+  const dt=w._dt||99999;const o=!known?0:(w._flip||dt>6000)?0.5:dt<2500?1:0.8;
+  const p=1/(1+Math.exp(-1.6*(est()-w.l+0.5)));
+  S.estN=(S.estN||0)+1;const K=S.estN<30?0.45:0.2;
+  S.est=Math.max(1,Math.min(5.5,est()+K*(o-p)));
+}
+function todayPack(){
+  const e=est();const avg=P=>P.w.reduce((a,w)=>a+w[2],0)/P.w.length;
+  const E=effInterests();const fitL=PACKS.filter(P=>avg(P)>=minLevel()-0.5&&avg(P)<=e+1.5);
+  let c=fitL.filter(P=>!E.length||INTERESTS.some(I=>E.includes(I.id)&&I.packs.includes(P.id)));
+  if(!c.length)c=fitL.length?fitL:PACKS;
+  return c[dayNo()%c.length];
+}
 const GQ=[
  {id:"g1",l:1,s:"Yesterday I ___ to the bank.",o:["go","went","will go"],a:1,he:"אתמול הלכתי לבנק.",why:"yesterday = עבר, ולכן went (צורת העבר של go)."},
  {id:"g2",l:1,s:"She ___ in an office every day.",o:["work","works","working"],a:1,he:"היא עובדת במשרד כל יום.",why:"every day = הרגל, הווה פשוט. אחרי she מוסיפים s: works."},
@@ -845,7 +896,8 @@ function visit(){
   save();renderAll();
   if(watered)setTimeout(()=>toast(S.days===1?"שתלת את העץ שלך! כל יום שתיכנסי הוא יגדל. +5 XP":"השקית את העץ ליום "+S.days+". +5 XP",3200),400);
 }
-const unlocked=()=>{let n=1;for(const L of LEVELS)if(S.xp>=L.min)n=L.n;return n;};
+// XP unlocks levels, and enough swipes that show she knows more unlock her real level right away
+const unlocked=()=>{let n=1;for(const L of LEVELS)if(S.xp>=L.min)n=L.n;if((S.estN||0)>=10)n=Math.max(n,Math.min(LEVELS.length,Math.round(est())));return n;};
 const lvl=()=>S.chosen?Math.min(S.chosen,unlocked()):unlocked();
 function addXP(area,n,silent){
   ensureToday();
@@ -1031,6 +1083,11 @@ function renderCollect(){
   const seg=el("div",{class:"row",style:"gap:6px;margin-top:8px"},el("span",{class:"small",text:"כמה מילים חדשות בכל סבב:"}));
   Object.entries(PACES).forEach(([k,p])=>seg.append(el("button",{class:"chip","aria-pressed":(S.pace||"normal")===k?"true":"false",text:p.he+" ("+p.n+")",onclick:()=>{S.pace=k;save();renderCollect();toast("מעכשיו "+p.n+" מילים חדשות בכל סבב");}})));
   c.append(seg);
+  const lv=el("div",{style:"margin-top:14px;border-top:1px solid var(--line);padding-top:12px"});
+  lv.append(el("div",{class:"row",style:"justify-content:space-between"},el("h3",{text:"הנושאים שלי"}),el("span",{class:"small muted"},"הרמה שלך לפי ההחלקות: ",el("b",{text:estName()}))));
+  lv.append(el("p",{class:"small muted",style:"margin:4px 0 8px",text:effInterests().length?"המילים החדשות נמשכות מהמילים שלך ומהנושאים המסומנים. אפשר לשנות בכל רגע.":"עוד לא בחרת נושאים, אז המילים מגיעות מכל התחומים. בחרי 2 עד 4:"}));
+  const ch=topicChips(renderCollect);ch.style.justifyContent="flex-start";lv.append(ch);
+  c.append(lv);
 }
 function renderPack(){
   const P=todayPack();const c=$("packCard");c.textContent="";
@@ -1042,7 +1099,7 @@ function renderPack(){
   c.append(el("div",{class:"row",style:"margin-top:10px;justify-content:space-between"},el("span",{class:"small muted",text:"מחר תגיע חבילה חדשה. מילים שכבר למדת ימשיכו לחזור בהחלקה ובמשחקים."}),el("button",{class:"btn",style:"background:var(--mine)",text:"ללמוד בהחלקה",onclick:openSwipe})));
 }
 function renderWotd(){
-  const pool=VOCAB.filter(w=>w.l===lvl());const d=new Date();const i=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%pool.length;
+  const pool=VOCAB.filter(w=>w.l===Math.min(5,Math.round(est())));const d=new Date();const i=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%pool.length;
   const w=pool[i];$("wotdEn").textContent=w.en;const e=firstEx(w.en);$("wotdHe").innerHTML="";$("wotdHe").append(w.he+" · "+TOPICS[w.t],el("div",{class:"en small",style:"margin-top:4px",text:e[0]}),el("div",{class:"small",text:e[1]}));
   $("wotdSpeak").innerHTML=SPEAK_SVG;$("wotdSpeak").onclick=()=>speak(w.en,{rate:0.8});
   const has=!!S.my[wkey(w.en)];$("wotdAdd").disabled=has;$("wotdAdd").textContent=has?"ברשימה שלך":"הוספה למילים שלי";
@@ -1636,6 +1693,7 @@ function swipePool(){
   const L=lvl();const map=new Map();
   Object.values(S.my).forEach(w=>{if(w.he)map.set(wkey(w.en),{en:w.en,he:w.he,t:"mine"});});
   VOCAB.forEach(w=>{const k=wkey(w.en);if(!map.has(k))map.set(k,{en:w.en,he:w.he,t:w.t,l:w.l,p:w.p});});
+  (S.extra||[]).forEach(w=>{const k=wkey(w.en);if(map.has(k))return;if(w.ex&&!EX[w.en])EX[w.en]=[[w.ex,w.exHe||""]];map.set(k,{en:w.en,he:w.he,t:I_TOPIC[w.i]||"gen",l:w.l,i:w.i});});
   return [...map.entries()].map(([k,w])=>Object.assign({k},w));
 }
 let exBusy=false;
@@ -1653,18 +1711,22 @@ async function moreExamples(){
 function dueCount(){const now=Date.now();return swipePool().filter(w=>S.srs[w.k]&&S.srs[w.k].due<=now).length;}
 const HOUR=3600000;
 // Deck like a seasoned teacher builds a lesson: a few hard words spread out, some reviews, and mostly new words from across topics.
+// New words: her topics at her level, with about a third a step above to stretch her, spread across packs.
 function freshMix(list,n){
-  const L=lvl();
-  const near=list.filter(w=>w.t==="mine"||(w.l||1)<=L+1);
-  const src=near.length>=n?near:list;
-  const groups={};
-  shuffle(src).sort((a,b)=>Math.abs((a.l||L)-L)-Math.abs((b.l||L)-L)).forEach(w=>{(groups[w.t]=groups[w.t]||[]).push(w);});
-  const keys=shuffle(Object.keys(groups));if(groups.mine){keys.splice(keys.indexOf("mine"),1);keys.unshift("mine");}
-  const out=[];let mine=0;
-  while(out.length<n&&keys.some(k=>groups[k].length)){
-    for(const k of keys){if(out.length>=n)break;if(!groups[k].length)continue;if(k==="mine"&&mine>=4&&keys.some(x=>x!=="mine"&&groups[x].length))continue;out.push(groups[k].shift());if(k==="mine")mine++;}
-  }
-  return out;
+  const e=est();
+  const near=w=>levelOK(w)&&(w.t==="mine"||(w.l||1)<=e+2);
+  let elig=list.filter(w=>near(w)&&inInterests(w));
+  if(elig.length<n)elig=elig.concat(list.filter(w=>near(w)&&!elig.includes(w)));
+  if(elig.length<n)elig=elig.concat(list.filter(w=>!elig.includes(w)).sort((a,b)=>Math.abs((a.l||e)-e)-Math.abs((b.l||e)-e)).slice(0,n-elig.length));
+  const stretch=elig.filter(w=>w.t!=="mine"&&(w.l||1)>=e+0.7&&(w.l||1)<=e+2);
+  const core=elig.filter(w=>!stretch.includes(w));
+  const spread=(src,m)=>{const groups={};shuffle(src).sort((a,b)=>Math.abs((a.l||e)-e)-Math.abs((b.l||e)-e)).forEach(w=>{const g=w.p||w.i||w.t;(groups[g]=groups[g]||[]).push(w);});
+    const keys=shuffle(Object.keys(groups));const out=[];
+    while(out.length<m&&keys.some(k=>groups[k].length))for(const k of keys){if(out.length>=m)break;if(groups[k].length)out.push(groups[k].shift());}
+    return out;};
+  const st=spread(stretch,Math.round(n*0.35));
+  const out=spread(core,n-st.length).concat(st);
+  return out.length<n?out.concat(spread(stretch.filter(w=>!st.includes(w)),n-out.length)):out;
 }
 // Collecting words comes first; grammar opens up gradually as the collection grows.
 const PACES={calm:{n:8,he:"רגוע"},normal:{n:14,he:"רגיל"},fast:{n:22,he:"מהיר"}};
@@ -1675,10 +1737,13 @@ function buildDeck(){
   const now=Date.now();const pool=swipePool();
   const due=pool.filter(w=>S.srs[w.k]&&S.srs[w.k].due<=now);
   const hard=due.filter(w=>S.srs[w.k].box===0).sort((a,b)=>S.srs[a.k].due-S.srs[b.k].due).slice(0,4);
-  const rev=due.filter(w=>S.srs[w.k].box>0).sort((a,b)=>S.srs[a.k].due-S.srs[b.k].due).slice(0,4);
+  const rev=due.filter(w=>S.srs[w.k].box>0&&!(w.t!=="mine"&&(w.l||1)<est()-1.2&&S.srs[w.k].box>=2)).sort((a,b)=>S.srs[a.k].due-S.srs[b.k].due).slice(0,4);
   const paceN=(PACES[S.pace]||PACES.normal).n;const nFresh=Math.max(Math.min(6,paceN),paceN-hard.length-rev.length);const tp=todayPack().id;
-  const packNew=shuffle(pool.filter(w=>!S.srs[w.k]&&w.p===tp)).slice(0,Math.ceil(nFresh/2));
-  let fresh=packNew.concat(freshMix(pool.filter(w=>!S.srs[w.k]&&!packNew.includes(w)),nFresh-packNew.length));
+  // her own words come first, then a few from today's pack, then her topics
+  const mineNew=shuffle(pool.filter(w=>!S.srs[w.k]&&w.t==="mine")).slice(0,Math.ceil(nFresh/2));
+  const packNew=shuffle(pool.filter(w=>!S.srs[w.k]&&w.p===tp&&levelOK(w)&&!mineNew.includes(w))).slice(0,Math.ceil(nFresh/4));
+  const got=mineNew.concat(packNew);
+  let fresh=got.concat(freshMix(pool.filter(w=>!S.srs[w.k]&&!got.includes(w)),nFresh-got.length));
   let base=shuffle(rev.concat(fresh));
   if(base.length+hard.length<8){
     // everything seen and nothing due: extra practice with the words seen longest ago
@@ -1687,14 +1752,14 @@ function buildDeck(){
   }
   hard.forEach((w,i)=>base.splice(Math.min(base.length,2+i*3),0,w));
   deck=base.map(w=>Object.assign({},w));
-  dIdx=0;dStats={yes:0,no:0,added:0,start:collected()};dLeft={};
+  dIdx=0;dStats={yes:0,no:0,added:0,start:collected(),est0:est()};dLeft={};
 }
 
 /* ---------------- fill-the-gap quiz cards ---------------- */
-function vocabQuiz(w){
+function vocabQuiz(w,avoid){
   const L=exList(w.k,w.en);if(!L.length||w.en.includes(" "))return null;
   const re=new RegExp("\\b"+w.en.replace(/[-]/g,"\\-")+"\\b","i");
-  const cand=shuffle(L).find(x=>re.test(x[0]));if(!cand)return null;
+  const cand=shuffle(L).find(x=>re.test(x[0])&&!(avoid||[]).includes(x[0]));if(!cand)return null;
   const m=cand[0].match(re);const shown=m[0];
   const lv=w.l||1;const others=shuffle(VOCAB.filter(v=>v.en!==w.en&&!v.en.includes(" ")&&Math.abs(v.l-lv)<=1&&(v.t===w.t||Math.random()<.3))).slice(0,2);
   if(others.length<2)return null;
@@ -1741,11 +1806,18 @@ function ruleEl(w,under){
   return c;
 }
 function addQuizzes(){
-  const words=deck.filter(w=>!w.type);
-  const vq=shuffle(words).map(vocabQuiz).filter(Boolean).slice(0,2);
+  // Quiz words learned in earlier rounds, so the answer isn't remembered from a card a moment ago.
+  const inDeck=new Set(deck.map(w=>w.k));
+  const older=shuffle(swipePool().filter(w=>!inDeck.has(w.k)&&S.srs[w.k]&&S.srs[w.k].box>=1));
+  let vq=older.map(w=>vocabQuiz(w)).filter(Boolean).slice(0,2);
+  if(vq.length<2){
+    // fall back to this round's words, with a sentence other than the one on the card
+    const L=k=>exList(k.k,k.en);
+    vq=vq.concat(shuffle(deck.filter(w=>!w.type&&L(w).length>1)).map(w=>{const l=L(w);return vocabQuiz(w,[l[((S.exi||{})[w.k]||0)%l.length][0]]);}).filter(Boolean)).slice(0,2);
+  }
   const gq=grammarQuizzes([0,0,1,2][phase()]);
   const qs=shuffle(vq.concat(gq));
-  qs.forEach((q,i)=>{const pos=Math.min(deck.length,2+i*3);deck.splice(pos,0,q);});
+  qs.forEach((q,i)=>{const pos=Math.min(deck.length,4+i*4);deck.splice(pos,0,q);});
 }
 function quizEl(q,under){
   const c=el("div",{class:"scard quiz"+(under?" under":"")});
@@ -1769,17 +1841,60 @@ function answerQuiz(c,q,i){
   c.querySelectorAll(".qopts button").forEach((b,j)=>{if(j!==q.a&&j!==i)b.hidden=true;});
   c.append(el("button",{class:"btn",style:"background:var(--mine);margin-top:auto;flex:none",text:"המשך",onclick:()=>{if(deck[dIdx]!==q)return;dIdx++;renderCard();}}));
   const now=Date.now();
-  if(q.kind==="grammar"){S.gq=S.gq||{};const st=S.gq[q.gid]||{box:0,due:now};st.box=ok?Math.min(st.box+1,INTERVALS.length-1):0;st.due=ok?now+INTERVALS[st.box]*DAY:now+HOUR;S.gq[q.gid]=st;}
+  if(q.kind==="grammar"){S.gq=S.gq||{};const st=S.gq[q.gid]||{box:0,due:now};st.box=ok?Math.min(st.box+1,INTERVALS.length-1):0;st.due=ok?now+INTERVALS[st.box]*DAY:now+20*HOUR;S.gq[q.gid]=st;}
   else if(q.k&&!ok){const st=S.srs[q.k]||{box:0,due:now,seen:0,lapses:0};st.box=0;st.due=now+HOUR;S.srs[q.k]=st;}
-  if(!ok){if(!q.retry)deck.splice(Math.min(deck.length,dIdx+6),0,Object.assign({},q,{done:false,retry:true}));dStats.no++;}else dStats.yes++;
+  if(!ok){if(!q.retry){const nq=retryQuiz(q);if(nq)deck.splice(Math.min(deck.length,dIdx+7),0,nq);}dStats.no++;}else dStats.yes++;
   addXP("words",ok?3:1);progress("swipe");
 }
+// Practice the same point again with a new sentence, never the one she was just corrected on.
+function retryQuiz(q){
+  let nq=null;
+  if(q.kind==="word"){const w=swipePool().find(x=>x.k===q.k);const full=q.s.replace("___",q.o[q.a]);if(w)nq=vocabQuiz(w,[full]);}
+  else{const used=new Set(deck.filter(x=>x.gid).map(x=>x.gid));const L=lvl();const alt=shuffle(GQ.filter(g=>g.l<=L&&!used.has(g.id)&&g.s!==q.s))[0];if(alt)nq={type:"quiz",kind:"grammar",gid:alt.id,s:alt.s,o:alt.o.slice(),a:alt.a,he:alt.he,why:alt.why};}
+  if(!nq)return null;
+  const ans=nq.o[nq.a];nq.o=shuffle(nq.o);nq.a=nq.o.indexOf(ans);nq.retry=true;return nq;
+}
 function openSwipe(){
-  buildDeck();addQuizzes();addRules();moreExamples();
+  if(S.interests==null)return pickTopics();
+  buildDeck();aiMoreWords();addQuizzes();addRules();moreExamples();
   $("swipeOv").hidden=false;$("swDone").hidden=true;$("swStack").hidden=false;$("swBtns").hidden=false;$("swLegend").hidden=false;
   $("swSpeak").innerHTML=SPEAK_SVG;$("swCount").textContent="באוסף: "+collected();
   document.body.style.overflow="hidden";
   renderCard();
+}
+function topicChips(onChange){
+  const sug=suggestInterests();const box=el("div",{class:"chips",style:"justify-content:center"});
+  INTERESTS.forEach(I=>{const on=(S.interests||[]).includes(I.id);box.append(el("button",{class:"chip","aria-pressed":on?"true":"false",text:I.he+(S.interests==null&&sug.includes(I.id)?" ✓":""),onclick:()=>{const a=(S.interests||[]).slice();const i=a.indexOf(I.id);if(i<0)a.push(I.id);else a.splice(i,1);S.interests=a;save();onChange();}}));});
+  return box;
+}
+function pickTopics(){
+  $("swipeOv").hidden=false;$("swStack").hidden=true;$("swBtns").hidden=true;$("swLegend").hidden=true;document.body.style.overflow="hidden";
+  $("swCount").textContent="באוסף: "+collected();
+  const d=$("swDone");d.hidden=false;d.textContent="";
+  const sug=suggestInterests();if(S.interests==null&&sug.length)S.interests=sug.slice(0,3);
+  const draw=()=>{d.textContent="";
+    d.append(el("h2",{text:"מה מעניין אותך ללמוד?"}),
+      el("p",{text:"בחרי 2 עד 4 נושאים. מהם אמשוך את המילים החדשות, ותמיד גם מהמילים שהוספת בעצמך."}),
+      sug.length?el("p",{class:"small muted",text:"סימנתי מראש את הנושאים שהמילים שלך שייכות אליהם."}):"",
+      topicChips(draw),
+      el("p",{class:"small muted",text:"אל תדאגי לגבי הרמה: לפי מהירות ההחלקה אני מזהה מה את כבר יודעת ומדלגת על מילים בסיסיות מדי."}),
+      el("button",{class:"btn",style:"background:var(--mine)",text:"בואי נתחיל",onclick:()=>{S.interests=S.interests||[];save();openSwipe();}}));};
+  draw();
+}
+let aiWordsBusy=false;
+async function aiMoreWords(){
+  if(!aiReady()||aiWordsBusy)return;
+  const left=swipePool().filter(w=>!S.srs[w.k]&&levelOK(w)&&inInterests(w)).length;if(left>=40)return;
+  aiWordsBusy=true;
+  try{
+    const E=effInterests();const names=(E.length?E:INTERESTS.map(I=>I.id)).map(id=>INTERESTS.find(I=>I.id===id)).filter(Boolean);
+    const mine=Object.values(S.my).slice(-15).map(w=>w.en).join(", ");
+    const have=new Set(swipePool().map(w=>w.k));
+    const arr=await sample.json("You are an experienced English teacher for a Hebrew-speaking adult at about CEFR "+estName()+" (and slightly above). Suggest 20 useful English words or short phrases she probably does not know yet, at that level, spread over these topics: "+names.map(I=>I.id+" ("+I.he+")").join(", ")+"."+(mine?" Build on the words she chose herself: "+mine+".":"")+" No very basic words. For each give a Hebrew translation, the CEFR level as a number 1-5 (A1=1 ... C1=5), the topic id, and one short natural example sentence with its Hebrew translation (feminine 'you').\nReply with only JSON: [{\"en\":\"\",\"he\":\"\",\"l\":3,\"i\":\"biz\",\"ex\":\"\",\"exHe\":\"\"}]",{modelTier:"quick"});
+    const ok=(Array.isArray(arr)?arr:[]).filter(r=>r&&r.en&&r.he&&!have.has(wkey(String(r.en)))).map(r=>({en:String(r.en).trim(),he:String(r.he).trim(),l:Math.max(1,Math.min(5,+r.l||Math.round(est()))),i:INTERESTS.some(I=>I.id===r.i)?r.i:(E[0]||"daily"),ex:String(r.ex||""),exHe:String(r.exHe||"")}));
+    if(ok.length){S.extra=(S.extra||[]).concat(ok).slice(-400);save();}
+  }catch(e){}
+  aiWordsBusy=false;
 }
 function closeSwipe(){$("swipeOv").hidden=true;document.body.style.overflow="";if(hasTTS)speechSynthesis.cancel();renderAll();}
 $("swClose").onclick=closeSwipe;
@@ -1802,7 +1917,7 @@ function cardEl(w,under){
 }
 function hiWord(sent,word){const i=sent.toLowerCase().indexOf(word.toLowerCase().split(' ')[0].slice(0,Math.max(3,word.length-2)));if(i<0)return [sent];let j=i;while(j<sent.length&&/[A-Za-z'-]/.test(sent[j]))j++;if(word.includes(' ')){const end=sent.toLowerCase().indexOf(word.toLowerCase().split(' ').pop(),i);if(end>0){j=end;while(j<sent.length&&/[A-Za-z'-]/.test(sent[j]))j++;}}return [sent.slice(0,i),el('b',{style:'color:var(--ink)',text:sent.slice(i,j)}),sent.slice(j)];}
 function renderCard(){
-  const stack=$("swStack");stack.textContent="";
+  const stack=$("swStack");stack.querySelectorAll(":scope>:not(.gone)").forEach(x=>x.remove());
   $("swProg").style.width=Math.min(100,dIdx/deck.length*100)+"%";
   if(dIdx>=deck.length)return finishDeck();
   const w=deck[dIdx];
@@ -1810,30 +1925,33 @@ function renderCard(){
   const nx=deck[dIdx+1];if(nx)stack.append(mk(nx,true));
   const isQ=w.type==="quiz";$("swBtns").hidden=isQ;$("swLegend").hidden=isQ;
   if(isQ){stack.append(quizEl(w,false));return;}
-  const c=mk(w,false);stack.append(c);fitRule(c);
+  const c=mk(w,false);stack.append(c);fitRule(c);w._shown=Date.now();
   $("swLegend").children[0].textContent="← שמאלה: "+(w.type==="rule"?"שוב":"עוד לא");$("swLegend").children[1].textContent=(w.type==="rule"?"ימינה: הבנתי":"ימינה: יודעת")+" →";
   if(w.type==="rule"){const r=RULES.find(x=>x.id===w.rid);$("swSpeak").onclick=()=>r.ex.forEach((e,i)=>speak(e[0],{rate:0.85,queue:i>0}));}
   else{$("swSpeak").onclick=()=>{speak(w.en,{rate:0.8});if(w.ex)speak(w.ex,{rate:0.85,queue:true});};speak(w.en,{rate:0.85});}
   attachDrag(c,w);
 }
 function fitRule(c){if(!c.classList.contains("rule"))return;c.classList.remove("tight","tighter");const over=()=>c.scrollHeight>c.clientHeight+1;if(over())c.classList.add("tight");if(over())c.classList.add("tighter");}
-function flipCard(c){const b=c.querySelector(".back");if(b.hidden){b.hidden=false;c.classList.add("flipped");fitRule(c);c.querySelector(".hint").textContent=c.classList.contains("rule")?"ימינה: הבנתי · שמאלה: שוב":"ימינה: יודעת · שמאלה: עוד לא";}}
+function flipCard(c){const b=c.querySelector(".back");if(b.hidden){const cw=deck[dIdx];if(cw&&!cw.type)cw._flip=1;b.hidden=false;c.classList.add("flipped");fitRule(c);c.querySelector(".hint").textContent=c.classList.contains("rule")?"ימינה: הבנתי · שמאלה: שוב":"ימינה: יודעת · שמאלה: עוד לא";}}
 function attachDrag(c,w){
-  let x0=0,y0=0,dx=0,dragging=false,moved=false;
+  let x0=0,y0=0,dx=0,dragging=false,moved=false,t0=0,lx=0,lt=0,vx=0;
   const yes=c.querySelector(".stamp.yes"),no=c.querySelector(".stamp.no");
-  c.addEventListener("pointerdown",e=>{dragging=true;moved=false;x0=e.clientX;y0=e.clientY;dx=0;c.setPointerCapture(e.pointerId);c.style.transition="none";});
-  c.addEventListener("pointermove",e=>{if(!dragging)return;dx=e.clientX-x0;const dy=e.clientY-y0;if(Math.abs(dx)>6)moved=true;c.style.transform="translate("+dx+"px,"+dy*0.2+"px) rotate("+(dx/18)+"deg)";yes.style.opacity=Math.max(0,Math.min(1,dx/90));no.style.opacity=Math.max(0,Math.min(1,-dx/90));});
+  c.addEventListener("pointerdown",e=>{dragging=true;moved=false;x0=e.clientX;y0=e.clientY;dx=0;vx=0;lx=e.clientX;lt=t0=performance.now();c.setPointerCapture(e.pointerId);c.style.transition="none";});
+  c.addEventListener("pointermove",e=>{if(!dragging)return;const t=performance.now();if(t>lt){vx=(e.clientX-lx)/(t-lt);lx=e.clientX;lt=t;}dx=e.clientX-x0;const dy=e.clientY-y0;if(Math.abs(dx)>6)moved=true;c.style.transform="translate("+dx+"px,"+dy*0.2+"px) rotate("+(dx/18)+"deg)";yes.style.opacity=Math.max(0,Math.min(1,dx/90));no.style.opacity=Math.max(0,Math.min(1,-dx/90));});
   const end=()=>{if(!dragging)return;dragging=false;
     if(!moved){c.style.transform="";flipCard(c);return;}
-    if(dx>90)fly(c,1);else if(dx<-90)fly(c,-1);
+    const flick=performance.now()-lt<80&&Math.abs(vx)>0.4&&Math.abs(dx)>24&&Math.sign(vx)===Math.sign(dx);
+    if(dx>70||(flick&&dx>0))fly(c,1);else if(dx<-70||(flick&&dx<0))fly(c,-1);
     else{c.style.transition="transform .25s";c.style.transform="";yes.style.opacity=0;no.style.opacity=0;}};
   c.addEventListener("pointerup",end);c.addEventListener("pointercancel",end);
 }
 function fly(c,dir){
-  if(c._gone)return;c._gone=1;
-  c.style.transition="transform .3s ease-in, opacity .3s";c.style.transform="translate("+(dir*520)+"px,-30px) rotate("+(dir*28)+"deg)";c.style.opacity="0";
+  if(c._gone)return;c._gone=1;const cw=deck[dIdx];if(cw&&cw._shown)cw._dt=Date.now()-cw._shown;
+  c.classList.add("gone");
+  c.style.transition="transform .22s ease-in, opacity .22s";c.style.transform="translate("+(dir*520)+"px,-30px) rotate("+(dir*28)+"deg)";c.style.opacity="0";
   c.querySelector(dir>0?".stamp.yes":".stamp.no").style.opacity=1;
-  setTimeout(()=>decide(dir>0),260);
+  setTimeout(()=>c.remove(),260);
+  decide(dir>0); // the next card appears underneath right away while this one flies off
 }
 function decide(known){
   const w=deck[dIdx];if(!w)return;const now=Date.now();
@@ -1843,11 +1961,14 @@ function decide(known){
     else{st.box=0;st.due=now+HOUR;dStats.no++;dLeft[w.k]=(dLeft[w.k]||0)+1;if(dLeft[w.k]===1)deck.splice(Math.min(deck.length,dIdx+6),0,Object.assign({},w));}
     S.rq[w.rid]=st;addXP("words",2);progress("swipe");dIdx++;renderCard();return;
   }
+  const first=!S.srs[w.k]&&!dLeft[w.k];if(first)learnLevel(w,known);
+  const quick=first&&known&&!w._flip&&(w._dt||99999)<2500;
   const st=S.srs[w.k]||{box:0,due:now,seen:0,lapses:0};
   st.seen=(st.seen||0)+1;st.last=now;
   if(known){
     if(dLeft[w.k])st.box=1;                 // missed earlier in this round: start the ladder again
-    else st.box=S.srs[w.k]?Math.min(st.box+1,INTERVALS.length-1):3; // known on first sight: skip ahead
+    else if(S.srs[w.k])st.box=Math.min(st.box+1,INTERVALS.length-1);
+    else st.box=quick?(w.t!=="mine"&&(w.l||1)<est()?6:4):(w._flip?2:3); // known on first sight: a quick swipe means she really knows it
     st.due=now+INTERVALS[st.box]*DAY;dStats.yes++;
     const before=collected();
     if(S.my[w.k]&&st.box>=4&&S.my[w.k].status!=="known")S.my[w.k].status="known";
@@ -1864,9 +1985,10 @@ function decide(known){
   addXP("words",1);progress("swipe");
   dIdx++;renderCard();
 }
-$("swYes").onclick=()=>{const c=$("swStack").querySelector(".scard:not(.under):not(.quiz)");if(c)fly(c,1);};
-$("swNo").onclick=()=>{const c=$("swStack").querySelector(".scard:not(.under):not(.quiz)");if(c)fly(c,-1);};
-document.addEventListener("keydown",e=>{if($("swipeOv").hidden)return;const cq=deck[dIdx];if(cq&&cq.type==="quiz"){const n=+e.key;if(n>=1&&n<=3){const c=$("swStack").querySelector(".scard.quiz:not(.under)");if(c)answerQuiz(c,cq,n-1);}else if(e.key==="Enter"&&cq.done){dIdx++;renderCard();}return;}if(e.key==="ArrowRight")$("swYes").click();else if(e.key==="ArrowLeft")$("swNo").click();else if(e.key===" "){e.preventDefault();const c=$("swStack").querySelector(".scard:not(.under)");if(c)flipCard(c);}else if(e.key==="Escape")closeSwipe();});
+// a second tap within a moment is an accidental double tap, not a decision on the next card
+let lastBtn=0;const btnFly=dir=>{const t=performance.now();if(t-lastBtn<350)return;lastBtn=t;const c=$("swStack").querySelector(".scard:not(.under):not(.gone):not(.quiz)");if(c)fly(c,dir);};
+$("swYes").onclick=()=>btnFly(1);$("swNo").onclick=()=>btnFly(-1);
+document.addEventListener("keydown",e=>{if($("swipeOv").hidden)return;const cq=deck[dIdx];if(cq&&cq.type==="quiz"){const n=+e.key;if(n>=1&&n<=3){const c=$("swStack").querySelector(".scard.quiz:not(.under)");if(c)answerQuiz(c,cq,n-1);}else if(e.key==="Enter"&&cq.done){dIdx++;renderCard();}return;}if(e.key==="ArrowRight")$("swYes").click();else if(e.key==="ArrowLeft")$("swNo").click();else if(e.key===" "){e.preventDefault();const c=$("swStack").querySelector(".scard:not(.under):not(.gone)");if(c)flipCard(c);}else if(e.key==="Escape")closeSwipe();});
 function finishDeck(){
   $("swStack").hidden=true;$("swBtns").hidden=true;$("swLegend").hidden=true;
   addXP("words",5);
@@ -1876,6 +1998,7 @@ function finishDeck(){
   d.append(el("h2",{text:"סיימת את הסבב!"}),
     el("div",{class:"collect-big"},el("b",{text:"+"+dStats.added}),el("span",{text:" מילים חדשות לאוסף · סה\"כ "+tot})),
     el("p",{text:"עברת "+(dStats.yes+dStats.no)+" כרטיסיות: "+dStats.yes+" ידעת ו-"+dStats.no+" לחזרה. מילים שהחלקת ימינה יחזרו בעוד כמה ימים, וככל שתכירי אותן שוב, הן יחזרו לעיתים רחוקות יותר. מילים שהחלקת שמאלה ינוחו קצת ויחזרו בסבב מאוחר יותר, משולבות בין מילים חדשות."}),
+    el("p",{class:"small"},"הרמה שלך לפי ההחלקות: ",el("b",{text:estName()}),estName()!==estName(dStats.est0)?(est()>dStats.est0?" (עלתה מ-":" (ירדה מ-")+estName(dStats.est0)+")":""),
     el("p",{class:"small muted",text:"+5 XP על סיום הסבב"}),
     el("div",{class:"row",style:"justify-content:center"},el("button",{class:"btn",style:"background:var(--mine)",text:"סבב נוסף",onclick:openSwipe}),el("button",{class:"btn ghost",text:"למסך הבית",onclick:closeSwipe})));
 }
