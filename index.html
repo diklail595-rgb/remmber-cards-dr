@@ -244,6 +244,10 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 .sbtn.no{color:var(--bad)} .sbtn.yes{color:var(--good)}
 .swipe-legend{direction:ltr;display:flex;gap:28px;font-size:.85rem;color:var(--muted)}
 
+#swCount.pop{animation:pop .5s ease-out}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
+.collect-big{font-size:1.1rem}
+.collect-big b{font-size:2rem;color:var(--mine)}
 .scard.rule{justify-content:flex-start;padding:32px 18px 14px;gap:10px}
 .scard.rule .hint{position:static;margin-top:auto;flex:none}
 .scard.rule.flipped .rforms{display:none}
@@ -331,6 +335,7 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
     <div class="missions" id="missions" style="margin-top:10px"></div>
   </div>
 
+  <div class="card" id="collectCard"></div>
   <div class="card" id="packCard"></div>
 
   <div class="rooms">
@@ -511,6 +516,7 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
   <div class="swipe-top">
     <b>החלקת מילים</b>
     <div class="swipe-dots"><i id="swProg" style="width:0%"></i></div>
+    <span class="tag" id="swCount" style="background:var(--mine-soft);white-space:nowrap"></span>
     <button class="btn ghost small" id="swClose" style="padding:4px 12px">סגירה</button>
   </div>
   <div class="stack" id="swStack"></div>
@@ -1011,8 +1017,20 @@ function renderHome(){
   BADGES.forEach(b=>{const ok=b.ok();if(ok)on++;bx.append(el("div",{class:"badge"+(ok?" on":""),title:b.d},el("div",{class:"medal",text:ok?"★":"?"}),el("b",{text:b.t}),el("span",{class:"small",text:b.d})));});
   $("badgeCount").textContent=on+" מתוך "+BADGES.length;
   const dc=dueCount();$("swRoomTxt").textContent=dc?(dc+" מילים מחכות לחזרה"):"ימינה = יודעת, שמאלה = עוד לא";
-  renderPack();
+  renderCollect();renderPack();
   renderWotd();
+}
+function renderCollect(){
+  const c=$("collectCard");c.textContent="";const n=collected();const next=MILESTONES.find(x=>x>n)||VOCAB.length;const prev=[0].concat(MILESTONES).filter(x=>x<=n).pop();
+  const ph=phase();
+  c.append(el("div",{class:"row",style:"justify-content:space-between;align-items:flex-end"},
+    el("div",{},el("span",{class:"small muted",text:"האוסף שלי"}),el("div",{},el("b",{style:"font-size:2.2rem;color:var(--mine);line-height:1",text:String(n)}),el("span",{class:"muted",text:" מילים"}))),
+    el("span",{class:"small muted",text:"היעד הבא: "+next})));
+  c.append(el("div",{class:"lvbar",style:"margin:10px 0 6px;width:100%;max-width:none"},el("i",{style:"width:"+Math.max(3,Math.min(100,(n-prev)/(next-prev)*100))+"%"})));
+  c.append(el("p",{class:"small muted",text:ph===1?"שלב האיסוף: כרגע רק מילים, בלי חוקים. אחרי 40 מילים יתחילו להופיע מדי פעם גם כרטיסיות דקדוק קצרות.":ph===2?"שלב שני: בעיקר מילים, עם כרטיסיית דקדוק אחת בכל סבב. ב-100 מילים ייפתחו כל החוקים.":"כל השלבים פתוחים: מילים, חוקים ותרגול דקדוק."}));
+  const seg=el("div",{class:"row",style:"gap:6px;margin-top:8px"},el("span",{class:"small",text:"כמה מילים חדשות בכל סבב:"}));
+  Object.entries(PACES).forEach(([k,p])=>seg.append(el("button",{class:"chip","aria-pressed":(S.pace||"normal")===k?"true":"false",text:p.he+" ("+p.n+")",onclick:()=>{S.pace=k;save();renderCollect();toast("מעכשיו "+p.n+" מילים חדשות בכל סבב");}})));
+  c.append(seg);
 }
 function renderPack(){
   const P=todayPack();const c=$("packCard");c.textContent="";
@@ -1648,13 +1666,18 @@ function freshMix(list,n){
   }
   return out;
 }
+// Collecting words comes first; grammar opens up gradually as the collection grows.
+const PACES={calm:{n:8,he:"רגוע"},normal:{n:14,he:"רגיל"},fast:{n:22,he:"מהיר"}};
+const MILESTONES=[10,25,50,75,100,150,200,250,300,355];
+function collected(){const set=new Set();for(const k in S.srs)if(S.srs[k].box>=1)set.add(k);for(const k in S.my)if(S.my[k].status==="known")set.add(k);return set.size;}
+function phase(){const c=collected();return c<40?1:c<100?2:3;}
 function buildDeck(){
   const now=Date.now();const pool=swipePool();
   const due=pool.filter(w=>S.srs[w.k]&&S.srs[w.k].due<=now);
   const hard=due.filter(w=>S.srs[w.k].box===0).sort((a,b)=>S.srs[a.k].due-S.srs[b.k].due).slice(0,4);
   const rev=due.filter(w=>S.srs[w.k].box>0).sort((a,b)=>S.srs[a.k].due-S.srs[b.k].due).slice(0,4);
-  const nFresh=Math.max(6,14-hard.length-rev.length);const tp=todayPack().id;
-  const packNew=shuffle(pool.filter(w=>!S.srs[w.k]&&w.p===tp)).slice(0,6);
+  const paceN=(PACES[S.pace]||PACES.normal).n;const nFresh=Math.max(Math.min(6,paceN),paceN-hard.length-rev.length);const tp=todayPack().id;
+  const packNew=shuffle(pool.filter(w=>!S.srs[w.k]&&w.p===tp)).slice(0,Math.ceil(nFresh/2));
   let fresh=packNew.concat(freshMix(pool.filter(w=>!S.srs[w.k]&&!packNew.includes(w)),nFresh-packNew.length));
   let base=shuffle(rev.concat(fresh));
   if(base.length+hard.length<8){
@@ -1664,7 +1687,7 @@ function buildDeck(){
   }
   hard.forEach((w,i)=>base.splice(Math.min(base.length,2+i*3),0,w));
   deck=base.map(w=>Object.assign({},w));
-  dIdx=0;dStats={yes:0,no:0};dLeft={};
+  dIdx=0;dStats={yes:0,no:0,added:0,start:collected()};dLeft={};
 }
 
 /* ---------------- fill-the-gap quiz cards ---------------- */
@@ -1695,7 +1718,7 @@ function rulePick(n){
   return due.slice(0,1).concat(fresh).concat(due.slice(1)).slice(0,n);
 }
 function addRules(){
-  rulePick(2).forEach((r,i)=>{
+  rulePick([0,0,1,2][phase()]).forEach((r,i)=>{
     const pos=Math.min(deck.length,1+i*7);deck.splice(pos,0,{type:"rule",k:"rule:"+r.id,rid:r.id});
     const q=r.q;deck.splice(Math.min(deck.length,pos+3),0,{type:"quiz",kind:"grammar",gid:r.id,s:q.s,o:q.o.slice(),a:q.a,he:q.he,why:q.why});
   });
@@ -1720,7 +1743,7 @@ function ruleEl(w,under){
 function addQuizzes(){
   const words=deck.filter(w=>!w.type);
   const vq=shuffle(words).map(vocabQuiz).filter(Boolean).slice(0,2);
-  const gq=grammarQuizzes(2);
+  const gq=grammarQuizzes([0,0,1,2][phase()]);
   const qs=shuffle(vq.concat(gq));
   qs.forEach((q,i)=>{const pos=Math.min(deck.length,2+i*3);deck.splice(pos,0,q);});
 }
@@ -1754,7 +1777,7 @@ function answerQuiz(c,q,i){
 function openSwipe(){
   buildDeck();addQuizzes();addRules();moreExamples();
   $("swipeOv").hidden=false;$("swDone").hidden=true;$("swStack").hidden=false;$("swBtns").hidden=false;$("swLegend").hidden=false;
-  $("swSpeak").innerHTML=SPEAK_SVG;
+  $("swSpeak").innerHTML=SPEAK_SVG;$("swCount").textContent="באוסף: "+collected();
   document.body.style.overflow="hidden";
   renderCard();
 }
@@ -1826,6 +1849,7 @@ function decide(known){
     if(dLeft[w.k])st.box=1;                 // missed earlier in this round: start the ladder again
     else st.box=S.srs[w.k]?Math.min(st.box+1,INTERVALS.length-1):3; // known on first sight: skip ahead
     st.due=now+INTERVALS[st.box]*DAY;dStats.yes++;
+    const before=collected();
     if(S.my[w.k]&&st.box>=4&&S.my[w.k].status!=="known")S.my[w.k].status="known";
   }else{
     st.box=0;st.due=now+HOUR;st.lapses=(st.lapses||0)+1;dStats.no++;
@@ -1833,7 +1857,10 @@ function decide(known){
     if(dLeft[w.k]===1)deck.splice(Math.min(deck.length,dIdx+6),0,Object.assign({},w,{_ex:0})); // one more look later in this round, then it rests
     if(S.my[w.k]&&S.my[w.k].status!=="focus")S.my[w.k].status="learning";
   }
-  S.srs[w.k]=st;
+  const was=collected();S.srs[w.k]=st;const now2=collected();
+  if(now2>was){dStats.added++;const pill=$("swCount");if(pill){pill.textContent="באוסף: "+now2;pill.classList.remove("pop");void pill.offsetWidth;pill.classList.add("pop");}
+    const m=MILESTONES.find(x=>was<x&&now2>=x);if(m)setTimeout(()=>toast("יש לך "+m+" מילים באוסף! "+(m===40?"":m>=100&&was<100?"פתחת את כל חוקי הדקדוק.":"המשיכי ככה."),3200),300);
+    if(was<40&&now2>=40)setTimeout(()=>toast("40 מילים באוסף! מעכשיו יופיעו מדי פעם גם כרטיסיות דקדוק קטנות.",3800),300);}
   addXP("words",1);progress("swipe");
   dIdx++;renderCard();
 }
@@ -1845,7 +1872,9 @@ function finishDeck(){
   addXP("words",5);
   const nxt=Object.values(S.srs).filter(x=>x.due>Date.now()).sort((a,b)=>a.due-b.due)[0];
   const d=$("swDone");d.hidden=false;d.textContent="";
+  const tot=collected();
   d.append(el("h2",{text:"סיימת את הסבב!"}),
+    el("div",{class:"collect-big"},el("b",{text:"+"+dStats.added}),el("span",{text:" מילים חדשות לאוסף · סה\"כ "+tot})),
     el("p",{text:"עברת "+(dStats.yes+dStats.no)+" כרטיסיות: "+dStats.yes+" ידעת ו-"+dStats.no+" לחזרה. מילים שהחלקת ימינה יחזרו בעוד כמה ימים, וככל שתכירי אותן שוב, הן יחזרו לעיתים רחוקות יותר. מילים שהחלקת שמאלה ינוחו קצת ויחזרו בסבב מאוחר יותר, משולבות בין מילים חדשות."}),
     el("p",{class:"small muted",text:"+5 XP על סיום הסבב"}),
     el("div",{class:"row",style:"justify-content:center"},el("button",{class:"btn",style:"background:var(--mine)",text:"סבב נוסף",onclick:openSwipe}),el("button",{class:"btn ghost",text:"למסך הבית",onclick:closeSwipe})));
