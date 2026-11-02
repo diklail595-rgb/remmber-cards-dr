@@ -223,54 +223,65 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 .vcard.seen{opacity:.75}
 
 
-/* swipe deck: a stories-style feed. Always dark inside, like a reel; the tokens are re-scoped so word, rule and quiz cards all follow. */
-.swipe-ov{--paper:#0F1318;--card:#171D26;--ink:#F3F4F1;--muted:#B2BAC6;--line:#2E3642;--good:#5BD69A;--good-soft:#173D2C;--bad:#FF8A7E;--bad-soft:#45211F;--accent:#FFC857;--accent-soft:#3D3115;--blue:#9DB8F7;--blue-soft:#1D2A45;--biz:#8FB0F5;--biz-soft:#1D2A45;--grow:#C4A3FF;--grow-soft:#2E2447;--mine:#FF8FB8;--mine-soft:#45202F;--fin:#5BD6A6;--fin-soft:#163A2E;--sport:#FFA270;--sport-soft:#45281A;--gen:#EBC27A;--gen-soft:#3D2F17;--tint:#8FB0F5;color-scheme:dark;
-  position:fixed;inset:0;z-index:30;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;gap:8px;overflow:hidden;
-  padding:calc(10px + env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+/* swipe deck: a stories-style feed on bright cards. Light tokens are pinned here so the feed stays bright even when the phone is in dark mode. */
+.swipe-ov{--paper:#EEF2F0;--card:#FFFFFF;--ink:#18241F;--muted:#5D6B66;--line:#DCE3DF;--good:#1F8A57;--good-soft:#DDF2E7;--bad:#C2413A;--bad-soft:#F9E1DF;--accent:#E8960C;--accent-soft:#FDF0D6;--blue:#2E5BBA;--blue-soft:#E4EBF9;--biz:#3467D6;--biz-soft:#E2EAFB;--grow:#8754E8;--grow-soft:#EEE6FC;--mine:#D2477A;--mine-soft:#FBE3EC;--fin:#1F9D6B;--fin-soft:#DDF3E9;--sport:#E26A2C;--sport-soft:#FCE6DA;--gen:#C2862A;--gen-soft:#F7ECD9;--tint:#3467D6;color-scheme:light;
+  position:fixed;inset:0;z-index:30;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;gap:10px;overflow:hidden;
+  padding:calc(10px + env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
 .swipe-top{position:relative;z-index:4;display:flex;flex-direction:column;gap:9px;width:100%;max-width:520px;margin:0 auto}
 .sw-bars{display:flex;gap:3px}
-.sw-bars i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.22)}
-.sw-bars i.d{background:var(--accent)}
-.sw-bars i.now{background:linear-gradient(to left,var(--accent) 35%,rgba(255,255,255,.22) 35%)}
+.sw-bars i{flex:1;height:4px;border-radius:2px;background:rgba(24,36,31,.12)}
+.sw-bars i.d{background:var(--mine)}
+.sw-bars i.now{background:linear-gradient(to left,var(--mine) 35%,rgba(24,36,31,.12) 35%)}
 .sw-head{display:flex;align-items:center;gap:10px}
-.sw-tree{width:42px;height:42px;border-radius:50%;flex:none;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#284A36,#13231A);box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--accent)}
-.sw-tree svg{width:30px;height:30px}
+.sw-tree{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#F2FAF4,#D6EBDD);box-shadow:0 0 0 2px var(--paper),0 0 0 4.5px var(--mine);position:relative}
+.sw-tree svg{width:32px;height:32px}
 .sw-tree.pop{animation:pop .5s ease-out}
 .sw-title{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
 .sw-title b{font-size:1rem}
 .sw-title span{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.sw-x{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:var(--ink);display:grid;place-items:center;flex:none;padding:0}
+.sw-x{width:44px;height:44px;border-radius:50%;border:0;background:var(--card);color:var(--ink);display:grid;place-items:center;flex:none;padding:0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .sw-x svg{width:20px;height:20px;fill:currentColor}
 .sw-stage{position:relative;flex:1;min-height:0;width:100%;max-width:520px;margin:0 auto}
 .stack{position:absolute;inset:0}
-.scard{position:absolute;inset:0;border-radius:24px;background:var(--card);background:radial-gradient(120% 75% at 85% 0%,color-mix(in srgb,var(--tint) 30%,var(--paper)) 0,var(--paper) 66%);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px 18px 54px 76px;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;overflow:hidden}
+.scard{position:absolute;inset:0;border-radius:26px;background:var(--card);background:radial-gradient(120% 60% at 50% 0%,color-mix(in srgb,var(--tint) 16%,#fff) 0,#fff 70%);border:1px solid var(--line);box-shadow:0 10px 30px -12px rgba(20,40,30,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px 22px 52px;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;overflow:hidden}
 .scard:not(.under){will-change:transform;z-index:2}
 .scard.gone{pointer-events:none;z-index:3}
 .scard.under{pointer-events:none;z-index:1}
 .scard .band{display:none}
-.scard .tag{background:rgba(255,255,255,.1)!important;color:var(--accent);letter-spacing:.06em}
-.scard .w{font-family:var(--f-en);font-size:clamp(2.2rem,11vw,3.2rem);font-weight:600;line-height:1.05;direction:ltr;overflow-wrap:anywhere}
-.scard .w.long{font-size:clamp(1.7rem,8vw,2.5rem)}
+.scard .tag{background:color-mix(in srgb,var(--tint) 14%,#fff)!important;color:var(--tint);letter-spacing:.04em}
+.scard .w{font-family:var(--f-en);font-size:clamp(2.3rem,11vw,3.3rem);font-weight:600;line-height:1.05;direction:ltr;overflow-wrap:anywhere;color:#111A16}
+.scard .w.long{font-size:clamp(1.8rem,8.5vw,2.6rem)}
 .scard .he{font-size:1.6rem;font-weight:700}
-.scard .ex{font-family:var(--f-en);direction:ltr;color:#D9DDE6;font-size:1.1rem;line-height:1.5}
-.scard .ex b{color:var(--accent)!important}
+.scard .ex{font-family:var(--f-en);direction:ltr;color:#3E4A45;font-size:1.12rem;line-height:1.55}
+.scard .ex b{color:var(--tint)!important}
 .scard .hint{position:absolute;bottom:16px;inset-inline:0;font-size:.85rem;color:var(--muted)}
-.scard .stamp{position:absolute;top:26px;padding:4px 14px;border:3px solid;border-radius:10px;font-weight:700;font-size:1.2rem;opacity:0;transform:rotate(-12deg);background:rgba(0,0,0,.25)}
+.scard .stamp{position:absolute;top:26px;padding:4px 14px;border:3px solid;border-radius:10px;font-weight:700;font-size:1.2rem;opacity:0;transform:rotate(-12deg);background:#fff}
 .scard .stamp.yes{left:20px;color:var(--good);border-color:var(--good)}
 .scard .stamp.no{right:20px;color:var(--bad);border-color:var(--bad);transform:rotate(12deg)}
-.swipe-btns{position:absolute;left:12px;bottom:58px;z-index:5;display:flex;flex-direction:column;gap:18px;align-items:center}
-.sbtn{width:52px;height:52px;border-radius:50%;border:0;background:rgba(255,255,255,.13);color:var(--ink);display:grid;place-items:center;padding:0;position:relative;margin-bottom:14px}
-.sbtn::after{content:attr(data-l);position:absolute;top:100%;margin-top:3px;left:50%;transform:translateX(-50%);font-size:.72rem;color:var(--muted);white-space:nowrap}
-.sbtn svg{width:26px;height:26px;fill:currentColor}
-.sbtn.no{color:var(--bad)} .sbtn.yes{color:var(--good)}
+.scard .saved{position:absolute;top:18px;inset-inline-start:18px;color:var(--mine);font-size:1.3rem}
+.heart-burst{position:absolute;left:50%;top:45%;width:110px;height:110px;margin:-55px 0 0 -55px;fill:var(--mine);pointer-events:none;animation:heart .8s ease-out forwards;z-index:4}
+@keyframes heart{0%{transform:scale(.2);opacity:0}25%{transform:scale(1.15);opacity:1}55%{transform:scale(.95);opacity:1}100%{transform:scale(1.3) translateY(-30px);opacity:0}}
+/* action bar in the thumb zone: "know it" sits bottom-right, where a right thumb rests */
+.swipe-btns{width:100%;max-width:520px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;padding:2px 6px 0}
+body:has(.swipe-ov:not([hidden])) .toast{bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+.sbtn{width:50px;height:50px;border-radius:50%;border:0;background:var(--card);color:var(--ink);display:grid;place-items:center;padding:0;position:relative;margin-bottom:18px;box-shadow:0 2px 8px rgba(20,40,30,.12)}
+.sbtn.big{width:62px;height:62px}
+.sbtn::after{content:attr(data-l);position:absolute;top:100%;margin-top:4px;left:50%;transform:translateX(-50%);font-size:.75rem;font-weight:600;color:var(--muted);white-space:nowrap}
+.sbtn svg{width:24px;height:24px;fill:currentColor}
+.sbtn.big svg{width:30px;height:30px}
+.sbtn.yes{background:var(--good);color:#fff} .sbtn.no{color:var(--bad)}
+.sbtn.like[aria-pressed="true"]{color:var(--mine)}
 .sbtn:active{transform:scale(.92)}
-.swipe-legend{display:flex;justify-content:center;gap:22px;font-size:.85rem;color:var(--muted);min-height:1.4em}
+.swipe-legend{display:none!important}
+.bloom{position:absolute;top:-6px;inset-inline-end:-6px;width:22px;height:22px;pointer-events:none;animation:bloom 1.4s ease-out forwards}
+@keyframes bloom{0%{transform:scale(0) rotate(0);opacity:1}30%{transform:scale(1.5) rotate(90deg);opacity:1}100%{transform:scale(1) rotate(180deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.heart-burst,.bloom{animation-duration:.01s}}
 .sw-leaf{position:fixed;left:0;top:0;width:22px;height:22px;z-index:35;pointer-events:none}
 #swCount.pop{animation:pop .5s ease-out}
 @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
 .collect-big{font-size:1.1rem}
 .collect-big b{font-size:2rem;color:var(--mine)}
-.scard.rule{justify-content:flex-start;padding:32px 18px 14px 76px;gap:10px}
+.scard.rule{justify-content:flex-start;padding:32px 18px 14px;gap:10px}
 .scard.rule .hint{position:static;margin-top:auto;flex:none}
 .scard.rule.flipped .rforms{display:none}
 .scard.rule.tight{gap:6px;padding-top:26px}
@@ -298,7 +309,7 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 .qwhy{font-size:.92rem;background:var(--biz-soft);border-radius:10px;padding:8px 10px;text-align:start}
 .swipe-done{flex:1;min-height:0;overflow-y:auto;width:100%;max-width:420px;margin:0 auto;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:flex-start;padding-block:12px}
 .swipe-done>*{flex:none}
-.done-tree{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#E5F1F8,#CFE6D6);display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--accent)}
+.done-tree{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#F2FAF4,#D6EBDD);display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--accent)}
 .done-tree svg{width:86%;height:auto}
 .week{display:flex;gap:8px;justify-content:center}
 .week span{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.75rem;color:var(--muted)}
@@ -572,11 +583,13 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
   </div>
   <div class="sw-stage" id="swStage">
     <div class="stack" id="swStack"></div>
-    <div class="swipe-btns" id="swBtns">
-      <button class="sbtn yes" id="swYes" aria-label="יודעת" data-l="יודעת"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></button>
-      <button class="sbtn no" id="swNo" aria-label="עוד לא" data-l="עוד לא"><svg viewBox="0 0 24 24"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7l-1.4-1.4L9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z" transform="translate(1.5 0)"/></svg></button>
-      <button class="sbtn" id="swSpeak" aria-label="השמעה" data-l="שמע"></button>
-    </div>
+  </div>
+  <div class="swipe-btns" id="swBtns">
+    <button class="sbtn big yes" id="swYes" aria-label="יודעת" data-l="יודעת"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></button>
+    <button class="sbtn" id="swSpeak" aria-label="השמעה" data-l="שמע"></button>
+    <button class="sbtn like" id="swLike" aria-label="שמירה למילים שלי" aria-pressed="false" data-l="שמירה"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.1 4.3 2.4h2c.7-1.3 2.2-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></button>
+    <button class="sbtn" id="swShare" aria-label="שיתוף המילה" data-l="שיתוף"><svg viewBox="0 0 24 24"><path d="M18 16a3 3 0 0 0-2.4 1.2l-6.7-3.4a3 3 0 0 0 0-1.6l6.7-3.4A3 3 0 1 0 15 7l-6.7 3.4a3 3 0 1 0 0 3.2L15 17a3 3 0 1 0 3-1z"/></svg></button>
+    <button class="sbtn big no" id="swNo" aria-label="עוד לא" data-l="עוד לא"><svg viewBox="0 0 24 24"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7l-1.4-1.4L9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z" transform="translate(1.5 0)"/></svg></button>
   </div>
   <div class="swipe-legend" id="swLegend"><span>למעלה: יודעת ↑</span><span>← שמאלה: עוד לא</span></div>
   <div class="swipe-done" id="swDone" hidden></div>
@@ -1937,7 +1950,7 @@ function topicChips(onChange){
   return box;
 }
 function pickTopics(){
-  $("swipeOv").hidden=false;$("swStage").hidden=true;$("swLegend").hidden=true;$("swBars").textContent="";document.body.style.overflow="hidden";
+  $("swipeOv").hidden=false;$("swStage").hidden=true;$("swBtns").hidden=true;$("swLegend").hidden=true;$("swBars").textContent="";document.body.style.overflow="hidden";
   $("swTitle").textContent="בחירת נושאים";$("swCount").textContent="באוסף: "+collected()+" מילים";
   const d=$("swDone");d.hidden=false;d.textContent="";
   const sug=suggestInterests();if(S.interests==null&&sug.length)S.interests=sug.slice(0,3);
@@ -1995,7 +2008,7 @@ function renderCard(){
   const isQ=w.type==="quiz";$("swBtns").hidden=isQ;$("swLegend").hidden=isQ;
   if(isQ){stack.append(quizEl(w,false));return;}
   const c=mk(w,false);stack.append(c);fitRule(c);w._shown=Date.now();
-  $("swLegend").children[0].textContent="למעלה: "+(w.type==="rule"?"הבנתי":"יודעת")+" ↑";$("swLegend").children[1].textContent="← שמאלה: "+(w.type==="rule"?"שוב":"עוד לא");$("swYes").dataset.l=w.type==="rule"?"הבנתי":"יודעת";$("swNo").dataset.l=w.type==="rule"?"שוב":"עוד לא";
+  $("swLegend").children[0].textContent="למעלה: "+(w.type==="rule"?"הבנתי":"יודעת")+" ↑";$("swLegend").children[1].textContent="← שמאלה: "+(w.type==="rule"?"שוב":"עוד לא");$("swYes").dataset.l=w.type==="rule"?"הבנתי":"יודעת";$("swLike").hidden=$("swShare").hidden=!!w.type;if(!w.type)syncLike(w);$("swNo").dataset.l=w.type==="rule"?"שוב":"עוד לא";
   if(w.type==="rule"){const r=RULES.find(x=>x.id===w.rid);$("swSpeak").onclick=()=>r.ex.forEach((e,i)=>speak(e[0],{rate:0.85,queue:i>0}));}
   else{$("swSpeak").onclick=()=>{speak(w.en,{rate:0.8});if(w.ex)speak(w.ex,{rate:0.85,queue:true});};speak(w.en,{rate:0.85});}
   attachDrag(c,w);
@@ -2016,13 +2029,49 @@ function attachDrag(c,w){
     if(axis==="y"){c.style.transform="translateY("+(dy<0?dy:dy*0.25)+"px)";yes.style.opacity=op(-dy/110);no.style.opacity=0;}
     else{c.style.transform="translate("+dx+"px,0) rotate("+(dx/22)+"deg)";yes.style.opacity=op(dx/90);no.style.opacity=op(-dx/90);}});
   const end=()=>{if(!dragging)return;dragging=false;
-    if(!moved){c.style.transform="";flipCard(c);return;}
+    if(!moved){c.style.transform="";
+      if(w.type){flipCard(c);return;}
+      const t=performance.now();
+      if(t-lastTap<320){clearTimeout(tapT);lastTap=0;likeWord(w,c,true);}
+      else{lastTap=t;tapT=setTimeout(()=>flipCard(c),260);}
+      return;}
     const recent=performance.now()-lt<90;
     if(axis==="y"){if(dy<-80||(recent&&vy<-0.4&&dy<-24))return fly(c,0);}
     else{const flick=recent&&Math.abs(vx)>0.4&&Math.abs(dx)>24&&Math.sign(vx)===Math.sign(dx);
       if(dx>70||(flick&&dx>0))return fly(c,1);if(dx<-70||(flick&&dx<0))return fly(c,-1);}
     c.style.transition="transform .22s";c.style.transform="";yes.style.opacity=0;no.style.opacity=0;};
   c.addEventListener("pointerup",end);c.addEventListener("pointercancel",end);
+}
+// Double-tap a card, like a post, to save the word to her own list.
+let lastTap=0,tapT=null;
+const HEART='<path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.1 4.3 2.4h2c.7-1.3 2.2-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/>';
+function isSaved(w){return !!(w&&S.my[w.k]);}
+function likeWord(w,c,burst){
+  if(!w||w.type)return;
+  if(burst&&c){const h=document.createElementNS("http://www.w3.org/2000/svg","svg");h.setAttribute("viewBox","0 0 24 24");h.setAttribute("class","heart-burst");h.innerHTML=HEART;c.append(h);setTimeout(()=>h.remove(),850);}
+  if(!S.my[w.k]){S.my[w.k]={en:w.en,he:w.he||"",ex:w.ex||"",exHe:w.exHe||"",status:"focus",src:"feed",added:Date.now(),seen:0};save();toast("נשמרה במילים שלי ♥",1600);}
+  else if(!burst){delete S.my[w.k];save();toast("הוסרה מהמילים שלי",1400);}
+  syncLike(w);
+}
+function syncLike(w){const on=isSaved(w);$("swLike").setAttribute("aria-pressed",String(on));$("swLike").dataset.l=on?"נשמרה":"שמירה";}
+async function shareWord(w){
+  if(!w||w.type)return;
+  const text=w.en+" = "+w.he+(w.ex?"\n"+w.ex:"")+"\n\nלומדת אנגלית ב-English Path";
+  const url="https://diklail595-rgb.github.io/remmber-cards-dr/";
+  try{if(navigator.share){await navigator.share({text,url});return;}}catch(e){if(e&&e.name==="AbortError")return;}
+  try{await navigator.clipboard.writeText(text+"\n"+url);toast("המילה הועתקה. אפשר להדביק בוואטסאפ",2200);}catch(e){toast("השיתוף לא זמין כאן",1800);}
+}
+$("swLike").onclick=()=>{const w=deck[dIdx];likeWord(w,$("swStack").querySelector(".scard:not(.under):not(.gone)"),!isSaved(w));};
+$("swShare").onclick=()=>shareWord(deck[dIdx]);
+// A flower opens on the tree now and then, not on a fixed schedule: a surprise is more fun than a quota.
+let sinceBloom=0;
+function maybeBloom(){
+  sinceBloom++;if(!(sinceBloom>=7||Math.random()<0.22))return;sinceBloom=0;
+  S.blooms=(S.blooms||0)+1;
+  const t=$("swTree");const f=document.createElementNS("http://www.w3.org/2000/svg","svg");f.setAttribute("viewBox","0 0 24 24");f.setAttribute("class","bloom");
+  f.innerHTML='<g fill="#F59CB8"><circle cx="12" cy="6" r="4"/><circle cx="18" cy="11" r="4"/><circle cx="15.5" cy="18" r="4"/><circle cx="8.5" cy="18" r="4"/><circle cx="6" cy="11" r="4"/></g><circle cx="12" cy="13" r="3" fill="#F2A516"/>';
+  t.append(f);setTimeout(()=>f.remove(),1500);
+  setTimeout(()=>toast("פרח חדש נפתח על העץ שלך! 🌸",1800),250);
 }
 // dir 0 = up like the next reel, 1 = right, -1 = left
 function fly(c,dir){
@@ -2069,7 +2118,7 @@ function decide(known){
     if(S.my[w.k]&&S.my[w.k].status!=="focus")S.my[w.k].status="learning";
   }
   const was=collected();S.srs[w.k]=st;const now2=collected();
-  if(now2>was){dStats.added++;const pill=$("swCount");if(pill)pill.textContent=countLine();leafToTree();
+  if(now2>was){dStats.added++;const pill=$("swCount");if(pill)pill.textContent=countLine();leafToTree();maybeBloom();
     const m=MILESTONES.find(x=>was<x&&now2>=x);if(m)setTimeout(()=>toast("יש לך "+m+" מילים באוסף! "+(m===40?"":m>=100&&was<100?"פתחת את כל חוקי הדקדוק.":"המשיכי ככה."),3200),300);
     if(was<40&&now2>=40)setTimeout(()=>toast("40 מילים באוסף! מעכשיו יופיעו מדי פעם גם כרטיסיות דקדוק קטנות.",3800),300);}
   addXP("words",1);progress("swipe");
@@ -2086,7 +2135,7 @@ function weekDone(){return weekDays().filter(d=>d.on).length;}
 function weekGoal(){return S.weekGoal||5;}
 function weekEl(){const box=el("div",{class:"week","aria-label":"השבוע: "+weekDone()+" מתוך "+weekGoal()+" ימים"});const L="אבגדהוש";weekDays().forEach((d,i)=>box.append(el("span",{},el("i",{class:(d.on?"on":"")+(d.today?" today":""),text:d.on?"✓":""}),L[i])));return box;}
 function finishDeck(){
-  $("swStage").hidden=true;$("swLegend").hidden=true;
+  $("swStage").hidden=true;$("swBtns").hidden=true;$("swLegend").hidden=true;
   addXP("words",5);
   S.practiced=S.practiced||[];if(!S.practiced.includes(today()))S.practiced.push(today());S.practiced=S.practiced.slice(-60);
   ensureToday();S.today.st=S.today.st||{};S.today.st[curFocus||"day"]=1;save();
