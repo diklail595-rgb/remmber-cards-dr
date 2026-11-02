@@ -40,7 +40,8 @@
   --leaf1:#4DB86A; --leaf2:#79CF7D; --leaf3:#2F9A55; --trunk:#A47552; --pot:#C9693E; --pot-rim:#A9542F; --fruit:#F7B638; --bloom:#F2A0BC; --sky:#16262C; --soil:#6E5640; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+html{font-size:calc(16px * var(--fs,1))}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.55}
 .en{font-family:var(--f-en);direction:ltr;unicode-bidi:isolate}
 .wrap{max-width:900px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
 h1,h2,h3{font-family:var(--f-display);font-weight:400;line-height:1.2;text-wrap:balance;margin:0}
@@ -222,35 +223,54 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 .vcard.seen{opacity:.75}
 
 
-/* swipe deck */
-.swipe-ov{position:fixed;inset:0;z-index:30;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
-.swipe-top{width:100%;max-width:380px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.swipe-dots{flex:1;height:6px;background:var(--line);border-radius:9px;overflow:hidden}
-.swipe-dots i{display:block;height:100%;background:var(--mine);transition:width .3s}
-.stack{position:relative;width:100%;max-width:340px;aspect-ratio:3/4;max-height:58vh}
-.scard{position:absolute;inset:0;border-radius:22px;background:var(--card);border:1px solid var(--line);box-shadow:0 14px 34px rgba(20,40,30,.16);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;overflow:hidden}
-.scard:not(.under){will-change:transform}
-.scard.gone{pointer-events:none;z-index:2}
-.scard.under{transform:scale(.94) translateY(14px);opacity:.7;pointer-events:none}
-.scard .band{position:absolute;inset:0 0 auto 0;height:10px}
-.scard .w{font-family:var(--f-en);font-size:clamp(1.9rem,8vw,2.6rem);font-weight:600;direction:ltr;overflow-wrap:anywhere}
-.scard .he{font-size:1.5rem;font-weight:700}
-.scard .ex{font-family:var(--f-en);direction:ltr;color:var(--muted);font-size:.95rem}
-.scard .hint{position:absolute;bottom:14px;inset-inline:0;font-size:.85rem;color:var(--muted)}
-.scard .stamp{position:absolute;top:24px;padding:4px 14px;border:3px solid;border-radius:10px;font-weight:700;font-size:1.2rem;opacity:0;transform:rotate(-12deg)}
+/* swipe deck: a stories-style feed. Always dark inside, like a reel; the tokens are re-scoped so word, rule and quiz cards all follow. */
+.swipe-ov{--paper:#0F1318;--card:#171D26;--ink:#F3F4F1;--muted:#B2BAC6;--line:#2E3642;--good:#5BD69A;--good-soft:#173D2C;--bad:#FF8A7E;--bad-soft:#45211F;--accent:#FFC857;--accent-soft:#3D3115;--blue:#9DB8F7;--blue-soft:#1D2A45;--biz:#8FB0F5;--biz-soft:#1D2A45;--grow:#C4A3FF;--grow-soft:#2E2447;--mine:#FF8FB8;--mine-soft:#45202F;--fin:#5BD6A6;--fin-soft:#163A2E;--sport:#FFA270;--sport-soft:#45281A;--gen:#EBC27A;--gen-soft:#3D2F17;--tint:#8FB0F5;color-scheme:dark;
+  position:fixed;inset:0;z-index:30;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;gap:8px;overflow:hidden;
+  padding:calc(10px + env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+.swipe-top{position:relative;z-index:4;display:flex;flex-direction:column;gap:9px;width:100%;max-width:520px;margin:0 auto}
+.sw-bars{display:flex;gap:3px}
+.sw-bars i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.22)}
+.sw-bars i.d{background:var(--accent)}
+.sw-bars i.now{background:linear-gradient(to left,var(--accent) 35%,rgba(255,255,255,.22) 35%)}
+.sw-head{display:flex;align-items:center;gap:10px}
+.sw-tree{width:42px;height:42px;border-radius:50%;flex:none;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#284A36,#13231A);box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--accent)}
+.sw-tree svg{width:30px;height:30px}
+.sw-tree.pop{animation:pop .5s ease-out}
+.sw-title{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.sw-title b{font-size:1rem}
+.sw-title span{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.sw-x{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:var(--ink);display:grid;place-items:center;flex:none;padding:0}
+.sw-x svg{width:20px;height:20px;fill:currentColor}
+.sw-stage{position:relative;flex:1;min-height:0;width:100%;max-width:520px;margin:0 auto}
+.stack{position:absolute;inset:0}
+.scard{position:absolute;inset:0;border-radius:24px;background:var(--card);background:radial-gradient(120% 75% at 85% 0%,color-mix(in srgb,var(--tint) 30%,var(--paper)) 0,var(--paper) 66%);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px 18px 54px 76px;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;overflow:hidden}
+.scard:not(.under){will-change:transform;z-index:2}
+.scard.gone{pointer-events:none;z-index:3}
+.scard.under{pointer-events:none;z-index:1}
+.scard .band{display:none}
+.scard .tag{background:rgba(255,255,255,.1)!important;color:var(--accent);letter-spacing:.06em}
+.scard .w{font-family:var(--f-en);font-size:clamp(2.2rem,11vw,3.2rem);font-weight:600;line-height:1.05;direction:ltr;overflow-wrap:anywhere}
+.scard .w.long{font-size:clamp(1.7rem,8vw,2.5rem)}
+.scard .he{font-size:1.6rem;font-weight:700}
+.scard .ex{font-family:var(--f-en);direction:ltr;color:#D9DDE6;font-size:1.1rem;line-height:1.5}
+.scard .ex b{color:var(--accent)!important}
+.scard .hint{position:absolute;bottom:16px;inset-inline:0;font-size:.85rem;color:var(--muted)}
+.scard .stamp{position:absolute;top:26px;padding:4px 14px;border:3px solid;border-radius:10px;font-weight:700;font-size:1.2rem;opacity:0;transform:rotate(-12deg);background:rgba(0,0,0,.25)}
 .scard .stamp.yes{left:20px;color:var(--good);border-color:var(--good)}
 .scard .stamp.no{right:20px;color:var(--bad);border-color:var(--bad);transform:rotate(12deg)}
-.swipe-btns{direction:ltr;display:flex;gap:28px;align-items:center}
-.sbtn{width:64px;height:64px;border-radius:50%;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.08)}
-.sbtn svg{width:28px;height:28px}
+.swipe-btns{position:absolute;left:12px;bottom:58px;z-index:5;display:flex;flex-direction:column;gap:18px;align-items:center}
+.sbtn{width:52px;height:52px;border-radius:50%;border:0;background:rgba(255,255,255,.13);color:var(--ink);display:grid;place-items:center;padding:0;position:relative;margin-bottom:14px}
+.sbtn::after{content:attr(data-l);position:absolute;top:100%;margin-top:3px;left:50%;transform:translateX(-50%);font-size:.72rem;color:var(--muted);white-space:nowrap}
+.sbtn svg{width:26px;height:26px;fill:currentColor}
 .sbtn.no{color:var(--bad)} .sbtn.yes{color:var(--good)}
-.swipe-legend{direction:ltr;display:flex;gap:28px;font-size:.85rem;color:var(--muted)}
-
+.sbtn:active{transform:scale(.92)}
+.swipe-legend{display:flex;justify-content:center;gap:22px;font-size:.85rem;color:var(--muted);min-height:1.4em}
+.sw-leaf{position:fixed;left:0;top:0;width:22px;height:22px;z-index:35;pointer-events:none}
 #swCount.pop{animation:pop .5s ease-out}
 @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
 .collect-big{font-size:1.1rem}
 .collect-big b{font-size:2rem;color:var(--mine)}
-.scard.rule{justify-content:flex-start;padding:32px 18px 14px;gap:10px}
+.scard.rule{justify-content:flex-start;padding:32px 18px 14px 76px;gap:10px}
 .scard.rule .hint{position:static;margin-top:auto;flex:none}
 .scard.rule.flipped .rforms{display:none}
 .scard.rule.tight{gap:6px;padding-top:26px}
@@ -276,14 +296,35 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 .qopts button.right{background:var(--good-soft);border-color:var(--good)}
 .qopts button.wrong{background:var(--bad-soft);border-color:var(--bad)}
 .qwhy{font-size:.92rem;background:var(--biz-soft);border-radius:10px;padding:8px 10px;text-align:start}
-.swipe-done{max-width:360px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+.swipe-done{flex:1;min-height:0;overflow-y:auto;width:100%;max-width:420px;margin:0 auto;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:flex-start;padding-block:12px}
+.swipe-done>*{flex:none}
+.done-tree{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#E5F1F8,#CFE6D6);display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--accent)}
+.done-tree svg{width:86%;height:auto}
+.week{display:flex;gap:8px;justify-content:center}
+.week span{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.75rem;color:var(--muted)}
+.week i{width:28px;height:28px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-style:normal;font-size:.8rem;font-weight:700;color:var(--paper)}
+.week i.on{background:var(--good)}
+.week i.today{box-shadow:0 0 0 2px var(--accent)}
+/* stories row on home */
+.stories-card{display:flex;flex-direction:column;gap:10px}
+.stories{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding:4px 2px 2px}
+.story{border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:6px;width:76px;flex:none;color:var(--ink)}
+.story .ring{width:72px;height:72px;border-radius:50%;padding:3px;background:conic-gradient(from 200deg,var(--accent),var(--mine),var(--grow),var(--accent))}
+.story.seen .ring{background:var(--line)}
+.story .face{width:100%;height:100%;border-radius:50%;border:3px solid var(--card);display:grid;place-items:center;font-family:var(--f-display);font-size:1.5rem;color:#fff}
+.story .face svg{width:40px;height:40px}
+.story small{font-size:.8rem;line-height:1.2;text-align:center;max-width:76px}
+.stories-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.fs{display:flex;gap:4px;align-items:center}
+.fs button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;min-width:36px;height:36px;font-weight:700;padding:0 6px}
+.fs button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.sw-tree.pop,#swCount.pop{animation:none}}
 .toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));inset-inline:16px;margin-inline:auto;max-width:420px;background:var(--ink);color:var(--paper);padding:12px 16px;border-radius:12px;font-weight:600;text-align:center;z-index:40}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px}
 @keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-
 
 <div dir="rtl" lang="he">
 <header class="top">
@@ -312,6 +353,12 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 
 <!-- HOME -->
 <section class="view" id="v-home">
+  <div class="card stories-card">
+    <div class="stories-head"><b id="weekTxt">השבוע</b>
+      <div class="fs" role="group" aria-label="גודל טקסט"><span class="small muted">גודל טקסט</span><button data-fs="1" style="font-size:.85rem">א</button><button data-fs="1.15" style="font-size:1.05rem">א</button><button data-fs="1.3" style="font-size:1.25rem">א</button></div>
+    </div>
+    <div class="stories" id="stories" aria-label="סבבי מילים"></div>
+  </div>
   <div class="card garden">
     <div class="tree-box" id="treeBox"></div>
     <div class="garden-info">
@@ -514,20 +561,24 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 
 </main>
 </div>
-<div class="swipe-ov" id="swipeOv" dir="rtl" lang="he" hidden role="dialog" aria-label="החלקת מילים">
+<div class="swipe-ov" id="swipeOv" dir="rtl" lang="he" hidden role="dialog" aria-label="פיד מילים">
   <div class="swipe-top">
-    <b>החלקת מילים</b>
-    <div class="swipe-dots"><i id="swProg" style="width:0%"></i></div>
-    <span class="tag" id="swCount" style="background:var(--mine-soft);white-space:nowrap"></span>
-    <button class="btn ghost small" id="swClose" style="padding:4px 12px">סגירה</button>
+    <div class="sw-bars" id="swBars" aria-hidden="true"></div>
+    <div class="sw-head">
+      <span class="sw-tree" id="swTree" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 29V15" stroke="#A47552" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="11" r="8" fill="#4DB86A"/><circle cx="10" cy="14" r="5" fill="#79CF7D"/><circle cx="22" cy="14" r="5" fill="#2F9A55"/><circle cx="13" cy="8" r="1.8" fill="#F2A0BC"/><circle cx="20" cy="12" r="1.6" fill="#F7B638"/></svg></span>
+      <div class="sw-title"><b id="swTitle">הסבב של היום</b><span id="swCount" aria-live="polite"></span></div>
+      <button class="sw-x" id="swClose" aria-label="סגירה"><svg viewBox="0 0 24 24"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7l-1.4-1.4L9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z" transform="translate(1.5 0)"/></svg></button>
+    </div>
   </div>
-  <div class="stack" id="swStack"></div>
-  <div class="swipe-btns" id="swBtns">
-    <button class="sbtn no" id="swNo" aria-label="לא מזהה"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7l-1.4-1.4L9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z" transform="translate(1.5 0)"/></svg></button>
-    <button class="sbtn" id="swSpeak" aria-label="השמעה" style="width:48px;height:48px"></button>
-    <button class="sbtn yes" id="swYes" aria-label="יודעת"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></button>
+  <div class="sw-stage" id="swStage">
+    <div class="stack" id="swStack"></div>
+    <div class="swipe-btns" id="swBtns">
+      <button class="sbtn yes" id="swYes" aria-label="יודעת" data-l="יודעת"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></button>
+      <button class="sbtn no" id="swNo" aria-label="עוד לא" data-l="עוד לא"><svg viewBox="0 0 24 24"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7l-1.4-1.4L9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z" transform="translate(1.5 0)"/></svg></button>
+      <button class="sbtn" id="swSpeak" aria-label="השמעה" data-l="שמע"></button>
+    </div>
   </div>
-  <div class="swipe-legend" id="swLegend"><span dir="rtl">← שמאלה: עוד לא</span><span dir="rtl">ימינה: יודעת →</span></div>
+  <div class="swipe-legend" id="swLegend"><span>למעלה: יודעת ↑</span><span>← שמאלה: עוד לא</span></div>
   <div class="swipe-done" id="swDone" hidden></div>
 </div>
 <div class="toast" id="toast" dir="rtl" lang="he" hidden></div>
@@ -1070,7 +1121,7 @@ function renderHome(){
   $("badgeCount").textContent=on+" מתוך "+BADGES.length;
   const dc=dueCount();$("swRoomTxt").textContent=dc?(dc+" מילים מחכות לחזרה"):"ימינה = יודעת, שמאלה = עוד לא";
   renderCollect();renderPack();
-  renderWotd();
+  renderWotd();renderStories();
 }
 function renderCollect(){
   const c=$("collectCard");c.textContent="";const n=collected();const next=MILESTONES.find(x=>x>n)||VOCAB.length;const prev=[0].concat(MILESTONES).filter(x=>x<=n).pop();
@@ -1688,7 +1739,7 @@ function renderVideos(){
 /* ---------------- swipe deck (spaced repetition) ---------------- */
 const DAY=86400000;
 const INTERVALS=[0,1,2,4,8,16,32,64]; // days per box
-let deck=[],dIdx=0,dStats={yes:0,no:0},dLeft={};
+let deck=[],dIdx=0,dStats={yes:0,no:0},dLeft={},curFocus=null;
 function swipePool(){
   const L=lvl();const map=new Map();
   Object.values(S.my).forEach(w=>{if(w.he)map.set(wkey(w.en),{en:w.en,he:w.he,t:"mine"});});
@@ -1801,7 +1852,7 @@ function ruleEl(w,under){
   r.ex.forEach(([e,h])=>back.append(el("div",{class:"rex"},el("div",{class:"en",text:e}),el("div",{class:"small muted",text:h}))));
   if(r.note)back.append(el("div",{class:"qwhy",text:"שימי לב: "+r.note}));
   c.append(back);
-  c.append(el("div",{class:"hint",text:dLeft[w.k]?"עוד הזדמנות אחת בסבב הזה":"הקישי לדוגמאות · ימינה: הבנתי · שמאלה: שוב"}));
+  c.append(el("div",{class:"hint",text:dLeft[w.k]?"עוד הזדמנות אחת בסבב הזה":"הקישי לדוגמאות"}));
   c.append(el("span",{class:"stamp yes",text:"הבנתי"}),el("span",{class:"stamp no",text:"שוב"}));
   return c;
 }
@@ -1854,11 +1905,29 @@ function retryQuiz(q){
   if(!nq)return null;
   const ans=nq.o[nq.a];nq.o=shuffle(nq.o);nq.a=nq.o.indexOf(ans);nq.retry=true;return nq;
 }
-function openSwipe(){
+// A story on the home screen opens a round from one source: her own words, words due for review, or one topic.
+const STORY_COL={biz:"biz",social:"mine",daily:"gen",travel:"sport",money:"fin",health:"sport",growth:"grow",tech:"blue"};
+function focusName(f){if(!f)return "הסבב של היום";if(f==="mine")return "המילים שלי";if(f==="review")return "חזרות";const I=INTERESTS.find(x=>x.id===f);return I?I.he:"הסבב של היום";}
+function focusDeck(f){
+  const now=Date.now(),e=est();const pool=swipePool();
+  const match=w=>f==="mine"?w.t==="mine":f==="review"?!!(S.srs[w.k]&&S.srs[w.k].due<=now):(levelOK(w)&&interestsOf(w).includes(f));
+  const list=pool.filter(match);const n=(PACES[S.pace]||PACES.normal).n;
+  const due=list.filter(w=>S.srs[w.k]&&S.srs[w.k].due<=now).sort((a,b)=>S.srs[a.k].due-S.srs[b.k].due).slice(0,f==="review"?n:5);
+  const fresh=f==="review"?[]:shuffle(list.filter(w=>!S.srs[w.k])).sort((a,b)=>Math.round(Math.abs((a.l||e)-e))-Math.round(Math.abs((b.l||e)-e)));
+  let base=shuffle(due.concat(fresh.slice(0,Math.max(0,n-due.length))));
+  if(base.length<6){const used=new Set(base.map(w=>w.k));base=base.concat(list.filter(w=>!used.has(w.k)&&S.srs[w.k]).sort((a,b)=>(S.srs[a.k].last||0)-(S.srs[b.k].last||0)).slice(0,8-base.length));}
+  if(!base.length)return false;
+  deck=base.map(w=>Object.assign({},w));dIdx=0;dStats={yes:0,no:0,added:0,start:collected(),est0:est()};dLeft={};return true;
+}
+function countLine(){const w=weekDone();return "באוסף: "+collected()+" מילים · השבוע "+w+" מתוך "+weekGoal()+" ימים";}
+function openSwipe(focus){
   if(S.interests==null)return pickTopics();
-  buildDeck();aiMoreWords();addQuizzes();addRules();moreExamples();
-  $("swipeOv").hidden=false;$("swDone").hidden=true;$("swStack").hidden=false;$("swBtns").hidden=false;$("swLegend").hidden=false;
-  $("swSpeak").innerHTML=SPEAK_SVG;$("swCount").textContent="באוסף: "+collected();
+  curFocus=typeof focus==="string"?focus:null;
+  buildDeck();if(curFocus&&!focusDeck(curFocus)){curFocus=null;buildDeck();}
+  aiMoreWords();addQuizzes();addRules();moreExamples();
+  $("swipeOv").hidden=false;$("swDone").hidden=true;$("swStage").hidden=false;$("swStack").hidden=false;$("swBtns").hidden=false;$("swLegend").hidden=false;
+  $("swTitle").textContent=focusName(curFocus);
+  $("swSpeak").innerHTML=SPEAK_SVG;$("swCount").textContent=countLine();
   document.body.style.overflow="hidden";
   renderCard();
 }
@@ -1868,8 +1937,8 @@ function topicChips(onChange){
   return box;
 }
 function pickTopics(){
-  $("swipeOv").hidden=false;$("swStack").hidden=true;$("swBtns").hidden=true;$("swLegend").hidden=true;document.body.style.overflow="hidden";
-  $("swCount").textContent="באוסף: "+collected();
+  $("swipeOv").hidden=false;$("swStage").hidden=true;$("swLegend").hidden=true;$("swBars").textContent="";document.body.style.overflow="hidden";
+  $("swTitle").textContent="בחירת נושאים";$("swCount").textContent="באוסף: "+collected()+" מילים";
   const d=$("swDone");d.hidden=false;d.textContent="";
   const sug=suggestInterests();if(S.interests==null&&sug.length)S.interests=sug.slice(0,3);
   const draw=()=>{d.textContent="";
@@ -1901,24 +1970,24 @@ $("swClose").onclick=closeSwipe;
 function cardEl(w,under){
   if(!under&&!w._ex){const e=nextEx(w.k,w.en);w.ex=e[0];w.exHe=e[1];w._ex=1;}
   if(under&&!w._ex){const L=exList(w.k,w.en);const e=L.length?L[((S.exi||{})[w.k]||0)%L.length]:['',''];w.ex=e[0];w.exHe=e[1];}
-  const c=el("div",{class:"scard"+(under?" under":"")});
+  const c=el("div",{class:"scard"+(under?" under":"")});c.style.setProperty("--tint","var(--"+(TCOL[w.t]||"gen")+")");
   c.append(el("div",{class:"band",style:"background:var(--"+(TCOL[w.t]||"gen")+")"}));
   c.append(el("span",{class:"tag",style:"background:var(--"+(TCOL[w.t]||"gen")+"-soft)",text:w.t==="mine"?"מהמילים שלי":(w.p&&w.p===todayPack().id?"חבילת היום · "+todayPack().he:TOPICS[w.t]||"")}));
-  c.append(el("div",{class:"w",text:w.en}));
+  c.append(el("div",{class:"w"+(w.en.length>9?" long":""),text:w.en}));
   if(w.ex){const exl=el("div",{class:"ex",style:"font-size:1.05rem;line-height:1.5;max-width:28ch"});exl.append(...hiWord(w.ex,w.en));c.append(exl);}
   const back=el("div",{class:"back",hidden:"hidden"},el("div",{class:"he",text:w.he}));
   if(w.exHe)back.append(el("div",{class:"small muted",style:"margin-top:4px",text:w.exHe}));
   c.append(back);
   const st=S.srs[w.k];const stub=st&&st.lapses>=3&&st.box===0;
   if(stub&&!under){back.hidden=false;c.classList.add("flipped");}
-  c.append(el("div",{class:"hint",text:stub?"מילה עקשנית: קראי את התרגום והמשפט, ותני לה לשקוע":dLeft[w.k]?"עוד הזדמנות אחת בסבב הזה":(st?"חזרה":"מילה חדשה")+" · הקישי כדי לראות תרגום"}));
+  c.append(el("div",{class:"hint",text:stub?"מילה עקשנית: קראי את התרגום והמשפט, ותני לה לשקוע":dLeft[w.k]?"עוד הזדמנות אחת בסבב הזה":(st?"חזרה":"מילה חדשה")+" · הקישי לתרגום"}));
   c.append(el("span",{class:"stamp yes",text:"יודעת"}),el("span",{class:"stamp no",text:"עוד לא"}));
   return c;
 }
 function hiWord(sent,word){const i=sent.toLowerCase().indexOf(word.toLowerCase().split(' ')[0].slice(0,Math.max(3,word.length-2)));if(i<0)return [sent];let j=i;while(j<sent.length&&/[A-Za-z'-]/.test(sent[j]))j++;if(word.includes(' ')){const end=sent.toLowerCase().indexOf(word.toLowerCase().split(' ').pop(),i);if(end>0){j=end;while(j<sent.length&&/[A-Za-z'-]/.test(sent[j]))j++;}}return [sent.slice(0,i),el('b',{style:'color:var(--ink)',text:sent.slice(i,j)}),sent.slice(j)];}
 function renderCard(){
   const stack=$("swStack");stack.querySelectorAll(":scope>:not(.gone)").forEach(x=>x.remove());
-  $("swProg").style.width=Math.min(100,dIdx/deck.length*100)+"%";
+  const bars=$("swBars");bars.textContent="";deck.forEach((x,i)=>bars.append(el("i",{class:i<dIdx?"d":i===dIdx?"now":""})));
   if(dIdx>=deck.length)return finishDeck();
   const w=deck[dIdx];
   const mk=(x,u)=>x.type==="quiz"?quizEl(x,u):x.type==="rule"?ruleEl(x,u):cardEl(x,u);
@@ -1926,32 +1995,53 @@ function renderCard(){
   const isQ=w.type==="quiz";$("swBtns").hidden=isQ;$("swLegend").hidden=isQ;
   if(isQ){stack.append(quizEl(w,false));return;}
   const c=mk(w,false);stack.append(c);fitRule(c);w._shown=Date.now();
-  $("swLegend").children[0].textContent="← שמאלה: "+(w.type==="rule"?"שוב":"עוד לא");$("swLegend").children[1].textContent=(w.type==="rule"?"ימינה: הבנתי":"ימינה: יודעת")+" →";
+  $("swLegend").children[0].textContent="למעלה: "+(w.type==="rule"?"הבנתי":"יודעת")+" ↑";$("swLegend").children[1].textContent="← שמאלה: "+(w.type==="rule"?"שוב":"עוד לא");$("swYes").dataset.l=w.type==="rule"?"הבנתי":"יודעת";$("swNo").dataset.l=w.type==="rule"?"שוב":"עוד לא";
   if(w.type==="rule"){const r=RULES.find(x=>x.id===w.rid);$("swSpeak").onclick=()=>r.ex.forEach((e,i)=>speak(e[0],{rate:0.85,queue:i>0}));}
   else{$("swSpeak").onclick=()=>{speak(w.en,{rate:0.8});if(w.ex)speak(w.ex,{rate:0.85,queue:true});};speak(w.en,{rate:0.85});}
   attachDrag(c,w);
 }
 function fitRule(c){if(!c.classList.contains("rule"))return;c.classList.remove("tight","tighter");const over=()=>c.scrollHeight>c.clientHeight+1;if(over())c.classList.add("tight");if(over())c.classList.add("tighter");}
-function flipCard(c){const b=c.querySelector(".back");if(b.hidden){const cw=deck[dIdx];if(cw&&!cw.type)cw._flip=1;b.hidden=false;c.classList.add("flipped");fitRule(c);c.querySelector(".hint").textContent=c.classList.contains("rule")?"ימינה: הבנתי · שמאלה: שוב":"ימינה: יודעת · שמאלה: עוד לא";}}
+function flipCard(c){const b=c.querySelector(".back");if(b.hidden){const cw=deck[dIdx];if(cw&&!cw.type)cw._flip=1;b.hidden=false;c.classList.add("flipped");fitRule(c);c.querySelector(".hint").textContent=c.classList.contains("rule")?"למעלה: הבנתי · שמאלה: שוב":"למעלה: יודעת · שמאלה: עוד לא";}}
+// Feed gestures: up (or right) = knows it, left = not yet. Speed of the decision still feeds the level estimate.
+const RM=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
 function attachDrag(c,w){
-  let x0=0,y0=0,dx=0,dragging=false,moved=false,t0=0,lx=0,lt=0,vx=0;
+  let x0=0,y0=0,dx=0,dy=0,dragging=false,moved=false,axis=null,lx=0,ly=0,lt=0,vx=0,vy=0;
   const yes=c.querySelector(".stamp.yes"),no=c.querySelector(".stamp.no");
-  c.addEventListener("pointerdown",e=>{dragging=true;moved=false;x0=e.clientX;y0=e.clientY;dx=0;vx=0;lx=e.clientX;lt=t0=performance.now();c.setPointerCapture(e.pointerId);c.style.transition="none";});
-  c.addEventListener("pointermove",e=>{if(!dragging)return;const t=performance.now();if(t>lt){vx=(e.clientX-lx)/(t-lt);lx=e.clientX;lt=t;}dx=e.clientX-x0;const dy=e.clientY-y0;if(Math.abs(dx)>6)moved=true;c.style.transform="translate("+dx+"px,"+dy*0.2+"px) rotate("+(dx/18)+"deg)";yes.style.opacity=Math.max(0,Math.min(1,dx/90));no.style.opacity=Math.max(0,Math.min(1,-dx/90));});
+  const op=v=>Math.max(0,Math.min(1,v));
+  c.addEventListener("pointerdown",e=>{dragging=true;moved=false;axis=null;x0=e.clientX;y0=e.clientY;dx=dy=vx=vy=0;lx=e.clientX;ly=e.clientY;lt=performance.now();c.setPointerCapture(e.pointerId);c.style.transition="none";});
+  c.addEventListener("pointermove",e=>{if(!dragging)return;const t=performance.now();if(t>lt){vx=(e.clientX-lx)/(t-lt);vy=(e.clientY-ly)/(t-lt);lx=e.clientX;ly=e.clientY;lt=t;}
+    dx=e.clientX-x0;dy=e.clientY-y0;
+    if(!axis&&(Math.abs(dx)>8||Math.abs(dy)>8))axis=Math.abs(dy)>Math.abs(dx)?"y":"x";
+    if(!axis)return;moved=true;
+    if(axis==="y"){c.style.transform="translateY("+(dy<0?dy:dy*0.25)+"px)";yes.style.opacity=op(-dy/110);no.style.opacity=0;}
+    else{c.style.transform="translate("+dx+"px,0) rotate("+(dx/22)+"deg)";yes.style.opacity=op(dx/90);no.style.opacity=op(-dx/90);}});
   const end=()=>{if(!dragging)return;dragging=false;
     if(!moved){c.style.transform="";flipCard(c);return;}
-    const flick=performance.now()-lt<80&&Math.abs(vx)>0.4&&Math.abs(dx)>24&&Math.sign(vx)===Math.sign(dx);
-    if(dx>70||(flick&&dx>0))fly(c,1);else if(dx<-70||(flick&&dx<0))fly(c,-1);
-    else{c.style.transition="transform .25s";c.style.transform="";yes.style.opacity=0;no.style.opacity=0;}};
+    const recent=performance.now()-lt<90;
+    if(axis==="y"){if(dy<-80||(recent&&vy<-0.4&&dy<-24))return fly(c,0);}
+    else{const flick=recent&&Math.abs(vx)>0.4&&Math.abs(dx)>24&&Math.sign(vx)===Math.sign(dx);
+      if(dx>70||(flick&&dx>0))return fly(c,1);if(dx<-70||(flick&&dx<0))return fly(c,-1);}
+    c.style.transition="transform .22s";c.style.transform="";yes.style.opacity=0;no.style.opacity=0;};
   c.addEventListener("pointerup",end);c.addEventListener("pointercancel",end);
 }
+// dir 0 = up like the next reel, 1 = right, -1 = left
 function fly(c,dir){
   if(c._gone)return;c._gone=1;const cw=deck[dIdx];if(cw&&cw._shown)cw._dt=Date.now()-cw._shown;
-  c.classList.add("gone");
-  c.style.transition="transform .22s ease-in, opacity .22s";c.style.transform="translate("+(dir*520)+"px,-30px) rotate("+(dir*28)+"deg)";c.style.opacity="0";
-  c.querySelector(dir>0?".stamp.yes":".stamp.no").style.opacity=1;
-  setTimeout(()=>c.remove(),260);
-  decide(dir>0); // the next card appears underneath right away while this one flies off
+  c.classList.add("gone");const ms=RM?120:240;
+  c.style.transition="transform "+ms+"ms ease-in, opacity "+ms+"ms";
+  c.style.transform=dir===0?"translateY(-110%)":"translate("+(dir*520)+"px,-20px) rotate("+(dir*24)+"deg)";
+  if(dir!==0)c.style.opacity="0";
+  c.querySelector(dir>=0?".stamp.yes":".stamp.no").style.opacity=1;
+  setTimeout(()=>c.remove(),ms+40);
+  decide(dir>=0); // the next card is already underneath, so it shows at once
+}
+// A new word in the collection flies as a leaf into the tree at the top.
+function leafToTree(){
+  const t=$("swTree");if(!t)return;t.classList.remove("pop");void t.offsetWidth;t.classList.add("pop");
+  if(RM||!t.animate)return;const r=t.getBoundingClientRect(),st=$("swStage").getBoundingClientRect();
+  const lf=document.createElementNS("http://www.w3.org/2000/svg","svg");lf.setAttribute("viewBox","0 0 24 24");lf.setAttribute("class","sw-leaf");lf.innerHTML='<path d="M4 20C4 10 10 4 20 4c0 10-6 16-16 16z" fill="#79CF7D"/><path d="M4 20 15 9" stroke="#2F9A55" stroke-width="1.6"/>';
+  document.body.append(lf);const x0=st.left+st.width/2-11,y0=st.top+st.height*0.45,x1=r.left+r.width/2-11,y1=r.top+r.height/2-11;
+  lf.animate([{transform:"translate("+x0+"px,"+y0+"px) scale(1.3) rotate(0deg)",opacity:1},{transform:"translate("+x1+"px,"+y1+"px) scale(.5) rotate(200deg)",opacity:.3}],{duration:650,easing:"cubic-bezier(.5,0,.8,.6)"}).onfinish=()=>lf.remove();
 }
 function decide(known){
   const w=deck[dIdx];if(!w)return;const now=Date.now();
@@ -1979,7 +2069,7 @@ function decide(known){
     if(S.my[w.k]&&S.my[w.k].status!=="focus")S.my[w.k].status="learning";
   }
   const was=collected();S.srs[w.k]=st;const now2=collected();
-  if(now2>was){dStats.added++;const pill=$("swCount");if(pill){pill.textContent="באוסף: "+now2;pill.classList.remove("pop");void pill.offsetWidth;pill.classList.add("pop");}
+  if(now2>was){dStats.added++;const pill=$("swCount");if(pill)pill.textContent=countLine();leafToTree();
     const m=MILESTONES.find(x=>was<x&&now2>=x);if(m)setTimeout(()=>toast("יש לך "+m+" מילים באוסף! "+(m===40?"":m>=100&&was<100?"פתחת את כל חוקי הדקדוק.":"המשיכי ככה."),3200),300);
     if(was<40&&now2>=40)setTimeout(()=>toast("40 מילים באוסף! מעכשיו יופיעו מדי פעם גם כרטיסיות דקדוק קטנות.",3800),300);}
   addXP("words",1);progress("swipe");
@@ -1987,21 +2077,47 @@ function decide(known){
 }
 // a second tap within a moment is an accidental double tap, not a decision on the next card
 let lastBtn=0;const btnFly=dir=>{const t=performance.now();if(t-lastBtn<350)return;lastBtn=t;const c=$("swStack").querySelector(".scard:not(.under):not(.gone):not(.quiz)");if(c)fly(c,dir);};
-$("swYes").onclick=()=>btnFly(1);$("swNo").onclick=()=>btnFly(-1);
-document.addEventListener("keydown",e=>{if($("swipeOv").hidden)return;const cq=deck[dIdx];if(cq&&cq.type==="quiz"){const n=+e.key;if(n>=1&&n<=3){const c=$("swStack").querySelector(".scard.quiz:not(.under)");if(c)answerQuiz(c,cq,n-1);}else if(e.key==="Enter"&&cq.done){dIdx++;renderCard();}return;}if(e.key==="ArrowRight")$("swYes").click();else if(e.key==="ArrowLeft")$("swNo").click();else if(e.key===" "){e.preventDefault();const c=$("swStack").querySelector(".scard:not(.under):not(.gone)");if(c)flipCard(c);}else if(e.key==="Escape")closeSwipe();});
+$("swYes").onclick=()=>btnFly(0);$("swNo").onclick=()=>btnFly(-1);
+document.addEventListener("keydown",e=>{if($("swipeOv").hidden)return;const cq=deck[dIdx];if(cq&&cq.type==="quiz"){const n=+e.key;if(n>=1&&n<=3){const c=$("swStack").querySelector(".scard.quiz:not(.under)");if(c)answerQuiz(c,cq,n-1);}else if(e.key==="Enter"&&cq.done){dIdx++;renderCard();}return;}if(e.key==="ArrowRight"||e.key==="ArrowUp"){e.preventDefault();$("swYes").click();}else if(e.key==="ArrowLeft")$("swNo").click();else if(e.key===" "){e.preventDefault();const c=$("swStack").querySelector(".scard:not(.under):not(.gone)");if(c)flipCard(c);}else if(e.key==="Escape")closeSwipe();});
+// Weekly goal instead of a fragile streak: practising on most days of the week is what counts.
+function weekStart(){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-d.getDay());return d;}
+function weekDays(){const ws=weekStart();const set=new Set(S.practiced||[]);return [...Array(7)].map((_,i)=>{const d=new Date(ws);d.setDate(ws.getDate()+i);const k=dstr(d);return {k,on:set.has(k),today:k===today()};});}
+function weekDone(){return weekDays().filter(d=>d.on).length;}
+function weekGoal(){return S.weekGoal||5;}
+function weekEl(){const box=el("div",{class:"week","aria-label":"השבוע: "+weekDone()+" מתוך "+weekGoal()+" ימים"});const L="אבגדהוש";weekDays().forEach((d,i)=>box.append(el("span",{},el("i",{class:(d.on?"on":"")+(d.today?" today":""),text:d.on?"✓":""}),L[i])));return box;}
 function finishDeck(){
-  $("swStack").hidden=true;$("swBtns").hidden=true;$("swLegend").hidden=true;
+  $("swStage").hidden=true;$("swLegend").hidden=true;
   addXP("words",5);
-  const nxt=Object.values(S.srs).filter(x=>x.due>Date.now()).sort((a,b)=>a.due-b.due)[0];
+  S.practiced=S.practiced||[];if(!S.practiced.includes(today()))S.practiced.push(today());S.practiced=S.practiced.slice(-60);
+  ensureToday();S.today.st=S.today.st||{};S.today.st[curFocus||"day"]=1;save();
+  $("swCount").textContent=countLine();
   const d=$("swDone");d.hidden=false;d.textContent="";
-  const tot=collected();
-  d.append(el("h2",{text:"סיימת את הסבב!"}),
-    el("div",{class:"collect-big"},el("b",{text:"+"+dStats.added}),el("span",{text:" מילים חדשות לאוסף · סה\"כ "+tot})),
-    el("p",{text:"עברת "+(dStats.yes+dStats.no)+" כרטיסיות: "+dStats.yes+" ידעת ו-"+dStats.no+" לחזרה. מילים שהחלקת ימינה יחזרו בעוד כמה ימים, וככל שתכירי אותן שוב, הן יחזרו לעיתים רחוקות יותר. מילים שהחלקת שמאלה ינוחו קצת ויחזרו בסבב מאוחר יותר, משולבות בין מילים חדשות."}),
-    el("p",{class:"small"},"הרמה שלך לפי ההחלקות: ",el("b",{text:estName()}),estName()!==estName(dStats.est0)?(est()>dStats.est0?" (עלתה מ-":" (ירדה מ-")+estName(dStats.est0)+")":""),
-    el("p",{class:"small muted",text:"+5 XP על סיום הסבב"}),
-    el("div",{class:"row",style:"justify-content:center"},el("button",{class:"btn",style:"background:var(--mine)",text:"סבב נוסף",onclick:openSwipe}),el("button",{class:"btn ghost",text:"למסך הבית",onclick:closeSwipe})));
+  const tot=collected(),wd=weekDone(),wg=weekGoal(),add=Math.max(0,tot-dStats.start);
+  const tb=el("div",{class:"done-tree"});tb.innerHTML=treeSVG(S.days||1,knownCount(),S.fruits||0).svg;
+  d.append(el("h2",{text:"סיימת להיום. העץ שלך גדל."}),tb,
+    el("div",{class:"collect-big"},el("b",{text:"+"+add}),el("span",{text:" "+(add===1?"עלה חדש":"עלים חדשים")+" · "+tot+" מילים באוסף"})),
+    el("div",{class:"row",style:"justify-content:center"},el("button",{class:"btn",style:"background:var(--accent);color:#1B1405",text:"עוד סבב",onclick:()=>openSwipe(curFocus)}),el("button",{class:"btn ghost",text:"לעץ שלי",onclick:closeSwipe})),
+    el("p",{text:"עברת "+(dStats.yes+dStats.no)+" כרטיסיות: "+dStats.yes+" ידעת ו-"+dStats.no+" יחזרו בסבב מאוחר יותר, בתוך משפט חדש."}),
+    el("b",{text:wd>=wg?"עמדת ביעד השבועי: "+wd+" ימים השבוע!":"השבוע: "+wd+" מתוך "+wg+" ימים"}),weekEl(),
+    el("p",{class:"small muted",text:"פספסת יום? זה בסדר. היעד הוא שבועי, אז השבוע עדיין שלך."}),
+    el("p",{class:"small"},"הרמה שלך לפי ההחלקות: ",el("b",{text:estName()}),estName()!==estName(dStats.est0)?(est()>dStats.est0?" (עלתה מ-":" (ירדה מ-")+estName(dStats.est0)+")":""));
 }
+/* ---------------- stories row & text size ---------------- */
+function renderStories(){
+  const box=$("stories");if(!box)return;box.textContent="";ensureToday();const seen=S.today.st||{};
+  const items=[{f:null,he:"הסבב של היום",col:"fin",tree:1}];
+  const dc=dueCount();if(dc)items.push({f:"review",he:"חזרות · "+dc,col:"accent",g:"↻"});
+  if(Object.values(S.my).some(w=>w.he))items.push({f:"mine",he:"המילים שלי",col:"mine",g:"★"});
+  effInterests().forEach(id=>{const I=INTERESTS.find(x=>x.id===id);if(I)items.push({f:id,he:I.he,col:STORY_COL[id]||"gen",g:I.he[0]});});
+  items.forEach(it=>{const done=!!seen[it.f||"day"];
+    const face=el("span",{class:"face",style:"background:var(--"+it.col+")"});if(it.tree)face.innerHTML=$("swTree").innerHTML;else face.textContent=it.g;
+    box.append(el("button",{class:"story"+(done?" seen":""),"aria-label":it.he+(done?", סיימת היום":", חדש"),onclick:()=>openSwipe(it.f||undefined)},el("span",{class:"ring"},face),el("small",{text:it.he})));});
+  $("weekTxt").textContent="השבוע: "+weekDone()+" מתוך "+weekGoal()+" ימי תרגול";
+  document.querySelectorAll(".fs button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.fs===(S.fs||1))));
+}
+function applyFs(){document.documentElement.style.setProperty("--fs",String(S.fs||1));}
+document.querySelectorAll(".fs button").forEach(b=>b.onclick=()=>{S.fs=+b.dataset.fs;save();applyFs();renderStories();});
+applyFs();
 
 /* ---------------- boot ---------------- */
 renderHeader();renderTenseTable();renderHome();updateAI();
