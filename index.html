@@ -223,56 +223,78 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 .vcard.seen{opacity:.75}
 
 
-/* swipe deck: a stories-style feed on bright cards. Light tokens are pinned here so the feed stays bright even when the phone is in dark mode. */
-.swipe-ov{--paper:#EEF2F0;--card:#FFFFFF;--ink:#18241F;--muted:#5D6B66;--line:#DCE3DF;--good:#1F8A57;--good-soft:#DDF2E7;--bad:#C2413A;--bad-soft:#F9E1DF;--accent:#E8960C;--accent-soft:#FDF0D6;--blue:#2E5BBA;--blue-soft:#E4EBF9;--biz:#3467D6;--biz-soft:#E2EAFB;--grow:#8754E8;--grow-soft:#EEE6FC;--mine:#D2477A;--mine-soft:#FBE3EC;--fin:#1F9D6B;--fin-soft:#DDF3E9;--sport:#E26A2C;--sport-soft:#FCE6DA;--gen:#C2862A;--gen-soft:#F7ECD9;--tint:#3467D6;color-scheme:light;
-  position:fixed;inset:0;z-index:30;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;gap:10px;overflow:hidden;
-  padding:calc(10px + env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
-.swipe-top{position:relative;z-index:4;display:flex;flex-direction:column;gap:9px;width:100%;max-width:520px;margin:0 auto}
+/* swipe deck: a clean, clinical feed. White surfaces, one crisp colour per category, and depth from layered cards and raised buttons.
+   Light tokens are pinned so the feed stays bright even when the phone is in dark mode. */
+.swipe-ov{--paper:#F4F6F8;--card:#FFFFFF;--ink:#14201B;--muted:#5E6A70;--line:#DFE5EA;--good:#1C9A5E;--good-soft:#DDF4E8;--bad:#D2463E;--bad-soft:#FBE3E1;--accent:#E8960C;--accent-soft:#FDF0D6;
+  --blue:#0FA3B1;--blue-soft:#DDF5F7;--biz:#2F6FED;--biz-soft:#E3ECFD;--grow:#7C4DFF;--grow-soft:#EEE7FF;--mine:#E0457B;--mine-soft:#FCE4ED;--fin:#12A27A;--fin-soft:#DCF5EC;--sport:#F06A35;--sport-soft:#FDE8DF;--gen:#D99512;--gen-soft:#FBF0D9;--tint:#2F6FED;color-scheme:light;
+  position:fixed;inset:0;z-index:30;background:var(--paper);background:linear-gradient(180deg,#FFFFFF 0,#EEF2F5 100%);color:var(--ink);display:flex;flex-direction:column;gap:10px;overflow:hidden;
+  padding:calc(10px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
+.swipe-top{position:relative;z-index:4;display:flex;flex-direction:column;gap:10px;width:100%;max-width:520px;margin:0 auto}
 .sw-bars{display:flex;gap:3px}
-.sw-bars i{flex:1;height:4px;border-radius:2px;background:rgba(24,36,31,.12)}
-.sw-bars i.d{background:var(--mine)}
-.sw-bars i.now{background:linear-gradient(to left,var(--mine) 35%,rgba(24,36,31,.12) 35%)}
-.sw-head{display:flex;align-items:center;gap:10px}
-.sw-tree{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#F2FAF4,#D6EBDD);box-shadow:0 0 0 2px var(--paper),0 0 0 4.5px var(--mine);position:relative}
+.sw-bars i{flex:1;height:4px;border-radius:2px;background:#DCE2E7}
+.sw-bars i.d{background:var(--tint)}
+.sw-bars i.now{background:linear-gradient(to left,var(--tint) 35%,#DCE2E7 35%)}
+.sw-head{display:flex;align-items:center;gap:10px;order:1}
+.sw-cats{order:2}
+.sw-tree{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;background:radial-gradient(circle at 40% 30%,#FFFFFF,#DDEFE3);box-shadow:0 0 0 2px #fff,0 0 0 4px var(--tint),0 6px 14px -6px rgba(0,0,0,.35);position:relative}
 .sw-tree svg{width:32px;height:32px}
 .sw-tree.pop{animation:pop .5s ease-out}
 .sw-title{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
 .sw-title b{font-size:1rem}
 .sw-title span{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.sw-x{width:44px;height:44px;border-radius:50%;border:0;background:var(--card);color:var(--ink);display:grid;place-items:center;flex:none;padding:0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.sw-x{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:linear-gradient(#fff,#F1F4F6);color:var(--ink);display:grid;place-items:center;flex:none;padding:0;box-shadow:0 3px 0 #D5DCE2}
+.sw-x:active{transform:translateY(2px);box-shadow:0 1px 0 #D5DCE2}
 .sw-x svg{width:20px;height:20px;fill:currentColor}
-.sw-stage{position:relative;flex:1;min-height:0;width:100%;max-width:520px;margin:0 auto}
-.stack{position:absolute;inset:0}
-.scard{position:absolute;inset:0;border-radius:26px;background:var(--card);background:radial-gradient(120% 60% at 50% 0%,color-mix(in srgb,var(--tint) 16%,#fff) 0,#fff 70%);border:1px solid var(--line);box-shadow:0 10px 30px -12px rgba(20,40,30,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px 22px 52px;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;overflow:hidden}
+/* category strip */
+.sw-cats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 2px 6px;margin-inline:-2px}
+.sw-cats::-webkit-scrollbar{display:none}
+.sw-cat{flex:none;border:1px solid var(--line);background:linear-gradient(#fff,#F3F6F8);color:var(--ink);border-radius:999px;padding:0 14px;min-height:40px;font-weight:700;font-size:.92rem;display:inline-flex;align-items:center;gap:7px;box-shadow:0 3px 0 #D9DFE4}
+.sw-cat i{width:12px;height:12px;border-radius:50%;background:var(--c);box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
+.sw-cat[aria-pressed="true"]{background:linear-gradient(color-mix(in srgb,var(--c) 85%,#fff),var(--c));border-color:var(--c);color:#fff;box-shadow:0 3px 0 color-mix(in srgb,var(--c) 70%,#000)}
+.sw-cat[aria-pressed="true"] i{background:#fff}
+.sw-cat:active{transform:translateY(2px);box-shadow:0 1px 0 #D9DFE4}
+/* stage: the card stack with two cards peeking underneath for depth */
+.sw-stage{position:relative;flex:1;min-height:0;width:100%;max-width:520px;margin:0 auto;perspective:1200px}
+.stack{position:absolute;inset:0 0 18px 0}
+.sw-stage::before,.sw-stage::after{content:"";position:absolute;left:6%;right:6%;bottom:9px;height:60px;border-radius:0 0 24px 24px;background:color-mix(in srgb,var(--tint) 14%,#fff);border:1px solid color-mix(in srgb,var(--tint) 22%,#fff);border-top:0;z-index:0}
+.sw-stage::after{left:12%;right:12%;bottom:0;background:color-mix(in srgb,var(--tint) 8%,#fff)}
+.sw-stage.flat::before,.sw-stage.flat::after{display:none}
+.scard{position:absolute;inset:0;border-radius:26px;background:var(--card);border:1px solid #E3E8EC;box-shadow:0 1px 0 #fff inset,0 2px 4px rgba(16,32,40,.06),0 18px 40px -16px rgba(16,32,40,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:92px 22px 112px;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;overflow:hidden}
 .scard:not(.under){will-change:transform;z-index:2}
 .scard.gone{pointer-events:none;z-index:3}
-.scard.under{pointer-events:none;z-index:1}
+.scard.under{pointer-events:none;z-index:1;transform:translateY(8px) scale(.97)}
 .scard .band{display:none}
-.scard .tag{background:color-mix(in srgb,var(--tint) 14%,#fff)!important;color:var(--tint);letter-spacing:.04em}
-.scard .w{font-family:var(--f-en);font-size:clamp(2.3rem,11vw,3.3rem);font-weight:600;line-height:1.05;direction:ltr;overflow-wrap:anywhere;color:#111A16}
+/* the category band across the top of every card */
+.scard .tag{position:absolute;top:0;inset-inline:0;height:68px;border-radius:0;display:block;line-height:68px;padding:0 20px;padding-inline-end:178px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:start;font-size:1rem;letter-spacing:.02em;color:#fff;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--tint) 78%,#fff) 0,var(--tint) 55%,color-mix(in srgb,var(--tint) 80%,#000) 100%)!important;box-shadow:inset 0 -1px 0 rgba(0,0,0,.08),inset 0 1px 0 rgba(255,255,255,.35)}
+.scard .w{font-family:var(--f-en);font-size:clamp(2.3rem,11vw,3.3rem);font-weight:600;line-height:1.05;direction:ltr;overflow-wrap:anywhere;color:#0F1A15;text-shadow:0 2px 0 rgba(16,32,40,.06)}
 .scard .w.long{font-size:clamp(1.8rem,8.5vw,2.6rem)}
-.scard .he{font-size:1.6rem;font-weight:700}
-.scard .ex{font-family:var(--f-en);direction:ltr;color:#3E4A45;font-size:1.12rem;line-height:1.55}
+.scard .he{font-size:1.6rem;font-weight:700;color:var(--tint)}
+.scard .back .small{color:var(--muted)!important}
+.scard .ex{font-family:var(--f-en);direction:ltr;color:#3B4750;font-size:1.12rem;line-height:1.55;background:#F5F8FA;border:1px solid #E6ECF0;border-radius:14px;padding:10px 14px}
 .scard .ex b{color:var(--tint)!important}
-.scard .hint{position:absolute;bottom:16px;inset-inline:0;font-size:.85rem;color:var(--muted)}
-.scard .stamp{position:absolute;top:26px;padding:4px 14px;border:3px solid;border-radius:10px;font-weight:700;font-size:1.2rem;opacity:0;transform:rotate(-12deg);background:#fff}
+.scard .hint{position:absolute;bottom:92px;inset-inline:0;font-size:.85rem;color:var(--muted)}
+.scard .stamp{position:absolute;top:84px;padding:4px 14px;border:3px solid;border-radius:10px;font-weight:700;font-size:1.2rem;opacity:0;transform:rotate(-12deg);background:#fff}
 .scard .stamp.yes{left:20px;color:var(--good);border-color:var(--good)}
 .scard .stamp.no{right:20px;color:var(--bad);border-color:var(--bad);transform:rotate(12deg)}
-.scard .saved{position:absolute;top:18px;inset-inline-start:18px;color:var(--mine);font-size:1.3rem}
 .heart-burst{position:absolute;left:50%;top:45%;width:110px;height:110px;margin:-55px 0 0 -55px;fill:var(--mine);pointer-events:none;animation:heart .8s ease-out forwards;z-index:4}
 @keyframes heart{0%{transform:scale(.2);opacity:0}25%{transform:scale(1.15);opacity:1}55%{transform:scale(.95);opacity:1}100%{transform:scale(1.3) translateY(-30px);opacity:0}}
-/* action bar in the thumb zone: "know it" sits bottom-right, where a right thumb rests */
-.swipe-btns{width:100%;max-width:520px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;padding:2px 6px 0}
-body:has(.swipe-ov:not([hidden])) .toast{bottom:calc(112px + env(safe-area-inset-bottom,0px))}
-.sbtn{width:50px;height:50px;border-radius:50%;border:0;background:var(--card);color:var(--ink);display:grid;place-items:center;padding:0;position:relative;margin-bottom:18px;box-shadow:0 2px 8px rgba(20,40,30,.12)}
-.sbtn.big{width:62px;height:62px}
-.sbtn::after{content:attr(data-l);position:absolute;top:100%;margin-top:4px;left:50%;transform:translateX(-50%);font-size:.75rem;font-weight:600;color:var(--muted);white-space:nowrap}
-.sbtn svg{width:24px;height:24px;fill:currentColor}
-.sbtn.big svg{width:30px;height:30px}
-.sbtn.yes{background:var(--good);color:#fff} .sbtn.no{color:var(--bad)}
-.sbtn.like[aria-pressed="true"]{color:var(--mine)}
-.sbtn:active{transform:scale(.92)}
+/* small tools sit on the card's coloured band; the two answers sit inside the card, big and raised */
+.sw-tools{position:absolute;top:12px;left:14px;z-index:5;display:flex;gap:8px}
+.tbtn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.22);color:#fff;display:grid;place-items:center;padding:0;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.tbtn svg{width:22px;height:22px;fill:currentColor}
+.tbtn[aria-pressed="true"]{background:#fff;color:var(--mine)}
+.tbtn:active{transform:scale(.92)}
+.swipe-btns{position:absolute;left:18px;right:18px;bottom:36px;z-index:5;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.abtn{min-height:60px;border-radius:18px;font-weight:700;font-size:1.1rem;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 10px}
+.abtn svg{width:24px;height:24px;fill:currentColor;flex:none}
+.abtn.yes{border:0;color:#fff;background:linear-gradient(#2FC07C,#1C9A5E);box-shadow:0 5px 0 #137545,0 12px 18px -10px rgba(19,117,69,.7)}
+.abtn.no{border:1px solid #E3D3D1;color:var(--bad);background:linear-gradient(#FFFFFF,#F7EFEE);box-shadow:0 5px 0 #E6CFCC,0 12px 18px -12px rgba(0,0,0,.25)}
+.abtn:active{transform:translateY(4px)}
+.abtn.yes:active{box-shadow:0 1px 0 #137545}
+.abtn.no:active{box-shadow:0 1px 0 #E6CFCC}
 .swipe-legend{display:none!important}
+body:has(.swipe-ov:not([hidden])) .toast{bottom:calc(140px + env(safe-area-inset-bottom,0px))}
 .bloom{position:absolute;top:-6px;inset-inline-end:-6px;width:22px;height:22px;pointer-events:none;animation:bloom 1.4s ease-out forwards}
 @keyframes bloom{0%{transform:scale(0) rotate(0);opacity:1}30%{transform:scale(1.5) rotate(90deg);opacity:1}100%{transform:scale(1) rotate(180deg);opacity:0}}
 @media (prefers-reduced-motion:reduce){.heart-burst,.bloom{animation-duration:.01s}}
@@ -281,8 +303,10 @@ body:has(.swipe-ov:not([hidden])) .toast{bottom:calc(112px + env(safe-area-inset
 @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
 .collect-big{font-size:1.1rem}
 .collect-big b{font-size:2rem;color:var(--mine)}
-.scard.rule{justify-content:flex-start;padding:32px 18px 14px;gap:10px}
+.scard.rule{justify-content:flex-start;padding:84px 18px 108px;gap:10px}
 .scard.rule .hint{position:static;margin-top:auto;flex:none}
+.scard.rule .tag,.scard.quiz .tag{--tint:var(--grow)}
+.scard.quiz .tag{--tint:var(--biz);padding-inline-end:20px}
 .scard.rule.flipped .rforms{display:none}
 .scard.rule.tight{gap:6px;padding-top:26px}
 .scard.rule.tight .rtitle{font-size:1.25rem}
@@ -299,7 +323,7 @@ body:has(.swipe-ov:not([hidden])) .toast{bottom:calc(112px + env(safe-area-inset
 .scard.rule .back{display:flex;flex-direction:column;gap:8px;width:100%}
 .scard.rule .back[hidden]{display:none}
 .rex .en{font-family:var(--f-en);direction:ltr;font-size:1rem}
-.scard.quiz{cursor:default;justify-content:flex-start;padding:34px 18px 18px;gap:10px;overflow-y:auto}
+.scard.quiz{cursor:default;justify-content:flex-start;padding:84px 18px 18px;gap:10px;overflow-y:auto}
 .qsent{font-family:var(--f-en);direction:ltr;font-size:1.25rem;line-height:1.6}
 .qsent .gap{display:inline-block;min-width:70px;border-bottom:3px solid var(--accent);color:var(--accent);font-weight:700;padding:0 4px}
 .qopts{direction:ltr;display:flex;flex-direction:column;gap:8px;width:100%}
@@ -320,9 +344,9 @@ body:has(.swipe-ov:not([hidden])) .toast{bottom:calc(112px + env(safe-area-inset
 .stories-card{display:flex;flex-direction:column;gap:10px}
 .stories{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding:4px 2px 2px}
 .story{border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:6px;width:76px;flex:none;color:var(--ink)}
-.story .ring{width:72px;height:72px;border-radius:50%;padding:3px;background:conic-gradient(from 200deg,var(--accent),var(--mine),var(--grow),var(--accent))}
+.story .ring{width:72px;height:72px;border-radius:50%;padding:3px;box-shadow:0 8px 16px -8px rgba(0,0,0,.4);background:conic-gradient(from 200deg,var(--accent),var(--mine),var(--grow),var(--accent))}
 .story.seen .ring{background:var(--line)}
-.story .face{width:100%;height:100%;border-radius:50%;border:3px solid var(--card);display:grid;place-items:center;font-family:var(--f-display);font-size:1.5rem;color:#fff}
+.story .face{width:100%;height:100%;border-radius:50%;border:3px solid var(--card);box-shadow:inset 0 -6px 10px rgba(0,0,0,.18),inset 0 6px 10px rgba(255,255,255,.3);display:grid;place-items:center;font-family:var(--f-display);font-size:1.5rem;color:#fff}
 .story .face svg{width:40px;height:40px}
 .story small{font-size:.8rem;line-height:1.2;text-align:center;max-width:76px}
 .stories-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
@@ -575,6 +599,7 @@ body:has(.swipe-ov:not([hidden])) .toast{bottom:calc(112px + env(safe-area-inset
 <div class="swipe-ov" id="swipeOv" dir="rtl" lang="he" hidden role="dialog" aria-label="פיד מילים">
   <div class="swipe-top">
     <div class="sw-bars" id="swBars" aria-hidden="true"></div>
+    <div class="sw-cats" id="swCats" role="group" aria-label="קטגוריות"></div>
     <div class="sw-head">
       <span class="sw-tree" id="swTree" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 29V15" stroke="#A47552" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="11" r="8" fill="#4DB86A"/><circle cx="10" cy="14" r="5" fill="#79CF7D"/><circle cx="22" cy="14" r="5" fill="#2F9A55"/><circle cx="13" cy="8" r="1.8" fill="#F2A0BC"/><circle cx="20" cy="12" r="1.6" fill="#F7B638"/></svg></span>
       <div class="sw-title"><b id="swTitle">הסבב של היום</b><span id="swCount" aria-live="polite"></span></div>
@@ -583,13 +608,15 @@ body:has(.swipe-ov:not([hidden])) .toast{bottom:calc(112px + env(safe-area-inset
   </div>
   <div class="sw-stage" id="swStage">
     <div class="stack" id="swStack"></div>
-  </div>
-  <div class="swipe-btns" id="swBtns">
-    <button class="sbtn big yes" id="swYes" aria-label="יודעת" data-l="יודעת"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></button>
-    <button class="sbtn" id="swSpeak" aria-label="השמעה" data-l="שמע"></button>
-    <button class="sbtn like" id="swLike" aria-label="שמירה למילים שלי" aria-pressed="false" data-l="שמירה"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.1 4.3 2.4h2c.7-1.3 2.2-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></button>
-    <button class="sbtn" id="swShare" aria-label="שיתוף המילה" data-l="שיתוף"><svg viewBox="0 0 24 24"><path d="M18 16a3 3 0 0 0-2.4 1.2l-6.7-3.4a3 3 0 0 0 0-1.6l6.7-3.4A3 3 0 1 0 15 7l-6.7 3.4a3 3 0 1 0 0 3.2L15 17a3 3 0 1 0 3-1z"/></svg></button>
-    <button class="sbtn big no" id="swNo" aria-label="עוד לא" data-l="עוד לא"><svg viewBox="0 0 24 24"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7l-1.4-1.4L9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z" transform="translate(1.5 0)"/></svg></button>
+    <div class="sw-tools" id="swTools">
+      <button class="tbtn" id="swSpeak" aria-label="השמעה"></button>
+      <button class="tbtn" id="swLike" aria-label="שמירה למילים שלי" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.1 4.3 2.4h2c.7-1.3 2.2-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></button>
+      <button class="tbtn" id="swShare" aria-label="שיתוף המילה"><svg viewBox="0 0 24 24"><path d="M18 16a3 3 0 0 0-2.4 1.2l-6.7-3.4a3 3 0 0 0 0-1.6l6.7-3.4A3 3 0 1 0 15 7l-6.7 3.4a3 3 0 1 0 0 3.2L15 17a3 3 0 1 0 3-1z"/></svg></button>
+    </div>
+    <div class="swipe-btns" id="swBtns">
+      <button class="abtn yes" id="swYes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg><span id="swYesL">יודעת</span></button>
+      <button class="abtn no" id="swNo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7l-1.4-1.4L9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z" transform="translate(1.5 0)"/></svg><span id="swNoL">עוד לא</span></button>
+    </div>
   </div>
   <div class="swipe-legend" id="swLegend"><span>למעלה: יודעת ↑</span><span>← שמאלה: עוד לא</span></div>
   <div class="swipe-done" id="swDone" hidden></div>
@@ -1932,6 +1959,15 @@ function focusDeck(f){
   if(!base.length)return false;
   deck=base.map(w=>Object.assign({},w));dIdx=0;dStats={yes:0,no:0,added:0,start:collected(),est0:est()};dLeft={};return true;
 }
+// Categories as a strip of coloured chips at the top of the feed; tapping one starts a round from that category.
+function renderCats(){
+  const box=$("swCats");box.textContent="";
+  const items=[{f:null,he:"הכול",col:"ink"}];
+  if(dueCount())items.push({f:"review",he:"חזרות",col:"accent"});
+  if(Object.values(S.my).some(w=>w.he))items.push({f:"mine",he:"המילים שלי",col:"mine"});
+  effInterests().forEach(id=>{const I=INTERESTS.find(x=>x.id===id);if(I)items.push({f:id,he:I.he,col:STORY_COL[id]||"gen"});});
+  items.forEach(it=>{const on=(it.f||null)===(curFocus||null);const b=el("button",{class:"sw-cat","aria-pressed":String(on),style:"--c:var(--"+it.col+")",onclick:()=>{if(!on)openSwipe(it.f||undefined);}},el("i",{}),it.he);box.append(b);if(on)setTimeout(()=>b.scrollIntoView({inline:"nearest",block:"nearest"}),0);});
+}
 function countLine(){const w=weekDone();return "באוסף: "+collected()+" מילים · השבוע "+w+" מתוך "+weekGoal()+" ימים";}
 function openSwipe(focus){
   if(S.interests==null)return pickTopics();
@@ -1939,7 +1975,7 @@ function openSwipe(focus){
   buildDeck();if(curFocus&&!focusDeck(curFocus)){curFocus=null;buildDeck();}
   aiMoreWords();addQuizzes();addRules();moreExamples();
   $("swipeOv").hidden=false;$("swDone").hidden=true;$("swStage").hidden=false;$("swStack").hidden=false;$("swBtns").hidden=false;$("swLegend").hidden=false;
-  $("swTitle").textContent=focusName(curFocus);
+  $("swTitle").textContent=focusName(curFocus);renderCats();
   $("swSpeak").innerHTML=SPEAK_SVG;$("swCount").textContent=countLine();
   document.body.style.overflow="hidden";
   renderCard();
@@ -2005,10 +2041,10 @@ function renderCard(){
   const w=deck[dIdx];
   const mk=(x,u)=>x.type==="quiz"?quizEl(x,u):x.type==="rule"?ruleEl(x,u):cardEl(x,u);
   const nx=deck[dIdx+1];if(nx)stack.append(mk(nx,true));
-  const isQ=w.type==="quiz";$("swBtns").hidden=isQ;$("swLegend").hidden=isQ;
+  const isQ=w.type==="quiz";$("swBtns").hidden=isQ;$("swTools").hidden=isQ;$("swStage").classList.toggle("flat",isQ);if(isQ)$("swipeOv").style.setProperty("--tint","var(--biz)");$("swLegend").hidden=isQ;
   if(isQ){stack.append(quizEl(w,false));return;}
   const c=mk(w,false);stack.append(c);fitRule(c);w._shown=Date.now();
-  $("swLegend").children[0].textContent="למעלה: "+(w.type==="rule"?"הבנתי":"יודעת")+" ↑";$("swLegend").children[1].textContent="← שמאלה: "+(w.type==="rule"?"שוב":"עוד לא");$("swYes").dataset.l=w.type==="rule"?"הבנתי":"יודעת";$("swLike").hidden=$("swShare").hidden=!!w.type;if(!w.type)syncLike(w);$("swNo").dataset.l=w.type==="rule"?"שוב":"עוד לא";
+  $("swLegend").children[0].textContent="למעלה: "+(w.type==="rule"?"הבנתי":"יודעת")+" ↑";$("swLegend").children[1].textContent="← שמאלה: "+(w.type==="rule"?"שוב":"עוד לא");$("swYesL").textContent=w.type==="rule"?"הבנתי":"יודעת";$("swNoL").textContent=w.type==="rule"?"שוב":"עוד לא";$("swLike").hidden=$("swShare").hidden=!!w.type;$("swipeOv").style.setProperty("--tint",w.type==="rule"?"var(--grow)":"var(--"+(TCOL[w.t]||"gen")+")");if(!w.type)syncLike(w);$("swNo").dataset.l=w.type==="rule"?"שוב":"עוד לא";
   if(w.type==="rule"){const r=RULES.find(x=>x.id===w.rid);$("swSpeak").onclick=()=>r.ex.forEach((e,i)=>speak(e[0],{rate:0.85,queue:i>0}));}
   else{$("swSpeak").onclick=()=>{speak(w.en,{rate:0.8});if(w.ex)speak(w.ex,{rate:0.85,queue:true});};speak(w.en,{rate:0.85});}
   attachDrag(c,w);
