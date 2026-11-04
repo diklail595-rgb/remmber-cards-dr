@@ -294,6 +294,19 @@ select{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 .abtn.yes:active{background:#178350}
 .abtn.no:active{background:#F4F6F8}
 .swipe-legend{display:none!important}
+/* the reward for knowing a word: a green check that pops, draws itself, and sends out a soft ring */
+.okpop{position:absolute;left:50%;top:44%;border-radius:50%;box-shadow:0 0 0 18px rgba(255,255,255,.85);width:84px;height:84px;margin:-42px 0 0 -42px;z-index:6;pointer-events:none}
+.okpop .okd{position:absolute;inset:0;border-radius:50%;background:var(--good);box-shadow:0 10px 24px -8px rgba(28,154,94,.6);animation:okdot .7s cubic-bezier(.2,1.6,.4,1) forwards}
+.okpop .okr{position:absolute;inset:0;border-radius:50%;border:3px solid var(--good);animation:okring .7s ease-out forwards}
+.okpop svg{position:absolute;inset:22px;width:40px;height:40px;fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:30;stroke-dashoffset:30;animation:okdraw .28s .12s ease-out forwards}
+.okpop.out{animation:okout .25s ease-in forwards}
+@keyframes okdot{0%{transform:scale(0)}100%{transform:scale(1)}}
+@keyframes okring{0%{transform:scale(.6);opacity:.7}100%{transform:scale(1.9);opacity:0}}
+@keyframes okdraw{to{stroke-dashoffset:0}}
+@keyframes okout{to{transform:scale(.6) translateY(-20px);opacity:0}}
+.sw-streak{position:absolute;left:50%;top:calc(44% + 66px);background:#fff;padding:2px 10px;border-radius:999px;transform:translateX(-50%);z-index:6;pointer-events:none;font-weight:700;font-size:.9rem;color:var(--good);white-space:nowrap;animation:okstreak .9s ease-out forwards}
+@keyframes okstreak{0%{opacity:0;transform:translate(-50%,6px)}25%{opacity:1;transform:translate(-50%,0)}80%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.okpop .okr{display:none}.okpop .okd,.okpop svg{animation-duration:.01s;animation-delay:0s}}
 body:has(.swipe-ov:not([hidden])) .toast{bottom:calc(140px + env(safe-area-inset-bottom,0px))}
 .bloom{position:absolute;top:-6px;inset-inline-end:-6px;width:22px;height:22px;pointer-events:none;animation:bloom 1.4s ease-out forwards}
 @keyframes bloom{0%{transform:scale(0) rotate(0);opacity:1}30%{transform:scale(1.5) rotate(90deg);opacity:1}100%{transform:scale(1) rotate(180deg);opacity:0}}
@@ -1971,7 +1984,7 @@ function renderCats(){
 function countLine(){const w=weekDone();return "באוסף: "+collected()+" מילים · השבוע "+w+" מתוך "+weekGoal()+" ימים";}
 function openSwipe(focus){
   if(S.interests==null)return pickTopics();
-  curFocus=typeof focus==="string"?focus:null;
+  curFocus=typeof focus==="string"?focus:null;okRun=0;
   buildDeck();if(curFocus&&!focusDeck(curFocus)){curFocus=null;buildDeck();}
   aiMoreWords();addQuizzes();addRules();moreExamples();
   $("swipeOv").hidden=false;$("swDone").hidden=true;$("swStage").hidden=false;$("swStack").hidden=false;$("swBtns").hidden=false;$("swLegend").hidden=false;
@@ -2109,6 +2122,15 @@ function maybeBloom(){
   t.append(f);setTimeout(()=>f.remove(),1500);
   setTimeout(()=>toast("פרח חדש נפתח על העץ שלך! 🌸",1800),250);
 }
+// The little hit of "I know this!": a check pops in the middle of the stage, with a count of how many in a row.
+let okRun=0;
+function checkPop(){
+  okRun++;const st=$("swStage");st.querySelectorAll(".okpop,.sw-streak").forEach(x=>x.remove());
+  const o=el("div",{class:"okpop","aria-hidden":"true"},el("span",{class:"okr"}),el("span",{class:"okd"}));
+  o.insertAdjacentHTML("beforeend",'<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>');st.append(o);
+  if(okRun>=3)st.append(el("div",{class:"sw-streak",text:okRun+" ברצף!"}));
+  setTimeout(()=>o.classList.add("out"),520);setTimeout(()=>{o.remove();st.querySelectorAll(".sw-streak").forEach(x=>x.remove());},950);
+}
 // dir 0 = up like the next reel, 1 = right, -1 = left
 function fly(c,dir){
   if(c._gone)return;c._gone=1;const cw=deck[dIdx];if(cw&&cw._shown)cw._dt=Date.now()-cw._shown;
@@ -2117,6 +2139,7 @@ function fly(c,dir){
   c.style.transform=dir===0?"translateY(-110%)":"translate("+(dir*520)+"px,-20px) rotate("+(dir*24)+"deg)";
   if(dir!==0)c.style.opacity="0";
   c.querySelector(dir>=0?".stamp.yes":".stamp.no").style.opacity=1;
+  if(dir>=0)checkPop();else okRun=0;
   setTimeout(()=>c.remove(),ms+40);
   decide(dir>=0); // the next card is already underneath, so it shows at once
 }
